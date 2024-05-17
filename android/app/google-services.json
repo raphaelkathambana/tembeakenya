@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "903105583227",
+    "project_id": "project-tembea",
+    "storage_bucket": "project-tembea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903105583227:android:d763d14c7ffb0d8912aade",
+        "android_client_info": {
+          "package_name": "com.codeclimbers.tembeakenya"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaaE735sbbiNOzXn60XjNoviU_lrvf6dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
