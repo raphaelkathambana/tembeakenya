@@ -7,6 +7,8 @@ class WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var media = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsUtil.backgroundColorLight,
@@ -14,6 +16,11 @@ class WelcomeView extends StatelessWidget {
             style: TextStyle(color: ColorsUtil.textColorLight)),
       ),
       body: Column(children: [
+        Image.asset(
+          "lib/assets/images/picOne.png",
+          width: media.width * 0.8,
+          fit: BoxFit.fitWidth,
+        ),
         const Text('Welcome'),
         // TextButton(
         //     onPressed: () {
