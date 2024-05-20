@@ -8,6 +8,7 @@ import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/register_view.dart';
 import 'package:tembeakenya/views/login_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
+import 'package:tembeakenya/views/view_test.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
 void main() {
@@ -31,6 +32,7 @@ void main() {
         '/register/': (context) => const RegisterView(),
         '/verify/': (context) => const VerifyEmailView(),
         '/home': (context) => const MainPage(),
+        '/testui/': (context) => const WelcomePage(),
       },
     ),
   );
@@ -49,7 +51,7 @@ class MainPage extends StatelessWidget {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
-            if(user != null){
+            if (user != null) {
               if (user.emailVerified == true) {
                 return const HomeView();
               } else {

@@ -7,40 +7,73 @@ class WelcomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var media = MediaQuery.of(context).size;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorsUtil.backgroundColorLight,
-        title: const Text('Home Page',
-            style: TextStyle(color: ColorsUtil.textColorLight)),
+    final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: ColorsUtil.secondaryColorLight,
+      foregroundColor: ColorsUtil.textColorLight,
+      minimumSize: const Size(279, 59),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
       ),
-      body: Column(children: [
-        Image.asset(
-          "lib/assets/images/picOne.png",
-          width: media.width * 0.8,
-          fit: BoxFit.fitWidth,
-        ),
-        const Text('Welcome'),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/register/',
-                (route) => false
-              );
-            },
-            child: const Text("Register")
-        ),
-        TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                '/login/',
-                (route) => false
-              );
-            },
-            child: const Text("Login")
+    );
+    return Scaffold(
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 100,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+              ),
+            ),
+          ),
+          const Image(
+            image: AssetImage('lib/assets/images/mountbackground.png'),
+          ),
+          Column(
+            children: [
+              const Text('Tembea Kenya',
+                  style: TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      color: ColorsUtil.primaryColorLight)),
+              const Text(
+                'Where Every Step is a\nJourney',
+                style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: ColorsUtil.accentColorLight),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: [
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/login/', (route) => false);
+                          },
+                          style: raisedButtonStyle,
+                          child: const Text('Login')),
+                      const SizedBox(
+                        height: 19,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/register/', (route) => false);
+                          },
+                          style: raisedButtonStyle,
+                          child: const Text('Register')),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           )
-        ]
+        ],
       ),
     );
   }
