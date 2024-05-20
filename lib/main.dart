@@ -24,20 +24,20 @@ void main() {
         ),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const MainPage(),
       routes: {
         '/welcome/': (context) => const WelcomeView(),
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
         '/verify/': (context) => const VerifyEmailView(),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => const MainPage(),
       },
     ),
   );
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {
