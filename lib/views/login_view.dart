@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 // import 'package:tembeakenya/views/verify_view.dart';
 
@@ -72,9 +73,16 @@ class _LoginViewState extends State<LoginView> {
               final user = FirebaseAuth.instance.currentUser;
 
               if (user?.emailVerified ?? false) {
-                // HomePage
+                if (!context.mounted) return;
+                Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/home/', (route) => false);
               } else {
-                const VerifyEmailView();
+                if (!context.mounted) return;
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const VerifyEmailView(),
+                  ),
+                );
               }
             } on FirebaseAuthException catch (e) {
               if (e.code == 'invalid-credential') {

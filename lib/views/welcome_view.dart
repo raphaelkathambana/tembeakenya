@@ -15,34 +15,26 @@ class WelcomeView extends StatelessWidget {
       ),
       body: Column(children: [
         const Text('Welcome'),
-        // TextButton(
-        //     onPressed: () {
-        //       Navigator.of(context).pushNamedAndRemoveUntil(
-        //         '/register/',
-        //         (route) => false
-        //       );
-        //     },
-        //     child: const Text("Register")
-        // ),
-        // TextButton(
-        //     onPressed: () {
-        //       Navigator.of(context).pushNamedAndRemoveUntil(
-        //         '/login/',
-        //         (route) => false
-        //       );
-        //     },
-        //     child: const Text("Login")
-        //   )
-        // ]
         TextButton(
             onPressed: () {
-              // Navigator.of(context).pushNamedAndRemoveUntil(
-              //   '/login/',
-              //   (route) => false
-              // );
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/register/',
+                (route) => false
+              );
             },
-            child: const Text("Logout"))
-      ]),
+            child: const Text("Register")
+        ),
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/login/',
+                (route) => false
+              );
+            },
+            child: const Text("Login")
+          )
+        ]
+      ),
     );
   }
 }

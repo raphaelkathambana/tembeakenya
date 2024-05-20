@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/views/verify_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -72,6 +73,12 @@ class _RegisterViewState extends State<RegisterView> {
                 print('Invalid Email');
               }
             }
+            if (!context.mounted) return;
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const VerifyEmailView(),
+                ),
+              );
           },
           child: const Text('Register'),
         ),

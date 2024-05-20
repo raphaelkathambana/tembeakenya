@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/firebase_options.dart';
+import 'package:tembeakenya/views/home_page.dart';
 
 import 'package:tembeakenya/views/register_view.dart';
 import 'package:tembeakenya/views/login_view.dart';
@@ -25,10 +26,11 @@ void main() {
       ),
       home: const HomePage(),
       routes: {
+        '/welcome/': (context) => const WelcomeView(),
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
         '/verify/': (context) => const VerifyEmailView(),
-        '/welcome/': (context) => const WelcomeView(),
+        '/home': (context) => const HomePage(),
       },
     ),
   );
@@ -47,12 +49,16 @@ class HomePage extends StatelessWidget {
         switch (snapshot.connectionState) {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
-
-            if (user?.emailVerified ?? false) {
-              return const WelcomeView();
+            if(user != null){
+              if (user.emailVerified == true) {
+                return const HomeView();
+              } else {
+                return const VerifyEmailView();
+              }
             } else {
-              return const LoginView();
+              return const WelcomeView();
             }
+
           default:
             return const CircularProgressIndicator();
         }
