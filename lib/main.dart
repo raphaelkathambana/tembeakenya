@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/firebase_options.dart';
+import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 
 import 'package:tembeakenya/views/register_view.dart';
@@ -30,7 +31,8 @@ void main() {
         '/login/': (context) => const LoginView(),
         '/register/': (context) => const RegisterView(),
         '/verify/': (context) => const VerifyEmailView(),
-        '/home': (context) => const MainPage(),
+        '/forgotpassword/': (context) => const ForgotPasswordView(),
+        '/home/': (context) => const HomeView(),
       },
     ),
   );
