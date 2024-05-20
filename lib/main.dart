@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/firebase_options.dart';
 
 import 'package:tembeakenya/views/register_view.dart';
@@ -8,14 +9,18 @@ import 'package:tembeakenya/views/login_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
-
-const backgroundDark = Color(0xFF171B10);
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MaterialApp(
+  runApp(
+    MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(103, 58, 183, 1)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: ColorsUtil.accentColorLight,
+          primary: ColorsUtil.primaryColorLight,
+          secondary: ColorsUtil.secondaryColorLight,
+          background: ColorsUtil.backgroundColorLight,
+        ),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -34,21 +39,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return FutureBuilder(
       future: Firebase.initializeApp(
         options: DefaultFirebaseOptions.currentPlatform,
       ),
       builder: (context, snapshot) {
         switch (snapshot.connectionState) {
-          case ConnectionState.done: 
-          final user = FirebaseAuth.instance.currentUser;
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
 
-          if (user?.emailVerified ?? false) {
-            return const WelcomeView();
-          } else {
-            return const VerifyEmailView();
-          }
+            if (user?.emailVerified ?? false) {
+              return const WelcomeView();
+            } else {
+              return const LoginView();
+            }
           default:
             return const CircularProgressIndicator();
         }
