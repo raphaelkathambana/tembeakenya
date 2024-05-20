@@ -1,9 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/views/verify_view.dart';
-// import 'package:tembeakenya/views/verify_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -85,8 +83,40 @@ class _LoginViewState extends State<LoginView> {
                 );
               }
             } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-credential') {
-                print('Invalid Credential');
+              if (e.code == 'invalid-email') {
+                if (!context.mounted) return;
+                showDialog (
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Invalid Email'),
+                    content: const Text('Please write your email properly'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ]
+                  )
+                );
+              }else if (e.code == 'invalid-credential') {
+                if (!context.mounted) return;
+                showDialog (
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Wrong Email or Password'),
+                    content: const Text('Please try again.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ]
+                  )
+                );
               }
             }
           },

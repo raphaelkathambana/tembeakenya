@@ -30,7 +30,6 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    // return Container(color: backgroundDark);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsUtil.backgroundColorLight,
@@ -64,21 +63,74 @@ class _RegisterViewState extends State<RegisterView> {
             try {
               await FirebaseAuth.instance.createUserWithEmailAndPassword(
                   email: email, password: password);
+                if (!context.mounted) return;
+                Navigator.of(context)
+                  .pushNamedAndRemoveUntil('/verify/', (route) => false);
+            
             } on FirebaseAuthException catch (e) {
               if (e.code == 'email-already-in-use') {
-                print('Email already in use');
-              } else if (e.code == 'weak-password') {
-                print('Weak Password');
-              } else if (e.code == 'invalid-email') {
-                print('Invalid Email');
+                if (!context.mounted) return;
+                showDialog (
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Email already in use'),
+                    content: const Text('Please enter a new email address.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ]
+                  )
+                );
+              } 
+              else if (e.code == 'weak-password') {
+                if (!context.mounted) return;
+                showDialog (
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Weak Password'),
+                    content: const Text('Please enter a stronger password.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ]
+                  )
+                );
+              } 
+              else if (e.code == 'invalid-email') {
+                if (!context.mounted) return;
+                showDialog (
+                  context: context, 
+                  builder: (context) => AlertDialog(
+                    title: const Text('Invalid Email'),
+                    content: const Text('Please please write your email properly'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ]
+                  )
+                );
+              }
+              else {
+                if (!context.mounted) return;
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const VerifyEmailView(),
+                  ),
+                );
               }
             }
-            if (!context.mounted) return;
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const VerifyEmailView(),
-                ),
-              );
           },
           child: const Text('Register'),
         ),
