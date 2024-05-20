@@ -1,0 +1,54 @@
+
+import 'package:flutter/material.dart';
+import 'package:tembeakenya/views/verify_view.dart';
+
+
+class WelcomeView extends StatelessWidget {
+  const WelcomeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+  return Scaffold(
+      
+    appBar: AppBar(
+      backgroundColor: backgroundDark,
+      title: const Text('Home Page', style: TextStyle(color: Colors.white)),
+    ),
+
+    body: Column(
+      children: [
+        const Text('Welcome'),
+        // TextButton(
+        //     onPressed: () {
+        //       Navigator.of(context).pushNamedAndRemoveUntil(
+        //         '/register/',
+        //         (route) => false
+        //       );
+        //     },
+        //     child: const Text("Register")
+        // ),
+        // TextButton(
+        //     onPressed: () {
+        //       Navigator.of(context).pushNamedAndRemoveUntil(
+        //         '/login/',
+        //         (route) => false
+        //       );
+        //     },
+        //     child: const Text("Login")
+        //   )
+        // ]
+        TextButton(
+            onPressed: () {
+              // Navigator.of(context).pushNamedAndRemoveUntil(
+              //   '/login/',
+              //   (route) => false
+              // );
+            },
+            child: const Text("Logout")
+          )
+        ]
+      ),
+    );
+  }
+}

@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/views/verify_view.dart';
+// import 'package:tembeakenya/views/verify_view.dart';
 
 
 const backgroundDark = Color(0xFF171B10);
@@ -30,47 +32,76 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TextField(
-          controller: _email,
-          enableSuggestions: false,
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration (
-            hintText: 'Enter your email here',
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: backgroundDark,
+        title: const Text('Login', style: TextStyle(color: Colors.white)),
+      ),
+      body: Column(
+        children: [
+          // 'Enter your email here'
+          TextField(
+            controller: _email,
+            enableSuggestions: false,
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration (
+              hintText: 'Enter your email here',
+            ),
           ),
-        ),
-      
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration (
-            hintText: 'Enter your password here',
+        
+        // 'Enter your password here'
+          TextField(
+            controller: _password,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
+            decoration: const InputDecoration (
+              hintText: 'Enter your password here',
+            ),
           ),
-        ),
-      
-        TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;          
-            try {
-              await FirebaseAuth.instance.signInWithEmailAndPassword(
-                email: email, 
-                password: password
-              );
-            } on FirebaseAuthException catch (e){
-              print(e.code);
-              if (e.code == 'invalid-credential') {
-                print('Invalid Credential');
+        
+        // 'Login' 
+          TextButton(
+            onPressed: () async {
+              final email = _email.text;
+              final password = _password.text;          
+              try {
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email, 
+                  password: password
+                );
+
+              final user = FirebaseAuth.instance.currentUser;
+
+              if (user?.emailVerified ?? false) {
+                // HomePage
+
+              } else {
+                const VerifyEmailView();
               }
-            } 
-          },
-          child: const Text('Login'),
-        ),
-      ]
+
+              } on FirebaseAuthException catch (e){
+                if (e.code == 'invalid-credential') {
+                  print('Invalid Credential');
+                }
+              }
+            },
+            child: const Text('Login'),
+          ),
+          
+        // 'Don't have an account? Sign up here!'
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/register/',
+                  (route) => false
+                );
+              },
+              child: const Text('Don\'t have an account? Sign up here!')
+            )
+        ]
+      ),
     );
   }
 }

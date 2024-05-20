@@ -12,23 +12,33 @@ class VerifyEmailView extends StatefulWidget {
 class _VerifyEmailViewState extends State<VerifyEmailView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Please verify your email address'),
-        TextButton(
-          onPressed:() async {
-            final user = FirebaseAuth.instance.currentUser;
-            await user?.sendEmailVerification();
-            // const LoginView();
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (context) => const LoginView(),
-              //   ),
-              // );
-          },
-          child: const Text('Send email verification'),
-        ),
-      ],
+    
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: backgroundDark,
+        title: const Text('Verify Email', style: TextStyle(color: Colors.white)),
+      ),
+      body: Column(
+        
+        
+        children: [
+          
+          const Text('Please verify your email address'),
+          TextButton(
+            onPressed:() async {
+              final user = FirebaseAuth.instance.currentUser;
+              await user?.sendEmailVerification();
+              // const LoginView();
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => const LoginView(),
+                //   ),
+                // );
+            },
+            child: const Text('Send email verification'),
+          ),
+        ],
+      ),
     );
   }
 }
