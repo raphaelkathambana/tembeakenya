@@ -1,31 +1,26 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/views/forgot_view.dart';
-import 'package:tembeakenya/views/verify_view.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class ForgotPasswordView extends StatefulWidget {
+  const ForgotPasswordView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
+  State<ForgotPasswordView> createState() => _ForgotPasswordViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
+class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   late final TextEditingController _email;
-  late final TextEditingController _password;
 
   @override
   void initState() {
     _email = TextEditingController();
-    _password = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _email.dispose();
-    _password.dispose();
     super.dispose();
   }
 
@@ -34,7 +29,7 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorsUtil.backgroundColorLight,
-        title: const Text('Login',
+        title: const Text('Reset Password',
             style: TextStyle(color: ColorsUtil.textColorLight)),
       ),
       body: Column(children: [
@@ -49,40 +44,14 @@ class _LoginViewState extends State<LoginView> {
           ),
         ),
 
-        // 'Enter your password here'
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(
-            hintText: 'Enter your password here',
-          ),
-        ),
-
-        // 'Login'
+        // 'Submit'
         TextButton(
           onPressed: () async {
             final email = _email.text;
-            final password = _password.text;
+
             try {
-              await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
+              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
 
-              final user = FirebaseAuth.instance.currentUser;
-
-              if (user?.emailVerified ?? false) {
-                if (!context.mounted) return;
-                Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/home/', (route) => false);
-              } else {
-                if (!context.mounted) return;
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const VerifyEmailView(),
-                  ),
-                );
-              }
             } on FirebaseAuthException catch (e) {
               if (e.code == 'invalid-email') {
                 if (!context.mounted) return;
@@ -106,7 +75,7 @@ class _LoginViewState extends State<LoginView> {
                 showDialog (
                   context: context, 
                   builder: (context) => AlertDialog(
-                    title: const Text('Wrong Email or Password'),
+                    title: const Text('Email does not exist.'),
                     content: const Text('Please try again.'),
                     actions: [
                       TextButton(
@@ -121,27 +90,9 @@ class _LoginViewState extends State<LoginView> {
               }
             }
           },
-          child: const Text('Login'),
+          child: const Text('Submit'),
         ),
-        // Forgot Password?
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ForgotPasswordView(),
-                  ),
-                );
-            },
-            child: const Text('Forgot password?')
-          ),
-        // 'Don't have an account? Sign up here!'
-          TextButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/register/', (route) => false);
-            },
-            child: const Text('Don\'t have an account? Sign up here!')
-          ),
+
         ]
       ),
     );
