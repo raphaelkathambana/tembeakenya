@@ -6,6 +6,8 @@ import 'package:tembeakenya/firebase_options.dart';
 import 'package:tembeakenya/views/register_view.dart';
 import 'package:tembeakenya/views/login_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
+import 'package:tembeakenya/views/welcome_view.dart';
+
 
 const backgroundDark = Color(0xFF171B10);
 void main() {
@@ -17,6 +19,12 @@ void main() {
         useMaterial3: true,
       ),
       home: const HomePage(),
+      routes: {
+        '/login/': (context) => const LoginView(),
+        '/register/': (context) => const RegisterView(),
+        '/verify/': (context) => const VerifyEmailView(),
+        '/welcome/': (context) => const WelcomeView(),
+      },
     ),
   );
 }
@@ -26,43 +34,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      
-      appBar: AppBar(
-        backgroundColor: backgroundDark,
-        title: const Text('Home Page', style: TextStyle(color: Colors.white)),
+
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
       ),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done: 
+          final user = FirebaseAuth.instance.currentUser;
 
-      body: FutureBuilder(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
-
-            if (user?.emailVerified ?? false) {
-              return const Text('Done');
-            } else {
-              return const VerifyEmailView();
-            }
-            default:
-              return const Text('Loading...');
+          if (user?.emailVerified ?? false) {
+            return const WelcomeView();
+          } else {
+            return const VerifyEmailView();
           }
-        },
-      ),
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
-
-
-// Navigator.of(context).push(
-//   MaterialPageRoute(
-//     builder: (context) => const VerifyEmailView(),
-//   ),
-// );
-
 
 
 
