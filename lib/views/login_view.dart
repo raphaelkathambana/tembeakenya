@@ -2,8 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/main.dart';
-import 'package:tembeakenya/views/forgot_view.dart';
-import 'package:tembeakenya/views/verify_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -33,63 +31,80 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Login',
-              style: TextStyle(
-                  fontSize: 35,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.primaryColorLight)),
-        ),
-        body: SingleChildScrollView(
-          child: Column(children: [
-            const SizedBox(
-              height: 100,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(10),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text('Login',
+            style: TextStyle(
+                fontSize: 35,
+                fontWeight: FontWeight.bold,
+                color: ColorsUtil.primaryColorLight)),
+      ),
+      body: SingleChildScrollView(
+        child: Column(children: [
+          const SizedBox(
+            height: 100,
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+              ),
+            ),
+          ),
+          const Image(
+            image: AssetImage('lib/assets/images/mountbg.png'),
+          ), // 'Enter your email here'
+          SizedBox(
+            width: MediaQuery.sizeOf(context).width * 0.85,
+            child: Column(
+              children: [
+                TextField(
+                  controller: _email,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your email here',
+                  ),
                 ),
-              ),
-            ),
-            const Image(
-              image: AssetImage('lib/assets/images/mountbg.png'),
-            ), // 'Enter your email here'
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width * 0.85,
-              child: Column(
-                children: [
-                  TextField(
-                    controller: _email,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your email here',
-                    ),
-                  ),
 
-                  // 'Enter your password here'
-                  TextField(
-                    controller: _password,
-                    obscureText: true,
-                    enableSuggestions: false,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your password here',
-                    ),
+                // 'Enter your password here'
+                TextField(
+                  controller: _password,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter your password here',
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 200,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(children: [
-                    ElevatedButton(
-                      onPressed: () async {
-                        final email = _email.text;
-                        final password = _password.text;
+          ),
+          SizedBox(
+            height: 200,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      final email = _email.text;
+                      final password = _password.text;
+                      if (email == '' || password == '') {
+                        if (!context.mounted) return;
+                        showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                    title: const Text('Error'),
+                                    content: const Text(
+                                        'Please fill out all the details'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text('OK'),
+                                      ),
+                                    ]));
+                      } else {
                         try {
                           await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
@@ -103,11 +118,7 @@ class _LoginViewState extends State<LoginView> {
                                 '/home/', (route) => false);
                           } else {
                             if (!context.mounted) return;
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const VerifyEmailView(),
-                              ),
-                            );
+                            Navigator.of(context).pushNamed('/verify/');
                           }
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'invalid-email') {
@@ -145,33 +156,27 @@ class _LoginViewState extends State<LoginView> {
                                         ]));
                           }
                         }
-                      },
-                      style: const MainPage().raisedButtonStyle,
-                      child: const Text('Login'),
-                    ),
-                    // Forgot Password?
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ForgotPasswordView(),
-                            ),
-                          );
-                        },
-                        child: const Text('Forgot password?')),
-                    // 'Don't have an account? Sign up here!'
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/register/', (route) => false);
-                        },
-                        child: const Text(
-                            'Don\'t have an account? Sign up here!')),
-                  ]),
-                ),
+                      }
+                    },
+                    child: const Text('Login'),
+                  ),
+                  // Forgot Password?
+                  TextButton(
+                      onPressed: () =>
+                          Navigator.of(context).pushNamed('/forgotpassword/'),
+                      child: const Text('Forgot password?')),
+                  // 'Don't have an account? Sign up here!'
+                  TextButton(
+                      onPressed: () =>
+                          Navigator.of(context).pushNamed('/register/'),
+                      child:
+                          const Text('Don\'t have an account? Sign up here!')),
+                ]),
               ),
             ),
-          ]),
-        ));
+          ),
+        ]),
+      ),
+    );
   }
 }

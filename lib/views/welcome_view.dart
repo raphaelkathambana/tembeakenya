@@ -43,20 +43,16 @@ class WelcomeView extends StatelessWidget {
                   child: Column(
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/login/', (route) => false);
-                          },
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed('/login/'),
                           style: const MainPage().raisedButtonStyle,
                           child: const Text('Login')),
                       const SizedBox(
                         height: 19,
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/register/', (route) => false);
-                          },
+                          onPressed: () =>
+                              Navigator.of(context).pushNamed('/register/'),
                           style: const MainPage().raisedButtonStyle,
                           child: const Text('Register')),
                     ],

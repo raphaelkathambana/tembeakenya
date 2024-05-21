@@ -75,6 +75,7 @@ void main() {
         '/forgotpassword/': (context) => const ForgotPasswordView(),
         '/home/': (context) => const HomeView(),
       },
+      
     ),
   );
 }
