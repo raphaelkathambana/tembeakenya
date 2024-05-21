@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/main.dart';
-// import 'package:tembeakenya/views/verify_view.dart';
 
-class WelcomeView extends StatelessWidget {
-  const WelcomeView({super.key});
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+      backgroundColor: ColorsUtil.secondaryColorLight,
+      foregroundColor: ColorsUtil.textColorLight,
+      minimumSize: const Size(279, 59),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+      ),
+    );
     return Scaffold(
       body: Column(
         children: [
@@ -47,7 +54,7 @@ class WelcomeView extends StatelessWidget {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/login/', (route) => false);
                           },
-                          style: const MainPage().raisedButtonStyle,
+                          style: raisedButtonStyle,
                           child: const Text('Login')),
                       const SizedBox(
                         height: 19,
@@ -57,7 +64,7 @@ class WelcomeView extends StatelessWidget {
                             Navigator.of(context).pushNamedAndRemoveUntil(
                                 '/register/', (route) => false);
                           },
-                          style: const MainPage().raisedButtonStyle,
+                          style: raisedButtonStyle,
                           child: const Text('Register')),
                     ],
                   ),

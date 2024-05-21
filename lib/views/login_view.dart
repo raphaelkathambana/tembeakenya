@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 
@@ -32,118 +33,145 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: ColorsUtil.backgroundColorLight,
-        title: const Text('Login',
-            style: TextStyle(color: ColorsUtil.textColorLight)),
-      ),
-      body: Column(children: [
-        // 'Enter your email here'
-        TextField(
-          controller: _email,
-          enableSuggestions: false,
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(
-            hintText: 'Enter your email here',
-          ),
+        appBar: AppBar(
+          title: const Text('Login',
+              style: TextStyle(
+                  fontSize: 35,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsUtil.primaryColorLight)),
         ),
-
-        // 'Enter your password here'
-        TextField(
-          controller: _password,
-          obscureText: true,
-          enableSuggestions: false,
-          autocorrect: false,
-          decoration: const InputDecoration(
-            hintText: 'Enter your password here',
-          ),
-        ),
-
-        // 'Login'
-        TextButton(
-          onPressed: () async {
-            final email = _email.text;
-            final password = _password.text;
-            try {
-              await FirebaseAuth.instance
-                  .signInWithEmailAndPassword(email: email, password: password);
-
-              final user = FirebaseAuth.instance.currentUser;
-
-              if (user?.emailVerified ?? false) {
-                if (!context.mounted) return;
-                Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/home/', (route) => false);
-              } else {
-                if (!context.mounted) return;
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const VerifyEmailView(),
+        body: SingleChildScrollView(
+          child: Column(children: [
+            const SizedBox(
+              height: 100,
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(10),
+                ),
+              ),
+            ),
+            const Image(
+              image: AssetImage('lib/assets/images/mountbg.png'),
+            ), // 'Enter your email here'
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * 0.85,
+              child: Column(
+                children: [
+                  TextField(
+                    controller: _email,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your email here',
+                    ),
                   ),
-                );
-              }
-            } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-email') {
-                if (!context.mounted) return;
-                showDialog (
-                  context: context, 
-                  builder: (context) => AlertDialog(
-                    title: const Text('Invalid Email'),
-                    content: const Text('Please write your email properly'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ]
-                  )
-                );
-              }else if (e.code == 'invalid-credential') {
-                if (!context.mounted) return;
-                showDialog (
-                  context: context, 
-                  builder: (context) => AlertDialog(
-                    title: const Text('Wrong Email or Password'),
-                    content: const Text('Please try again.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ]
-                  )
-                );
-              }
-            }
-          },
-          child: const Text('Login'),
-        ),
-        // Forgot Password?
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const ForgotPasswordView(),
+
+                  // 'Enter your password here'
+                  TextField(
+                    controller: _password,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your password here',
+                    ),
                   ),
-                );
-            },
-            child: const Text('Forgot password?')
-          ),
-        // 'Don't have an account? Sign up here!'
-          TextButton(
-            onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/register/', (route) => false);
-            },
-            child: const Text('Don\'t have an account? Sign up here!')
-          ),
-        ]
-      ),
-    );
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 200,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        final email = _email.text;
+                        final password = _password.text;
+                        try {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: email, password: password);
+
+                          final user = FirebaseAuth.instance.currentUser;
+
+                          if (user?.emailVerified ?? false) {
+                            if (!context.mounted) return;
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                '/home/', (route) => false);
+                          } else {
+                            if (!context.mounted) return;
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const VerifyEmailView(),
+                              ),
+                            );
+                          }
+                        } on FirebaseAuthException catch (e) {
+                          if (e.code == 'invalid-email') {
+                            if (!context.mounted) return;
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                        title: const Text('Invalid Email'),
+                                        content: const Text(
+                                            'Please write your email properly'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ]));
+                          } else if (e.code == 'invalid-credential') {
+                            if (!context.mounted) return;
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                        title: const Text(
+                                            'Wrong Email or Password'),
+                                        content:
+                                            const Text('Please try again.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text('OK'),
+                                          ),
+                                        ]));
+                          }
+                        }
+                      },
+                      style: const MainPage().raisedButtonStyle,
+                      child: const Text('Login'),
+                    ),
+                    // Forgot Password?
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ForgotPasswordView(),
+                            ),
+                          );
+                        },
+                        child: const Text('Forgot password?')),
+                    // 'Don't have an account? Sign up here!'
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/register/', (route) => false);
+                        },
+                        child: const Text(
+                            'Don\'t have an account? Sign up here!')),
+                  ]),
+                ),
+              ),
+            ),
+          ]),
+        ));
   }
 }
