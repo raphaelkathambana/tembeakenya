@@ -14,6 +14,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: ColorsUtil.backgroundColorLight,
         title: const Text('Verify Email',
             style: TextStyle(color: ColorsUtil.textColorLight)),
@@ -27,8 +28,23 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               await user?.sendEmailVerification();
 
               if (!context.mounted) return;
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil('/login/', (route) => false);
+              showDialog (
+                context: context, 
+                builder: (context) => AlertDialog(
+                  title: const Text('Verification Link Sent'),
+                  content: const Text('A link has been sent to your email.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();  
+                        Navigator.of(context).pushNamedAndRemoveUntil('/login/', (route) => false);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ]
+                )
+              );
+              
               
             },
             child: const Text('Send email verification'),
@@ -37,8 +53,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (!context.mounted) return;
-              Navigator.of(context)
-                .pushNamedAndRemoveUntil('/welcome/', (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil('/welcome/', (route) => false);
             },
             child: const Text("Logout"))
         ],
