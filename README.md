@@ -1,4 +1,4 @@
-# tembeakenya
+# Tembea Kenya
 
 Tembea Kenya is a hiking application to enhance hiking experience and community.
 
