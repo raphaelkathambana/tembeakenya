@@ -9,7 +9,6 @@ import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/register_view.dart';
 import 'package:tembeakenya/views/login_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
-import 'package:tembeakenya/views/view_test.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
 void main() {
@@ -35,6 +34,7 @@ void main() {
         '/forgotpassword/': (context) => const ForgotPasswordView(),
         '/home/': (context) => const HomeView(),
       },
+      
     ),
   );
 }

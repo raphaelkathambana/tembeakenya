@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-// import 'package:tembeakenya/views/verify_view.dart';
 
 class WelcomeView extends StatelessWidget {
   const WelcomeView({super.key});
@@ -51,20 +50,16 @@ class WelcomeView extends StatelessWidget {
                   child: Column(
                     children: [
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/login/', (route) => false);
-                          },
+                          onPressed: () =>
+                            Navigator.of(context).pushNamed('/login/'),
                           style: raisedButtonStyle,
                           child: const Text('Login')),
                       const SizedBox(
                         height: 19,
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/register/', (route) => false);
-                          },
+                          onPressed: () => 
+                            Navigator.of(context).pushNamed('/register/'),
                           style: raisedButtonStyle,
                           child: const Text('Register')),
                     ],
