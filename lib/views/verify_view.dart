@@ -15,9 +15,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: ColorsUtil.backgroundColorLight,
         title: const Text('Verify Email',
-            style: TextStyle(color: ColorsUtil.textColorLight)),
+            style: TextStyle(
+              color: ColorsUtil.primaryColorLight,
+              fontSize: 35,
+              fontWeight: FontWeight.bold,
+            )),
       ),
       body: Column(
         children: [
@@ -28,34 +31,33 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               await user?.sendEmailVerification();
 
               if (!context.mounted) return;
-              showDialog (
-                context: context, 
-                builder: (context) => AlertDialog(
-                  title: const Text('Verification Link Sent'),
-                  content: const Text('A link has been sent to your email.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();  
-                        Navigator.of(context).pushNamedAndRemoveUntil('/login/', (route) => false);
-                      },
-                      child: const Text('OK'),
-                    ),
-                  ]
-                )
-              );
-              
-              
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                          title: const Text('Verification Link Sent'),
+                          content:
+                              const Text('A link has been sent to your email.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    '/login/', (route) => false);
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ]));
             },
             child: const Text('Send email verification'),
           ),
           TextButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              if (!context.mounted) return;
-              Navigator.of(context).pushNamedAndRemoveUntil('/welcome/', (route) => false);
-            },
-            child: const Text("Logout"))
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                if (!context.mounted) return;
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/welcome/', (route) => false);
+              },
+              child: const Text("Logout"))
         ],
       ),
     );

@@ -158,6 +158,7 @@ class _LoginViewState extends State<LoginView> {
                         }
                       }
                     },
+                    style: const MainPage().raisedButtonStyle,
                     child: const Text('Login'),
                   ),
                   // Forgot Password?
