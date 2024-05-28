@@ -2,10 +2,9 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_prefs_cookie_store/shared_prefs_cookie_store.dart';
 
-String url = 'http://10.0.223.245:8000/'; // Use your local IP address
+String url = 'http://10.53.19.127:8000/'; // Use your local IP address
 
 Future<String> getCsrfToken() async {
   Dio dio = Dio();
