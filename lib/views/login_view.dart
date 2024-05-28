@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/main.dart';
+import 'package:tembeakenya/test_backend.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -86,77 +86,8 @@ class _LoginViewState extends State<LoginView> {
                 padding: const EdgeInsets.all(10),
                 child: Column(children: [
                   ElevatedButton(
-                    onPressed: () async {
-                      final email = _email.text;
-                      final password = _password.text;
-                      if (email == '' || password == '') {
-                        if (!context.mounted) return;
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                    title: const Text('Error'),
-                                    content: const Text(
-                                        'Please fill out all the details'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(context).pop(),
-                                        child: const Text('OK'),
-                                      ),
-                                    ]));
-                      } else {
-                        try {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                  email: email, password: password);
-
-                          final user = FirebaseAuth.instance.currentUser;
-
-                          if (user?.emailVerified ?? false) {
-                            if (!context.mounted) return;
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/home/', (route) => false);
-                          } else {
-                            if (!context.mounted) return;
-                            Navigator.of(context).pushNamed('/verify/');
-                          }
-                        } on FirebaseAuthException catch (e) {
-                          if (e.code == 'invalid-email') {
-                            if (!context.mounted) return;
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                        title: const Text('Invalid Email'),
-                                        content: const Text(
-                                            'Please write your email properly'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ]));
-                          } else if (e.code == 'invalid-credential') {
-                            if (!context.mounted) return;
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                        title: const Text(
-                                            'Wrong Email or Password'),
-                                        content:
-                                            const Text('Please try again.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text('OK'),
-                                          ),
-                                        ]));
-                          }
-                        }
-                      }
+                    onPressed: () {
+                      TestBackend().login(_email.text, _password.text);
                     },
                     style: const MainPage().raisedButtonStyle,
                     child: const Text('Login'),
