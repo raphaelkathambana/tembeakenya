@@ -1,11 +1,10 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:json_extractor/json_extractor.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
-import 'package:dio/dio.dart' as di;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -118,18 +117,14 @@ class _LoginViewState extends State<LoginView> {
 }
 
 Future<dynamic> newMethod(BuildContext context, message) {
-  // extract object from JSON in message
-  var extractor = const JsonExtractor({'errorMessage': 'errors'});
-
-  var extracted = extractor.process(message);
-  var data = extracted['errorMessage']?.cast<String, String>() ?? [];
-  // make a List of errors from data
-  debugPrint(json.toString());
+  debugPrint("Extracting Errors");
+  loopThroughMap(message);
+  var error = getMainErrorMessage(message);
   return showDialog(
       context: context,
       builder: (context) => AlertDialog(
               title: const Text('Error'),
-              content: Text(data.toString().split('[').last.split(']').first),
+              content: Text(error.toString().split('[').last.split(']').first),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -145,18 +140,39 @@ Future<void> login(String email, String password, context) async {
   String token = await getCsrfToken();
   debugPrint(token);
   try {
-    final response = await di.Dio().post('${url}api/v1/login',
+    final response = await APICall().client.post('${url}api/v1/login',
         data: jsonEncode({
           'email': email,
           'password': password,
         }),
-        options: di.Options(headers: {
+        options: Options(headers: {
           'X-XSRF-TOKEN': token,
           'Accept': 'application/json',
         }));
     debugPrint(response.data.toString());
-  } on di.DioException catch (e) {
+    APICall apiCall = APICall();
+    await apiCall.client.get('${url}api/user');
+    if (response.statusCode == 200) {
+      Navigator.of(context).pushNamedAndRemoveUntil('/home/', (route) => false);
+    }
+  } on DioException catch (e) {
+    debugPrint('Error Occurred: Getting Message');
     debugPrint(e.response?.data.toString());
     newMethod(context, e.response?.data);
+  }
+}
+
+void loopThroughMap(Map<String, dynamic> map) {
+  debugPrint('Looping through map');
+  map.forEach((key, value) {
+    debugPrint('Key: $key, Value: $value');
+  });
+}
+
+dynamic getMainErrorMessage(Map<String, dynamic> map) {
+  if (map.containsKey('message')) {
+    return map['message'];
+  } else {
+    return 'Key not found';
   }
 }

@@ -4,29 +4,17 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_prefs_cookie_store/shared_prefs_cookie_store.dart';
 
-String url = 'http://10.53.19.127:8000/'; // Use your local IP address
+String url = 'http://172.20.10.5:8000/'; // Use your local IP address
 
 Future<String> getCsrfToken() async {
   Dio dio = Dio();
   var cookieJar = CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));
 
-  Response response = await dio.get(
-    url,
-    options: Options(
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      followRedirects: false,
-      validateStatus: (status) {
-        return status! < 500;
-      },
-    ),
-  );
+  Response response = await APICall().client.get('${url}sanctum/csrf-cookie');
 // Set timeout duration
 
-  if (response.statusCode == 200) {
+  if (response.statusCode == 200 || response.statusCode == 204) {
     debugPrint('CSRF token retrieved successfully');
     // The CSRF token is now set in cookies, you can proceed with login
   } else {
