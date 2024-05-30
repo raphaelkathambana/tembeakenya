@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 
 class HomeView extends StatelessWidget {
@@ -27,7 +28,8 @@ class HomeView extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: TextButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
+                    // await FirebaseAuth.instance.signOut();
+                    APICall().clearCookies();
                     if (!context.mounted) return;
                     Navigator.of(context)
                         .pushNamedAndRemoveUntil('/welcome/', (route) => false);
