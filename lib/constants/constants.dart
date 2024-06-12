@@ -2,9 +2,10 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_prefs_cookie_store/shared_prefs_cookie_store.dart';
 
-String url = 'http://172.20.10.5:8000/'; // Use your local IP address
+String url = 'https://tembeakenyabackend.fly.dev/'; // Use your local IP address
 
 Future<String> getCsrfToken() async {
   Dio dio = Dio();
@@ -29,6 +30,57 @@ Future<String> getCsrfToken() async {
       .toString();
 }
 
+// class APICall {
+//   final Dio _dio;
+
+//   static final APICall _instance = APICall._internal();
+//   final SharedPrefCookieStore _cookieStore = SharedPrefCookieStore();
+
+//   factory APICall() => _instance;
+
+//   APICall._internal() : _dio = Dio() {
+//     init();
+//   }
+
+//   void init() async {
+//     _dio.interceptors.add(CookieManager(_cookieStore));
+//     _dio.interceptors.add(
+//       InterceptorsWrapper(
+//         onRequest: (options, handler) {
+//           debugPrint('Sending request to ${options.uri}');
+//           return handler.next(options);
+//         },
+//         onResponse: (response, handler) {
+//           debugPrint('Received response: $response');
+//           return handler.next(response);
+//         },
+//         onError: (DioException error, handler) {
+//           debugPrint('Error has occurred: $error');
+//           return handler.next(error);
+//         },
+//       ),
+//     );
+//   }
+
+//   void clearCookies() {
+//     _cookieStore.deleteAll();
+//   }
+
+//   Dio get client => _dio;
+// }
+
+Future<void> getClient() async {
+  APICall apiCall = APICall();
+  //Send a dummy request to your domain to prime DioCookieManager
+  await apiCall.client.get(url);
+}
+
+Future<bool> isAuthenticated() async {
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('auth_token');
+  return token != null;
+}
+
 class APICall {
   final Dio _dio;
 
@@ -45,7 +97,12 @@ class APICall {
     _dio.interceptors.add(CookieManager(_cookieStore));
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onRequest: (options, handler) {
+        onRequest: (options, handler) async {
+          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString('auth_token');
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
           debugPrint('Sending request to ${options.uri}');
           return handler.next(options);
         },
@@ -66,17 +123,4 @@ class APICall {
   }
 
   Dio get client => _dio;
-}
-
-Future<void> getClient() async {
-  APICall apiCall = APICall();
-  //Send a dummy request to your domain to prime DioCookieManager
-  await apiCall.client.get(url);
-
-  //Request which actually sets the cookies to the DioCookieManager
-  await apiCall.client.get('${url}sanctum/csrf-cookie');
-  var token = await getCsrfToken();
-  await apiCall.client.post('${url}api/about',
-      options: Options(
-          headers: {'Accept': 'application/json', 'X-XSRF-TOKEN': token}));
 }

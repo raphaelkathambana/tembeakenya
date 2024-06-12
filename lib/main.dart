@@ -1,9 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+// import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
-import 'package:tembeakenya/firebase_options.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 
@@ -24,9 +23,8 @@ import 'package:tembeakenya/views/welcome_view.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(
-    MaterialApp(
+    MaterialApp.router(
       title: 'Flutter Demo',
       themeMode: ThemeMode.system,
       darkTheme: ThemeData(
@@ -67,15 +65,18 @@ void main() {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MainPage(),
-      routes: {
-        '/welcome/': (context) => const WelcomeView(),
-        '/login/': (context) => const LoginView(),
-        '/register/': (context) => const RegisterView(),
-        '/verify/': (context) => const VerifyEmailView(),
-        '/forgotpassword/': (context) => const ForgotPasswordView(),
-        '/home/': (context) => const HomeView(),
-      },
+      routerConfig: _router,
+      // routeInformationParser: router.routeInformationParser,
+      // routerDelegate: router.routerDelegate,
+      // backButtonDispatcher: CustomBackButtonDispatcher(router),
+      // routes: {
+      //   '/welcome/': (context) => const WelcomeView(),
+      //   '/login/': (context) => const LoginView(),
+      //   '/register/': (context) => const RegisterView(),
+      //   '/verify/': (context) => const VerifyEmailView(),
+      //   '/forgotpassword/': (context) => const ForgotPasswordView(),
+      //   '/home/': (context) => const HomeView(),
+      // },
     ),
   );
 }
@@ -112,29 +113,62 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      ),
-      builder: (context, snapshot) {
-        getClient();
-        switch (snapshot.connectionState) {
-          case ConnectionState.done:
-            final user = FirebaseAuth.instance.currentUser;
-            if (user != null) {
-              if (user.emailVerified == true) {
-                return const HomeView();
-              } else {
-                return const VerifyEmailView();
-              }
-            } else {
-              return const WelcomeView();
-            }
-
-          default:
-            return const CircularProgressIndicator();
+    return FutureBuilder<bool>(
+      future: isAuthenticated(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text('Error: ${snapshot.error}'),
+            ),
+          );
+        } else {
+          if (snapshot.data == true) {
+            return const HomeView();
+          } else {
+            return const WelcomeView();
+          }
         }
       },
     );
   }
 }
+
+final GoRouter _router = GoRouter(initialLocation: '/', routes: <RouteBase>[
+  GoRoute(
+    path: '/',
+    pageBuilder: (context, state) => const MaterialPage(child: MainPage()),
+  ),
+  GoRoute(
+    path: '/welcome',
+    pageBuilder: (context, state) => const MaterialPage(child: WelcomeView()),
+  ),
+  GoRoute(
+    path: '/login',
+    pageBuilder: (context, state) => const MaterialPage(child: LoginView()),
+  ),
+  GoRoute(
+    path: '/register',
+    pageBuilder: (context, state) => const MaterialPage(child: RegisterView()),
+  ),
+  GoRoute(
+    path: '/verify',
+    pageBuilder: (context, state) =>
+        const MaterialPage(child: VerifyEmailView()),
+  ),
+  GoRoute(
+    path: '/forgotpassword',
+    pageBuilder: (context, state) =>
+        const MaterialPage(child: ForgotPasswordView()),
+  ),
+  GoRoute(
+      name: '/home',
+      path: '/home',
+      builder: (context, state) => const HomeView()),
+]);

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/constants.dart';
+import 'package:tembeakenya/views/login_view.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -65,7 +69,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         TextButton(
           onPressed: () async {
             final email = _email.text;
-
+            sendForgotPasswordLink(email, context);
             try {
               await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
             } on FirebaseAuthException catch (e) {
@@ -107,5 +111,26 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         ),
       ]),
     );
+  }
+
+  Future<void> sendForgotPasswordLink(String email, context) async {
+    String token = await getCsrfToken();
+    debugPrint(token);
+    try {
+      final response =
+          await APICall().client.post('${url}api/v1/forgot-password',
+              data: jsonEncode({
+                'email': email,
+              }),
+              options: Options(headers: {
+                'X-XSRF-TOKEN': token,
+                'Accept': 'application/json',
+              }));
+      debugPrint(response.data.toString());
+    } on DioException catch (e) {
+      debugPrint('Error Occurred: Getting Message');
+      debugPrint(e.response?.data.toString());
+      newMethod(context, e.response?.data);
+    }
   }
 }
