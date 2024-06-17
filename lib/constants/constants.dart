@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_prefs_cookie_store/shared_prefs_cookie_store.dart';
 
-String url = 'https://tembeakenyabackend.fly.dev/'; // Use your local IP address
+String url = 'https://tembeakenyabackend.fly.dev/';
+String apiVersion1Uri = '/api/v1/';
 
 Future<String> getCsrfToken() async {
   Dio dio = Dio();
@@ -13,7 +14,6 @@ Future<String> getCsrfToken() async {
   dio.interceptors.add(CookieManager(cookieJar));
 
   Response response = await APICall().client.get('${url}sanctum/csrf-cookie');
-// Set timeout duration
 
   if (response.statusCode == 200 || response.statusCode == 204) {
     debugPrint('CSRF token retrieved successfully');
@@ -30,55 +30,13 @@ Future<String> getCsrfToken() async {
       .toString();
 }
 
-// class APICall {
-//   final Dio _dio;
-
-//   static final APICall _instance = APICall._internal();
-//   final SharedPrefCookieStore _cookieStore = SharedPrefCookieStore();
-
-//   factory APICall() => _instance;
-
-//   APICall._internal() : _dio = Dio() {
-//     init();
-//   }
-
-//   void init() async {
-//     _dio.interceptors.add(CookieManager(_cookieStore));
-//     _dio.interceptors.add(
-//       InterceptorsWrapper(
-//         onRequest: (options, handler) {
-//           debugPrint('Sending request to ${options.uri}');
-//           return handler.next(options);
-//         },
-//         onResponse: (response, handler) {
-//           debugPrint('Received response: $response');
-//           return handler.next(response);
-//         },
-//         onError: (DioException error, handler) {
-//           debugPrint('Error has occurred: $error');
-//           return handler.next(error);
-//         },
-//       ),
-//     );
-//   }
-
-//   void clearCookies() {
-//     _cookieStore.deleteAll();
-//   }
-
-//   Dio get client => _dio;
-// }
-
-Future<void> getClient() async {
-  APICall apiCall = APICall();
-  //Send a dummy request to your domain to prime DioCookieManager
-  await apiCall.client.get(url);
-}
-
-Future<bool> isAuthenticated() async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('auth_token');
-  return token != null;
+String convertQueryParametersToString(Map<String, List<String>> queryParams) {
+  return queryParams.entries.map((entry) {
+    final key = Uri.encodeComponent(entry.key);
+    return entry.value
+        .map((value) => '$key=${Uri.encodeComponent(value)}')
+        .join('&');
+  }).join('&');
 }
 
 class APICall {

@@ -13,19 +13,42 @@ class ColorsUtil {
   static const Color textColorDark = Color(0xfffcfef6);
   static const Color backgroundColorDark = Color(0xff161a0f);
 }
-//  $themes: (
-//  light: (
-//    text: #070901,
-//    background: #ecf0e5,
-//    primary: #84873b,
-//    secondary: #cfb796,
-//    accent: #c4df81,
-//  ),
-//  dark: (
-//    text: #fcfef6,
-//    background: #161a0f,
-//    primary: #c1c478,
-//    secondary: #695130,
-//    accent: #637e20,
-//  ),
-// );
+
+ThemeData darkThemeData = ThemeData(
+  /* dark theme settings */
+  brightness: Brightness.dark,
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.dark,
+    seedColor: ColorsUtil.accentColorDark,
+    primary: ColorsUtil.primaryColorDark,
+    secondary: ColorsUtil.secondaryColorDark,
+    surface: ColorsUtil.backgroundColorDark,
+    background: ColorsUtil.backgroundColorDark,
+    onPrimary: ColorsUtil.textColorDark,
+    onSecondary: ColorsUtil.textColorDark,
+    onSurface: ColorsUtil.textColorDark,
+    onBackground: ColorsUtil.textColorDark,
+    onError: ColorsUtil.textColorDark,
+    surfaceVariant: ColorsUtil.secondaryColorLight,
+  ),
+  useMaterial3: true,
+);
+ThemeData lightThemeData = ThemeData(
+  brightness: Brightness.light,
+  /* light theme settings */
+  colorScheme: ColorScheme.fromSeed(
+    brightness: Brightness.light,
+    seedColor: ColorsUtil.accentColorLight,
+    primary: ColorsUtil.primaryColorLight,
+    secondary: ColorsUtil.secondaryColorLight,
+    surface: ColorsUtil.backgroundColorLight,
+    background: ColorsUtil.backgroundColorLight,
+    onPrimary: ColorsUtil.textColorLight,
+    onSecondary: ColorsUtil.textColorLight,
+    onSurface: ColorsUtil.textColorLight,
+    onBackground: ColorsUtil.textColorLight,
+    onError: ColorsUtil.textColorLight,
+    surfaceVariant: ColorsUtil.secondaryColorLight,
+  ),
+  useMaterial3: true,
+);
