@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/main.dart';
+import 'package:tembeakenya/views/nav_bar.dart';
+// import 'package:tembeakenya/main.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -114,8 +115,12 @@ class _LoginViewState extends State<LoginView> {
 
                           if (user?.emailVerified ?? false) {
                             if (!context.mounted) return;
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                                '/home/', (route) => false);
+                            Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const LayoutView(),
+                                    ),
+                                  );
                           } else {
                             if (!context.mounted) return;
                             Navigator.of(context).pushNamed('/verify/');

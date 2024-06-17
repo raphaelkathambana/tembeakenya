@@ -10,9 +10,9 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: ColorsUtil.backgroundColorLight,
+        backgroundColor: ColorsUtil.backgroundColorDark,
         title: const Text('Home Page',
-            style: TextStyle(color: ColorsUtil.textColorLight)),
+            style: TextStyle(color: ColorsUtil.textColorDark)),
       ),
       body: Column(children: [
         const Text('Welcome'),
