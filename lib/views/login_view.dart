@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/views/nav_bar.dart';
+import 'package:tembeakenya/assets/nav_bar.dart';
 // import 'package:tembeakenya/main.dart';
 
 class LoginView extends StatefulWidget {

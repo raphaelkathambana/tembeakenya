@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
@@ -12,11 +13,17 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  late final TextEditingController _fname;
+  late final TextEditingController _lname;
+  late final TextEditingController _username;
   late final TextEditingController _email;
   late final TextEditingController _password;
 
   @override
   void initState() {
+    _fname = TextEditingController();
+    _lname = TextEditingController();
+    _username = TextEditingController();
     _email = TextEditingController();
     _password = TextEditingController();
     super.initState();
@@ -24,6 +31,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
+    _fname.dispose();
+    _lname.dispose();
+    _username.dispose();
     _email.dispose();
     _password.dispose();
     super.dispose();
@@ -60,6 +70,30 @@ class _RegisterViewState extends State<RegisterView> {
                   width: MediaQuery.sizeOf(context).width * 0.7,
                   child: Column(
                     children: [
+                      TextField(
+                        controller: _fname,
+                        enableSuggestions: true,
+                        autocorrect: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your first name',
+                        ),
+                      ),
+                      TextField(
+                        controller: _lname,
+                        enableSuggestions: true,
+                        autocorrect: true,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your last name',
+                        ),
+                      ),
+                      TextField(
+                        controller: _username,
+                        enableSuggestions: true,
+                        autocorrect: false,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter your username',
+                        ),
+                      ),
                       TextField(
                         controller: _email,
                         enableSuggestions: false,
@@ -107,9 +141,15 @@ class _RegisterViewState extends State<RegisterView> {
                                           ]));
                             } else {
                               try {
-                                await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                        email: email, password: password);
+                            // *********** FOR AUTHENTICATION *********** //
+                                await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+                            // ************* FOR FIRESTORE ************** //
+                                await FirebaseFirestore.instance.collection("Users").doc(FirebaseAuth.instance.currentUser!.uid).set({
+                                  "fname": _fname.text,
+                                  "lname": _lname.text,
+                                  "username": _username.text,
+                                  "email": _email.text
+                                });
                                 if (!context.mounted) return;
                                 Navigator.of(context).pushNamedAndRemoveUntil(
                                     '/verify/', (route) => false);

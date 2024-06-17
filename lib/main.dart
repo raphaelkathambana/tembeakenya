@@ -6,7 +6,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/firebase_options.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
-import 'package:tembeakenya/views/nav_bar.dart';
+import 'package:tembeakenya/assets/nav_bar.dart';
 import 'package:tembeakenya/views/profile_edit_view.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 
@@ -15,15 +15,6 @@ import 'package:tembeakenya/views/login_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
-// final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-//   backgroundColor: ColorsUtil.secondaryColorLight,
-//   foregroundColor: ColorsUtil.textColorLight,
-//   minimumSize: const Size(279, 59),
-//   padding: const EdgeInsets.symmetric(horizontal: 16),
-//   shape: const RoundedRectangleBorder(
-//     borderRadius: BorderRadius.all(Radius.circular(10)),
-//   ),
-// );
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
