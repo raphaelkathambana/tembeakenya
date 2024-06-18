@@ -340,26 +340,33 @@ class AuthController {
   /// Returns a map with the following keys:
   /// - 'isAuthenticated': A boolean indicating if the user is authenticated.
   /// - 'isVerified': A boolean indicating if the user's email is verified.
-  Future<Map<String, dynamic>> isAuthenticated() async {
+  Future<Map<String, bool>> isAuthenticated() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     if (token != null) {
+      debugPrint('Hmm, Let us see how this goes...');
       final response = await apiCall.client.get('${url}api/user');
-      final userData = json.decode(response.data);
+      debugPrint(response.statusCode.toString());
+      debugPrint('We got a User :)');
       if (response.statusCode == 200) {
+        debugPrint('Should return true, true');
+        final userData = json.decode(response.data);
         return {
           'isAuthenticated': true,
           'isVerified': userData['email_verified_at'] != null,
         };
       } else {
+        debugPrint('Should return false, false');
         return {
-          'isVerified': userData['email_verified_at'] != null,
+          'isVerified': response.data['email_verified_at'] != null,
           'isAuthenticated': false,
         };
       }
     } else {
       final response = await apiCall.client.get('${url}api/user');
       final userData = json.decode(response.data);
+      debugPrint('Hmm, Let us see how this goes ');
+      debugPrint(userData);
       return {
         'isVerified': userData['email_verified_at'] != null,
         'isAuthenticated': false,

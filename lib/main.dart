@@ -52,10 +52,10 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, dynamic>>(
+    return FutureBuilder<Map<String, bool>>(
       future: AuthController(NavigationService(router)).isAuthenticated(),
       builder:
-          (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
+          (BuildContext context, AsyncSnapshot<Map<String, bool>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
@@ -65,12 +65,12 @@ class MainPage extends StatelessWidget {
         } else {
           if (snapshot.data?['isAuthenticated'] == true) {
             if (snapshot.data?['isVerified'] == true) {
-              return const HomeView();
+              return const WelcomeView();
             } else {
               return const VerifyEmailView(id: '', params: null, token: '');
             }
           } else {
-            return const WelcomeView();
+            return const HomeView();
           }
         }
       },
