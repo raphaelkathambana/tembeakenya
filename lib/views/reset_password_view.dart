@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 
 class ResetPassword extends StatefulWidget {
@@ -13,11 +14,13 @@ class ResetPassword extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPassword> {
   late final TextEditingController _newPassword;
   late final TextEditingController _newPasswordConfirm;
+  late NavigationService navigationService;
 
   @override
   void initState() {
     _newPassword = TextEditingController();
     _newPasswordConfirm = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
@@ -84,8 +87,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                 );
                 return;
               }
-              resetPassword(widget.email, password, passwordConfirm,
-                  widget.token, context);
+              AuthController(navigationService).resetPassword(widget.email,
+                  password, passwordConfirm, widget.token, context);
             },
             child: const Text('Reset Password'),
           )

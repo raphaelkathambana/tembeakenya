@@ -14,47 +14,51 @@ class WelcomeView extends StatelessWidget {
             image: DecorationImage(
                 image: AssetImage('lib/assets/images/mountbackground.png'),
                 fit: BoxFit.fitWidth)),
-        child: Column(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Text('Tembea Kenya',
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            verticalDirection: VerticalDirection.down,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Tembea Kenya',
+                      style: TextStyle(
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                          color: ColorsUtil.primaryColorLight)),
+                  const Text(
+                    'Where Every Step is a\nJourney',
                     style: TextStyle(
-                        fontSize: 35,
+                        fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: ColorsUtil.primaryColorLight)),
-                const Text(
-                  'Where Every Step is a\nJourney',
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: ColorsUtil.accentColorLight),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () => context.push('/login'),
-                            style: const MainPage().raisedButtonStyle,
-                            child: const Text('Login')),
-                        const SizedBox(
-                          height: 19,
-                        ),
-                        ElevatedButton(
-                            onPressed: () => context.push('/register'),
-                            style: const MainPage().raisedButtonStyle,
-                            child: const Text('Register')),
-                      ],
+                        color: ColorsUtil.accentColorLight),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () => context.push('/login'),
+                              style: const MainPage().raisedButtonStyle,
+                              child: const Text('Login')),
+                          const SizedBox(
+                            height: 19,
+                          ),
+                          ElevatedButton(
+                              onPressed: () => context.push('/register'),
+                              style: const MainPage().raisedButtonStyle,
+                              child: const Text('Register')),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

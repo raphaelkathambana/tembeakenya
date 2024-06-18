@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/main.dart';
 import '../../assets/colors.dart';
@@ -13,6 +14,14 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   bool _isLoading = false;
+  late NavigationService navigationService;
+
+  @override
+  void initState() {
+    navigationService = NavigationService(router);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
       _isLoading = true;
     });
 
-    bool isLoggedOut = await logout();
+    bool isLoggedOut = await AuthController(navigationService).logout();
 
     setState(() {
       _isLoading = false;
@@ -63,7 +72,8 @@ class _HomeViewState extends State<HomeView> {
     if (isLoggedOut) {
       // Navigate to the login or welcome screen
       if (!mounted) return;
-      context.go('/login');
+      // context.go('/login');
+      navigationService.navigateToLogin(context);
     } else {
       // Show an error message
       ScaffoldMessenger.of(context).showSnackBar(

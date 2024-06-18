@@ -53,7 +53,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: isAuthenticated(),
+      future: AuthController(NavigationService(router)).isAuthenticated(),
       builder:
           (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {

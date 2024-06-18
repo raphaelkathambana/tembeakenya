@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
@@ -24,9 +25,11 @@ class VerifyEmailView extends StatefulWidget {
 class _VerifyEmailViewState extends State<VerifyEmailView> {
   bool _isLoading = false;
   String? _verificationMessage;
+  late NavigationService navigationService;
 
   @override
   void initState() {
+    navigationService = NavigationService(router);
     super.initState();
     if (widget.id != null && widget.token != null && widget.params != null) {
       _verifyEmail(widget.id!, widget.token!, widget.params!);
@@ -61,7 +64,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               const Text("Didn't Receive a Verification Link?"),
               TextButton(
                 onPressed: () async {
-                  sendVerification(context);
+                  AuthController(navigationService).sendVerification(context);
                   if (!context.mounted) return;
                   showDialog(
                       context: context,
@@ -128,7 +131,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       _isLoading = true;
     });
 
-    bool isLoggedOut = await logout();
+    bool isLoggedOut = await AuthController(navigationService).logout();
 
     setState(() {
       _isLoading = false;

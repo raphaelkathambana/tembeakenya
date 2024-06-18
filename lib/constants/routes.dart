@@ -110,3 +110,34 @@ final GoRouter router = GoRouter(
     return null;
   },
 );
+
+class NavigationService {
+  final GoRouter _router;
+
+  NavigationService(this._router);
+
+  void navigateToHome(BuildContext context) {
+    _router.go('/home');
+  }
+
+  void navigateToEmailVerify(BuildContext context) {
+    _router.goNamed('/email-verify');
+  }
+
+  void navigateToLogin(BuildContext context) {
+    _router.go('/login');
+  }
+
+  void navigateToRegister(BuildContext context) {
+    _router.go('/register');
+  }
+
+  void navigateToForgotPassword(BuildContext context) {
+    _router.go('/forgotpassword');
+  }
+
+  void navigateToResetPassword(
+      BuildContext context, String token, String email) {
+    _router.go('/reset-password/$token?email=$email');
+  }
+}

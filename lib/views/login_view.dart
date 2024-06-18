@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/main.dart';
@@ -29,11 +30,13 @@ class CustomBackButtonDispatcher extends RootBackButtonDispatcher {
 class _LoginViewState extends State<LoginView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late NavigationService navigationService;
 
   @override
   void initState() {
     _email = TextEditingController();
     _password = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
@@ -104,7 +107,8 @@ class _LoginViewState extends State<LoginView> {
                   child: Column(children: [
                     ElevatedButton(
                       onPressed: () async {
-                        login(_email.text, _password.text, context);
+                        AuthController(navigationService)
+                            .login(_email.text, _password.text, context);
                       },
                       style: const MainPage().raisedButtonStyle,
                       child: const Text('Login'),

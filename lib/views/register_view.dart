@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/main.dart';
@@ -17,6 +18,7 @@ class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _passwordConfirm;
+  late NavigationService navigationService;
 
   @override
   void initState() {
@@ -25,6 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
     _email = TextEditingController();
     _password = TextEditingController();
     _passwordConfirm = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
@@ -131,8 +134,13 @@ class _RegisterViewState extends State<RegisterView> {
                               final email = _email.text;
                               final password = _password.text;
                               final passwordConfirm = _passwordConfirm.text;
-                              register(firstname, lastname, email, password,
-                                  passwordConfirm, context);
+                              AuthController(navigationService).register(
+                                  firstname,
+                                  lastname,
+                                  email,
+                                  password,
+                                  passwordConfirm,
+                                  context);
                             },
                             style: const MainPage().raisedButtonStyle,
                             child: const Text('Register'),

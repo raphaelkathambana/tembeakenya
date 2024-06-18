@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../../assets/colors.dart';
 
@@ -11,10 +12,12 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   late final TextEditingController _email;
+  late NavigationService navigationService;
 
   @override
   void initState() {
     _email = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
@@ -64,7 +67,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         TextButton(
           onPressed: () async {
             final email = _email.text;
-            sendForgotPasswordLink(email, context);
+            AuthController(navigationService)
+                .sendForgotPasswordLink(email, context);
           },
           child: const Text('Submit'),
         ),
