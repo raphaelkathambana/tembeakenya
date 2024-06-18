@@ -59,7 +59,12 @@ class _ProfileViewState extends State<ProfileView> {
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Edit Profile'),
-              onTap: () => Navigator.of(context).pushNamed('/editprofile/'),
+              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>false),
+            ),
+            ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Change Password'),
+              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>false),
             ),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -75,14 +80,14 @@ class _ProfileViewState extends State<ProfileView> {
         ),
         body: SingleChildScrollView(
           
-                      // ****************************************** //
+            // ****************************************** //
             child: FutureBuilder(
                 future: UserDetail.getCurrentUser(currentUser.uid),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
                       UserDetail userData = snapshot.data as UserDetail;
-                      // ****************************************** //
+            // ****************************************** //
                       return Column(children: [
                         Card(
                           color: const Color.fromARGB(55, 99, 126, 32),
@@ -98,8 +103,7 @@ class _ProfileViewState extends State<ProfileView> {
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                _image != null
-                                    ? IconButton(
+                                _image != null ? IconButton(
                                         icon: CircleAvatar(
                                             radius: 42,
                                             backgroundColor:
@@ -148,37 +152,28 @@ class _ProfileViewState extends State<ProfileView> {
                                         onPressed: () {
                                           showDialog(
                                               context: context,
-                                              builder: (context) => AlertDialog(
-                                                      content:
-                                                          const CircleAvatar(
-                                                              radius: 120,
-                                                              backgroundColor:
-                                                                  ColorsUtil
-                                                                      .accentColorDark,
-                                                              child:
-                                                                  CircleAvatar(
-                                                                radius: 118,
-                                                                backgroundImage:
-                                                                    AssetImage(
-                                                                        'lib/assets/images/profile.png'),
-                                                              )),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(),
-                                                          child:
-                                                              const Text('OK'),
-                                                        ),
-                                                      ]));
+                                              builder: (context) => const AlertDialog(
+                                                content:
+                                                    CircleAvatar(
+                                                        radius: 140,
+                                                        backgroundColor:
+                                                            ColorsUtil
+                                                                .accentColorDark,
+                                                        child:
+                                                            CircleAvatar(
+                                                          radius: 138,
+                                                          backgroundImage:
+                                                              AssetImage(
+                                                                  'lib/assets/images/profile.png'),
+                                                        )),
+                                                        ));
                                         },
                                       ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(userData.fname,
+                                    Text("${userData.fname} ${userData.lname}",
                                         style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold,
@@ -201,6 +196,35 @@ class _ProfileViewState extends State<ProfileView> {
                             ),
                           ]),
                         ),
+                        Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 20, horizontal: 20),
+                            padding: const EdgeInsets.only(
+                                left: 20, right: 20, top: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 49, 59, 21),
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                       Text('Email',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorsUtil.primaryColorDark)),
+                                      
+                                    ],
+                                  ),
+                                  Text(currentUser.email!,
+                                      style: const TextStyle(
+                                          fontSize: 18,
+                                          color: ColorsUtil.textColorDark)),
+                                ])),
                         Container(
                           height: 350,
                           margin: const EdgeInsets.symmetric(

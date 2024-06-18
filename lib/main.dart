@@ -69,6 +69,7 @@ void main() {
         '/verify/': (context) => const VerifyEmailView(),
         '/forgotpassword/': (context) => const ForgotPasswordView(),
         '/home/': (context) => const HomeView(),
+        '/navbar/': (context) => const LayoutView(),
         '/profile/': (context) => const ProfileView(),
         '/editprofile/': (context) => const ProfileEditView(),
       },

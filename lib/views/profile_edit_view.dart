@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tembeakenya/assets/user_detail.dart';
@@ -14,6 +16,8 @@ pickImage(ImageSource source) async {
   }
 }
 
+// Future<void> edit
+
 class ProfileEditView extends StatefulWidget {
   const ProfileEditView({super.key});
 
@@ -23,6 +27,11 @@ class ProfileEditView extends StatefulWidget {
 
 class _ProfileEditViewState extends State<ProfileEditView> {
   Uint8List? _image;
+
+  List<String> name = ['', ''];
+  String username = '';
+  String email = '';
+
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
@@ -36,11 +45,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+        automaticallyImplyLeading: false,
           backgroundColor: ColorsUtil.backgroundColorDark,
           title: const Text(
             'Edit Profile Page',
             style: TextStyle(color: ColorsUtil.textColorDark),
-          ),
+          )          
         ),
         body: SingleChildScrollView(
             child: FutureBuilder(
@@ -49,10 +59,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   if (snapshot.connectionState == ConnectionState.done) {
                     if (snapshot.hasData) {
                       UserDetail userData = snapshot.data as UserDetail;
+
                       // ****************************************** //
                       return Column(children: [
                         Column(children: [
                           _image != null
+                          
                               ? Stack(children: [
                                   IconButton(
                                       icon: CircleAvatar(
@@ -130,9 +142,64 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   ColorsUtil.primaryColorDark)),
-                                      IconButton(
+                                      IconButton(                                        
                                           onPressed: () async {
-                                            // TODO EDIT TEXT FIELD
+                                            await showDialog(
+                                              context: context, 
+                                              builder: (context) => AlertDialog(
+                                                title: const Text("Edit Name"),
+                                                content: SizedBox(
+                                                  height: 200,
+                                                  width: 400,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    children: [
+                                                      TextField(
+                                                        decoration: const InputDecoration(
+                                                          labelText: "Enter your First Name",
+                                                        ),
+                                                        onChanged: (value) {
+                                                          name[0] = value;
+                                                        },
+                                                      ),
+                                                      TextField(
+                                                        decoration: const InputDecoration(
+                                                          labelText: "Enter your Last Name",
+                                                        ), 
+                                                        onChanged: (value) {
+                                                          name[1] = value;
+                                                        },
+                                                      ),
+                                                    ],
+                                                  )
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    child: const Text('Cancle'),
+                                                    onPressed: () => Navigator.pop(context), 
+                                                  ),
+                                                  TextButton(
+                                                    child: const Text('Save'),
+                                                    onPressed: () => Navigator.of(context).popAndPushNamed('/editprofile/')
+                                                    // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>route.isFirst), 
+                                                  ),
+                                                ],
+                                              )
+                                            );
+                                            if (name[0].trim().isNotEmpty && name[1].trim().isNotEmpty) {
+                                              await FirebaseFirestore.instance.collection("Users")
+                                              .doc(currentUser.uid).update({"fname": name[0], "lname": name[1],});
+
+                                            } else if (name[0].trim().isNotEmpty) {
+                                              await FirebaseFirestore.instance.collection("Users")
+                                              .doc(currentUser.uid).update({"fname": name[0]});
+
+                                            } else if (name[1].trim().isNotEmpty) {
+                                              await FirebaseFirestore.instance.collection("Users")
+                                              .doc(currentUser.uid).update({"lname": name[1]});
+
+                                            }
+                                            
                                           },
                                           icon: const Icon(
                                             Icons.edit,
@@ -140,6 +207,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           )),
                                     ],
                                   ),
+                                  
                                   Text("${userData.fname} ${userData.lname}",
                                       style: const TextStyle(
                                           fontSize: 18,
@@ -167,13 +235,42 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                               color:
                                                   ColorsUtil.primaryColorDark)),
                                       IconButton(
-                                          onPressed: () async {
-                                            // TODO EDIT TEXT FIELD
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: ColorsUtil.primaryColorDark,
-                                          )),
+                                        onPressed: () async {
+                                          await showDialog(
+                                            context: context, 
+                                            builder: (context) => AlertDialog(
+                                              title: const Text("Edit Username"),
+                                              content: TextField(
+                                                      decoration: const InputDecoration(
+                                                        labelText: "Enter your Username",
+                                                      ),
+                                                      onChanged: (value) {
+                                                        username = value;
+                                                      },
+                                                    ),
+                                              actions: [
+                                                TextButton(
+                                                  child: const Text('Cancle'),
+                                                  onPressed: () => Navigator.pop(context), 
+                                                ),
+                                                TextButton(
+                                                  child: const Text('Save'),
+                                                  onPressed: () => Navigator.of(context).popAndPushNamed('/editprofile/')
+                                                  
+                                                ),
+                                              ],
+                                            )
+                                          );
+                                          if (username.trim().isNotEmpty) {
+                                            await FirebaseFirestore.instance.collection("Users")
+                                            .doc(currentUser.uid).update({"username": username,});
+                                          }
+                                          
+                                        },
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: ColorsUtil.primaryColorDark,
+                                        )),
                                     ],
                                   ),
                                   Text(userData.username,
@@ -181,42 +278,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           fontSize: 18,
                                           color: ColorsUtil.textColorDark)),
                                 ])),
-                        Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            padding: const EdgeInsets.only(
-                                left: 20, right: 20, top: 0, bottom: 10),
-                            decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 49, 59, 21),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      const Text('Email',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                              color:
-                                                  ColorsUtil.primaryColorDark)),
-                                      IconButton(
-                                          onPressed: () async {
-                                            // TODO EDIT TEXT FIELD
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: ColorsUtil.primaryColorDark,
-                                          )),
-                                    ],
-                                  ),
-                                  Text(currentUser.email!,
-                                      style: const TextStyle(
-                                          fontSize: 18,
-                                          color: ColorsUtil.textColorDark)),
-                                ]))
+                      ElevatedButton(onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/navbar/', (route)=>false), child: const Text('Save'))
                       ]);
                     } else {
                       return const Center(
