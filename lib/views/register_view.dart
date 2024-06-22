@@ -57,14 +57,14 @@ class _RegisterViewState extends State<RegisterView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(
-                height: 100,
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                  ),
-                ),
-              ),
+              // const SizedBox(
+              //   height: 20,
+              //   child: Center(
+              //     child: Padding(
+              //       padding: EdgeInsets.all(10),
+              //     ),
+              //   ),
+              // ),
               const Image(
                 image: AssetImage('lib/assets/images/mountbg.png'),
               ),
@@ -80,7 +80,7 @@ class _RegisterViewState extends State<RegisterView> {
                           autocorrect: false,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
-                            hintText: 'Enter your First name here',
+                            labelText: 'Enter your First name here',
                           ),
                         ),
                         TextField(
@@ -89,7 +89,7 @@ class _RegisterViewState extends State<RegisterView> {
                           autocorrect: false,
                           keyboardType: TextInputType.name,
                           decoration: const InputDecoration(
-                            hintText: 'Enter your Last name here',
+                            labelText: 'Enter your Last name here',
                           ),
                         ),
                         TextField(
@@ -98,7 +98,7 @@ class _RegisterViewState extends State<RegisterView> {
                           autocorrect: false,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
-                            hintText: 'Enter your Email here',
+                            labelText: 'Enter your Email here',
                           ),
                         ),
                         TextField(
@@ -107,7 +107,7 @@ class _RegisterViewState extends State<RegisterView> {
                           enableSuggestions: false,
                           autocorrect: false,
                           decoration: const InputDecoration(
-                            hintText: 'Enter your password here',
+                            labelText: 'Enter your password here',
                           ),
                         ),
                         TextField(
@@ -116,7 +116,7 @@ class _RegisterViewState extends State<RegisterView> {
                           enableSuggestions: false,
                           autocorrect: false,
                           decoration: const InputDecoration(
-                            hintText: 'Re-enter your password here',
+                            labelText: 'Re-enter your password here',
                           ),
                         ),
                       ],

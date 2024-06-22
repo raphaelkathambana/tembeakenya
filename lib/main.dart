@@ -65,12 +65,12 @@ class MainPage extends StatelessWidget {
         } else {
           if (snapshot.data?['isAuthenticated'] == true) {
             if (snapshot.data?['isVerified'] == true) {
-              return const WelcomeView();
+              return const HomeView();
             } else {
               return const VerifyEmailView(id: '', params: null, token: '');
             }
           } else {
-            return const HomeView();
+            return const WelcomeView();
           }
         }
       },

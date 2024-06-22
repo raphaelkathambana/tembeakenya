@@ -55,7 +55,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    hintText: 'Enter your email here',
+                    labelText: 'Enter your email here',
                   ),
                 ),
               ],

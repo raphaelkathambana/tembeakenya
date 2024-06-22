@@ -350,11 +350,11 @@ class AuthController {
       debugPrint('We got a User :)');
       if (response.statusCode == 200) {
         debugPrint('Should return true, true');
-        final userData = json.decode(response.data);
         return {
           'isAuthenticated': true,
-          'isVerified': userData['email_verified_at'] != null,
+          'isVerified': response.data['email_verified_at'] != null,
         };
+        // final userData = json.decode(response.data);
       } else {
         debugPrint('Should return false, false');
         return {
