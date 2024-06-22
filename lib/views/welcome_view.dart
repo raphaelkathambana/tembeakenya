@@ -41,14 +41,14 @@ class WelcomeView extends StatelessWidget {
                       child: Column(
                         children: [
                           ElevatedButton(
-                              onPressed: () => context.push('/login'),
+                              onPressed: () => context.go('/login'),
                               style: const MainPage().raisedButtonStyle,
                               child: const Text('Login')),
                           const SizedBox(
                             height: 19,
                           ),
                           ElevatedButton(
-                              onPressed: () => context.push('/register'),
+                              onPressed: () => context.go('/register'),
                               style: const MainPage().raisedButtonStyle,
                               child: const Text('Register')),
                         ],
