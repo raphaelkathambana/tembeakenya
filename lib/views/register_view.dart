@@ -1,8 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tembeakenya/assets/colors.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/controllers/auth_controller.dart';
+import '../../assets/colors.dart';
 import 'package:tembeakenya/main.dart';
-import 'package:tembeakenya/views/verify_view.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -12,20 +13,31 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  late final TextEditingController _firstname;
+  late final TextEditingController _lastname;
   late final TextEditingController _email;
   late final TextEditingController _password;
+  late final TextEditingController _passwordConfirm;
+  late NavigationService navigationService;
 
   @override
   void initState() {
+    _firstname = TextEditingController();
+    _lastname = TextEditingController();
     _email = TextEditingController();
     _password = TextEditingController();
+    _passwordConfirm = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
   @override
   void dispose() {
+    _firstname.dispose();
+    _lastname.dispose();
     _email.dispose();
     _password.dispose();
+    _passwordConfirm.dispose();
     super.dispose();
   }
 
@@ -40,158 +52,111 @@ class _RegisterViewState extends State<RegisterView> {
                 fontWeight: FontWeight.bold,
                 color: ColorsUtil.primaryColorLight)),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 100,
-              child: Center(
-                child: Padding(
-                  padding: EdgeInsets.all(10),
-                ),
+      body: SizedBox(
+        height: MediaQuery.sizeOf(context).height * 0.9,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // const SizedBox(
+              //   height: 20,
+              //   child: Center(
+              //     child: Padding(
+              //       padding: EdgeInsets.all(10),
+              //     ),
+              //   ),
+              // ),
+              const Image(
+                image: AssetImage('lib/assets/images/mountbg.png'),
               ),
-            ),
-            const Image(
-              image: AssetImage('lib/assets/images/mountbg.png'),
-            ),
-            Column(
-              children: [
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width * 0.7,
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: _email,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your email here',
-                        ),
-                      ),
-                      TextField(
-                        controller: _password,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter your password here',
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
+              Column(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * 0.7,
                     child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () async {
-                            final email = _email.text;
-                            final password = _password.text;
-                            if (email == '' || password == '') {
-                              if (!context.mounted) return;
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                          title: const Text('Error'),
-                                          content: const Text(
-                                              'Please fill out all the details'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(context).pop(),
-                                              child: const Text('OK'),
-                                            ),
-                                          ]));
-                            } else {
-                              try {
-                                await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                        email: email, password: password);
-                                if (!context.mounted) return;
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    '/verify/', (route) => false);
-                              } on FirebaseAuthException catch (e) {
-                                if (e.code == 'email-already-in-use') {
-                                  if (!context.mounted) return;
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                              title: const Text(
-                                                  'Email already in use'),
-                                              content: const Text(
-                                                  'Please enter a new email address.'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                  child: const Text('OK'),
-                                                ),
-                                              ]));
-                                } else if (e.code == 'weak-password') {
-                                  if (!context.mounted) return;
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                              title:
-                                                  const Text('Weak Password'),
-                                              content: const Text(
-                                                  'Please enter a stronger password.'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('OK'),
-                                                ),
-                                              ]));
-                                } else if (e.code == 'invalid-email') {
-                                  if (!context.mounted) return;
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                              title:
-                                                  const Text('Invalid Email'),
-                                              content: const Text(
-                                                  'Please please write your email properly'),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.of(context)
-                                                          .pop(),
-                                                  child: const Text('OK'),
-                                                ),
-                                              ]));
-                                } else {
-                                  if (!context.mounted) return;
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const VerifyEmailView(),
-                                    ),
-                                  );
-                                }
-                              }
-                            }
-                          },
-                          style: const MainPage().raisedButtonStyle,
-                          child: const Text('Register'),
+                        TextField(
+                          controller: _firstname,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter your First name here',
+                          ),
                         ),
-                        TextButton(
-                            onPressed: () =>
-                                Navigator.of(context).pushNamed('/login/'),
-                            child: const Text(
-                                "Already have an account? Sign in here!")),
+                        TextField(
+                          controller: _lastname,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.name,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter your Last name here',
+                          ),
+                        ),
+                        TextField(
+                          controller: _email,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter your Email here',
+                          ),
+                        ),
+                        TextField(
+                          controller: _password,
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: const InputDecoration(
+                            labelText: 'Enter your password here',
+                          ),
+                        ),
+                        TextField(
+                          controller: _passwordConfirm,
+                          obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          decoration: const InputDecoration(
+                            labelText: 'Re-enter your password here',
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                  SizedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () async {
+                              final firstname = _firstname.text;
+                              final lastname = _lastname.text;
+                              final email = _email.text;
+                              final password = _password.text;
+                              final passwordConfirm = _passwordConfirm.text;
+                              AuthController(navigationService).register(
+                                  firstname,
+                                  lastname,
+                                  email,
+                                  password,
+                                  passwordConfirm,
+                                  context);
+                            },
+                            style: const MainPage().raisedButtonStyle,
+                            child: const Text('Register'),
+                          ),
+                          TextButton(
+                              onPressed: () => context.push('/login'),
+                              child: const Text(
+                                  "Already have an account? Sign in here!")),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
