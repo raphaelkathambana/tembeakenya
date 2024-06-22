@@ -1,12 +1,13 @@
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tembeakenya/assets/user_detail.dart';
+
+
+// ************** IMAGE PICKER *************** //
 
 pickImage(ImageSource source) async {
   final ImagePicker imagePicker = ImagePicker();
@@ -15,8 +16,8 @@ pickImage(ImageSource source) async {
     return await file.readAsBytes();
   }
 }
+  // ****************************************** //
 
-// Future<void> edit
 
 class ProfileEditView extends StatefulWidget {
   const ProfileEditView({super.key});
@@ -26,6 +27,8 @@ class ProfileEditView extends StatefulWidget {
 }
 
 class _ProfileEditViewState extends State<ProfileEditView> {
+
+  // ************** IMAGE PICKER *************** //
   Uint8List? _image;
 
   List<String> name = ['', ''];
@@ -38,6 +41,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       _image = img;
     });
   }
+  // ****************************************** //
+
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
@@ -63,45 +68,43 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       // ****************************************** //
                       return Column(children: [
                         Column(children: [
-                          _image != null
-                          
-                              ? Stack(children: [
-                                  IconButton(
-                                      icon: CircleAvatar(
-                                          radius: 62,
-                                          backgroundColor:
-                                              ColorsUtil.accentColorDark,
-                                          child: CircleAvatar(
-                                            radius: 60,
-                                            backgroundImage:
-                                                MemoryImage(_image!),
-                                          )),
-                                      onPressed: selectImage),
-                                  const Positioned(
-                                    bottom: 10,
-                                    left: 100,
-                                    child: Icon(Icons.add_a_photo),
-                                  )
-                                ])
-                              : Stack(children: [
-                                  IconButton(
-                                    icon: const CircleAvatar(
-                                        radius: 62,
-                                        backgroundColor:
-                                            ColorsUtil.accentColorDark,
-                                        child: CircleAvatar(
-                                          radius: 60,
-                                          backgroundImage: AssetImage(
-                                              'lib/assets/images/profile.png'),
-                                        )),
-                                    onPressed: selectImage,
-                                  ),
-                                  const Positioned(
-                                    bottom: 10,
-                                    left: 100,
-                                    child: Icon(Icons.add_a_photo),
-                                  )
-                                ]),
+                          if (_image != null) 
+                          Stack(children: [
+                              IconButton(
+                                  icon: CircleAvatar(
+                                      radius: 62,
+                                      backgroundColor:
+                                          ColorsUtil.accentColorDark,
+                                      child: CircleAvatar(
+                                        radius: 60,
+                                        backgroundImage:
+                                            MemoryImage(_image!),
+                                      )),
+                                  onPressed: selectImage),
+                              const Positioned(
+                                bottom: 10,
+                                left: 100,
+                                child: Icon(Icons.add_a_photo),
+                              )
+                            ]) else Stack(children: [
+                              IconButton(
+                                icon: const CircleAvatar(
+                                    radius: 62,
+                                    backgroundColor:
+                                        ColorsUtil.accentColorDark,
+                                    child: CircleAvatar(
+                                      radius: 60,
+                                      backgroundImage: AssetImage(
+                                          'lib/assets/images/profile.png'),
+                                    )),
+                                onPressed: selectImage,
+                              ),
+                              const Positioned(
+                                bottom: 10,
+                                left: 100,
+                                child: Icon(Icons.add_a_photo),
+                              )
+                            ]),
                           const Divider(
                             height: 25,
                             color: ColorsUtil.secondaryColorDark,
@@ -199,7 +202,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                               .doc(currentUser.uid).update({"lname": name[1]});
 
                                             }
-                                            
                                           },
                                           icon: const Icon(
                                             Icons.edit,
@@ -207,10 +209,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           )),
                                     ],
                                   ),
-                                  
+                                  // TODO: ADD THE IF STATEMENT AND CHANGE ROUTE SETTINGS TO ADD THE BACK FUNCTIONALITY
                                   Text("${userData.fname} ${userData.lname}",
                                       style: const TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 18, 
                                           color: ColorsUtil.textColorDark)),
                                 ])),
                         Container(

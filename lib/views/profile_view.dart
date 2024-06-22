@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+// import 'dart:typed_data';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,26 +22,30 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  Uint8List? _image;
-  void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = img;
-    });
-  }
 
   final currentUser = FirebaseAuth.instance.currentUser!;
 
   // ****************************************** //
 
-  // Future<UserDetail> getCurrentUser(String email) async {
-  //   final snapshot = await FirebaseFirestore.instance
-  //       .collection("Users")
-  //       .where("email", isEqualTo: currentUser.email)
-  //       .get();
-  //   final userData = snapshot.docs.map((e) => UserDetail.fromSnapshot(e)).single;
-  //   return userData;
-  // }
+      // Uint8List? _image;
+      // void selectImage() async {
+      //   Uint8List img = await pickImage(ImageSource.gallery);
+      //   setState(() {
+      //     _image = img;
+      //   });
+      // }
+
+    // ****************************************** //
+
+      // Future<UserDetail> getCurrentUser(String email) async {
+      //   final snapshot = await FirebaseFirestore.instance
+      //       .collection("Users")
+      //       .where("email", isEqualTo: currentUser.email)
+      //       .get();
+      //   final userData = snapshot.docs.map((e) => UserDetail.fromSnapshot(e)).single;
+      //   return userData;
+      // }
+
   // ****************************************** //
 
   @override
@@ -88,6 +92,7 @@ class _ProfileViewState extends State<ProfileView> {
                     if (snapshot.hasData) {
                       UserDetail userData = snapshot.data as UserDetail;
             // ****************************************** //
+
                       return Column(children: [
                         Card(
                           color: const Color.fromARGB(55, 99, 126, 32),
@@ -103,72 +108,71 @@ class _ProfileViewState extends State<ProfileView> {
                             Row(
                               children: [
                                 const SizedBox(width: 10),
-                                _image != null ? IconButton(
-                                        icon: CircleAvatar(
-                                            radius: 42,
-                                            backgroundColor:
-                                                ColorsUtil.accentColorDark,
-                                            child: CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage:
-                                                  MemoryImage(_image!),
-                                            )),
-                                        // onPressed: selectImage,
+                                // _image != null ? IconButton(
+                                //         icon: CircleAvatar(
+                                //             radius: 42,
+                                //             backgroundColor:
+                                //                 ColorsUtil.accentColorDark,
+                                //             child: CircleAvatar(
+                                //               radius: 40,
+                                //               backgroundImage:
+                                //                   MemoryImage(_image!),
+                                //             )),
+                                //         // onPressed: selectImage,
+                                //         onPressed: () {
+                                //           showDialog(
+                                //               context: context,
+                                //               builder: (context) => AlertDialog(
+                                //                       content: CircleAvatar(
+                                //                         radius: 30,
+                                //                         backgroundImage:
+                                //                             MemoryImage(
+                                //                                 _image!),
+                                //                       ),
+                                //                       actions: [
+                                //                         TextButton(
+                                //                           onPressed: () =>
+                                //                               Navigator.of(
+                                //                                       context)
+                                //                                   .pop(),
+                                //                           child:
+                                //                               const Text('OK'),
+                                //                         ),
+                                //                       ]));
+                                //         },
+                                //       ):
+                                  IconButton(
+                                    icon: const CircleAvatar(
+                                        radius: 42,
+                                        backgroundColor:
+                                            ColorsUtil.accentColorDark,
+                                        child: CircleAvatar(
+                                          radius: 40,
+                                          backgroundImage: AssetImage(
+                                              'lib/assets/images/profile.png'),
+                                        )),
+                                    // onPressed: selectImage,
 
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                      content: CircleAvatar(
-                                                        radius: 30,
-                                                        backgroundImage:
-                                                            MemoryImage(
-                                                                _image!),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () =>
-                                                              Navigator.of(
-                                                                      context)
-                                                                  .pop(),
-                                                          child:
-                                                              const Text('OK'),
-                                                        ),
-                                                      ]));
-                                        },
-                                      )
-                                    : IconButton(
-                                        icon: const CircleAvatar(
-                                            radius: 42,
-                                            backgroundColor:
-                                                ColorsUtil.accentColorDark,
-                                            child: CircleAvatar(
-                                              radius: 40,
-                                              backgroundImage: AssetImage(
-                                                  'lib/assets/images/profile.png'),
-                                            )),
-                                        // onPressed: selectImage,
-
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) => const AlertDialog(
-                                                content:
-                                                    CircleAvatar(
-                                                        radius: 140,
-                                                        backgroundColor:
-                                                            ColorsUtil
-                                                                .accentColorDark,
-                                                        child:
-                                                            CircleAvatar(
-                                                          radius: 138,
-                                                          backgroundImage:
-                                                              AssetImage(
-                                                                  'lib/assets/images/profile.png'),
-                                                        )),
-                                                        ));
-                                        },
-                                      ),
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => const AlertDialog(
+                                            content:
+                                                CircleAvatar(
+                                                    radius: 140,
+                                                    backgroundColor:
+                                                        ColorsUtil
+                                                            .accentColorDark,
+                                                    child:
+                                                        CircleAvatar(
+                                                      radius: 138,
+                                                      backgroundImage:
+                                                          AssetImage(
+                                                              'lib/assets/images/profile.png'),
+                                                    )),
+                                                    ));
+                                    },
+                                  ),
                                 const SizedBox(width: 10),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,12 +289,6 @@ class _ProfileViewState extends State<ProfileView> {
                                     ),
                                   ],
                                 ),
-                                // const Divider(
-                                //   height: 2,
-                                //   color: ColorsUtil.secondaryColorDark,
-                                //   indent: 12,
-                                //   endIndent: 12,
-                                // ),
                               ]),
                         ),
                         Container(
@@ -300,17 +298,11 @@ class _ProfileViewState extends State<ProfileView> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 30),
                           decoration: BoxDecoration(
-                              // border: Border.all(
-                              //   color: ColorsUtil.secondaryColorDark,
-                              //   width: 3,
-                              // ),
                               color: const Color.fromARGB(255, 49, 59, 21),
                               borderRadius: BorderRadius.circular(10)),
                           child: const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // SizedBox(width: 30),
-
                                 Text('Milestones',
                                     style: TextStyle(
                                         fontSize: 24,
@@ -341,9 +333,6 @@ class _ProfileViewState extends State<ProfileView> {
                                                 color: ColorsUtil
                                                     .primaryColorDark)),
                                         Row(
-                                            // crossAxisAlignment: CrossAxisAlignment.end,
-                                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-
                                             children: [
                                               Text(' ',
                                                   style: TextStyle(
@@ -375,35 +364,6 @@ class _ProfileViewState extends State<ProfileView> {
                   }
                 }))
 
-        // bottomNavigationBar: BottomNavigationBar(
-        //   type: BottomNavigationBarType.fixed,
-
-        //   currentIndex: _currentIndex,
-        //   onTap: (index) {
-        //     setState(() {
-        //       _currentIndex = index;
-        //     });
-        //   },
-
-        //   items: const [
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.home),
-        //       label: 'Home',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.map),
-        //       label: 'Navigation',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.people),
-        //       label: 'Community',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.person),
-        //       label: 'Profile',
-        //     ),
-        //   ],
-        // ),
         );
   }
 }
