@@ -48,7 +48,7 @@ class AuthController {
         isVerified(await apiCall.client.get('${url}api/user'), context);
         if (!context.mounted) return;
         // context.goNamed('/home');
-        navigationService.navigateToNavbar(context);
+        navigationService.navigateToHome(context);
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 302) {

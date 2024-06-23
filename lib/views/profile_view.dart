@@ -3,17 +3,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-// import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tembeakenya/assets/user_detail.dart';
-import 'package:tembeakenya/constants/routes.dart';
 
-// pickImage(ImageSource source) async {
-//   final ImagePicker imagePicker = ImagePicker();
-//   XFile? file = await imagePicker.pickImage(source: source);
-//   if (file != null) {
-//     return await file.readAsBytes();
-//   }
-// }
+pickImage(ImageSource source) async {
+  final ImagePicker imagePicker = ImagePicker();
+  XFile? file = await imagePicker.pickImage(source: source);
+  if (file != null) {
+    return await file.readAsBytes();
+  }
+}
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -51,7 +50,6 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(57, 22, 26, 15),
@@ -65,12 +63,12 @@ class _ProfileViewState extends State<ProfileView> {
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Edit Profile'),
-              onTap: () => navigationService.navigateToEditProfile(context),
+              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>false),
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Change Password'),
-              onTap: () => navigationService.navigateToEditProfile(context),
+              onTap: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>false),
             ),
             ListTile(
               leading: const Icon(Icons.logout),

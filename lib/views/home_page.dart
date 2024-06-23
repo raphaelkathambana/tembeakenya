@@ -49,7 +49,7 @@ class _HomeViewState extends State<HomeView> {
                   onPressed: _isLoading ? null : _handleLogout,
                 )),
             ElevatedButton(
-                onPressed: () => context.go('/test-view'),
+                onPressed: () => context.push('/test-view'),
                 style: const MainPage().raisedButtonStyle,
                 child: const Text('ViewTest')),
           ]),

@@ -114,8 +114,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
       await Future.delayed(const Duration(seconds: 1));
       // Navigate to the home page or perform other actions
       if (!mounted) return;
-      // context.go('/home');
-      navigationService.navigateToNavbar(context);
+      context.go('/home');
     } on DioException catch (e) {
       setState(() {
         _verificationMessage = 'Verification failed: ${e.response?.data}';
