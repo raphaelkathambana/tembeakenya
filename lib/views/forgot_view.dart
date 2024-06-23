@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/controllers/auth_controller.dart';
+import '../../assets/colors.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -12,10 +12,12 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   late final TextEditingController _email;
+  late NavigationService navigationService;
 
   @override
   void initState() {
     _email = TextEditingController();
+    navigationService = NavigationService(router);
     super.initState();
   }
 
@@ -53,7 +55,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   autocorrect: false,
                   keyboardType: TextInputType.emailAddress,
                   decoration: const InputDecoration(
-                    hintText: 'Enter your email here',
+                    labelText: 'Enter your email here',
                   ),
                 ),
               ],
@@ -65,43 +67,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         TextButton(
           onPressed: () async {
             final email = _email.text;
-
-            try {
-              await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-            } on FirebaseAuthException catch (e) {
-              if (e.code == 'invalid-email') {
-                if (!context.mounted) return;
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                            title: const Text('Invalid Email'),
-                            content:
-                                const Text('Please write your email properly'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ]));
-              } else if (e.code == 'invalid-credential') {
-                if (!context.mounted) return;
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                            title: const Text('Email does not exist.'),
-                            content: const Text('Please try again.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('OK'),
-                              ),
-                            ]));
-              }
-            }
+            AuthController(navigationService)
+                .sendForgotPasswordLink(email, context);
           },
           child: const Text('Submit'),
         ),

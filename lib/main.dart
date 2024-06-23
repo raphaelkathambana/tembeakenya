@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/assets/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/views/home_page.dart';
+// import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 

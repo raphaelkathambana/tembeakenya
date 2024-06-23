@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tembeakenya/assets/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/login_view.dart';
+import 'package:tembeakenya/views/profile_edit_view.dart';
+import 'package:tembeakenya/views/profile_view.dart';
 import 'package:tembeakenya/views/register_view.dart';
 import 'package:tembeakenya/views/reset_password_view.dart';
 import 'package:tembeakenya/views/verify_view.dart';
@@ -40,6 +43,21 @@ final GoRouter router = GoRouter(
       name: '/email-verify',
       pageBuilder: (context, state) => const MaterialPage(
           child: VerifyEmailView(id: '', params: null, token: '')),
+    ),
+    GoRoute(
+      path: '/navbar',
+      name: '/navbar',
+      pageBuilder: (context, state) => const MaterialPage(child: LayoutView()),
+    ),
+        GoRoute(
+      path: '/profile',
+      name: '/profile',
+      pageBuilder: (context, state) => const MaterialPage(child: ProfileView()),
+    ),
+        GoRoute(
+      path: '/edit-profile',
+      name: '/edit-profile',
+      pageBuilder: (context, state) => const MaterialPage(child: ProfileEditView()),
     ),
     GoRoute(
       path: '${apiVersion1Uri}email/verify/:userId/:token',
@@ -139,5 +157,14 @@ class NavigationService {
   void navigateToResetPassword(
       BuildContext context, String token, String email) {
     _router.go('/reset-password/$token?email=$email');
+  }
+  void navigateToProfile(BuildContext context) {
+    _router.go('/profile');
+  }
+    void navigateToEditProfile(BuildContext context) {
+    _router.go('/edit-profile');
+  }
+    void navigateToNavbar(BuildContext context) {
+    _router.go('/navbar');
   }
 }
