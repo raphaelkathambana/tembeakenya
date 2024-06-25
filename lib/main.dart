@@ -1,17 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp.router(
       title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       darkTheme: darkThemeData,
       theme: lightThemeData,
       debugShowCheckedModeBanner: false,
@@ -65,7 +67,7 @@ class MainPage extends StatelessWidget {
         } else {
           if (snapshot.data?['isAuthenticated'] == true) {
             if (snapshot.data?['isVerified'] == true) {
-              return const HomeView();
+              return const LayoutView();
             } else {
               return const VerifyEmailView(id: '', params: null, token: '');
             }

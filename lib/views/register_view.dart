@@ -1,3 +1,4 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
@@ -162,3 +163,12 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 }
+                            // // *********** FOR AUTHENTICATION *********** //
+                            //     await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+                            // // ************* FOR FIRESTORE ************** //
+                            //     await FirebaseFirestore.instance.collection("Users").doc(FirebaseAuth.instance.currentUser!.uid).set({
+                            //       "fname": _fname.text,
+                            //       "lname": _lname.text,
+                            //       "username": _username.text,
+                            //       "email": _email.text
+                            //     });

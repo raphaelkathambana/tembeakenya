@@ -27,6 +27,7 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: ColorsUtil.backgroundColorDark,
         title: const Text('Home Page',
             style: TextStyle(
               color: ColorsUtil.primaryColorLight,
@@ -48,7 +49,7 @@ class _HomeViewState extends State<HomeView> {
                   onPressed: _isLoading ? null : _handleLogout,
                 )),
             ElevatedButton(
-                onPressed: () => context.push('/test-view'),
+                onPressed: () => context.go('/test-view'),
                 style: const MainPage().raisedButtonStyle,
                 child: const Text('ViewTest')),
           ]),

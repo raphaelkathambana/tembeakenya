@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import '../../assets/colors.dart';
 import 'package:tembeakenya/main.dart';
+import '../../assets/colors.dart';
+// import 'package:tembeakenya/assets/nav_bar.dart';
+// import 'package:tembeakenya/main.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
