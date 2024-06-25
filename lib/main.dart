@@ -1,28 +1,19 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:tembeakenya/assets/nav_bar.dart';
+import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import '../assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-// import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
-// final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
-//   backgroundColor: ColorsUtil.secondaryColorLight,
-//   foregroundColor: ColorsUtil.textColorLight,
-//   minimumSize: const Size(279, 59),
-//   padding: const EdgeInsets.symmetric(horizontal: 16),
-//   shape: const RoundedRectangleBorder(
-//     borderRadius: BorderRadius.all(Radius.circular(10)),
-//   ),
-// );
-
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp.router(
       title: 'Flutter Demo',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       darkTheme: darkThemeData,
       theme: lightThemeData,
       debugShowCheckedModeBanner: false,

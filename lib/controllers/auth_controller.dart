@@ -58,7 +58,7 @@ class AuthController {
         if (!context.mounted) return;
         if (user.statusCode == 200) {
           navigationService
-              .navigateToHome(context); // context.goNamed('/home');
+              .navigateToNavbar(context); // context.goNamed('/home');
         }
       } else {
         if (!context.mounted) return;

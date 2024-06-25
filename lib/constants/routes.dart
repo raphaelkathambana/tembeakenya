@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tembeakenya/assets/nav_bar.dart';
+import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
