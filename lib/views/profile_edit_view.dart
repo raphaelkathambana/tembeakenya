@@ -1,27 +1,33 @@
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_storage.dart';
+import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/model/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {
-  const ProfileEditView({super.key});
+  final currentUser;
+  const ProfileEditView({super.key, required this.currentUser});
 
   @override
   State<ProfileEditView> createState() => _ProfileEditViewState();
 }
 
 class _ProfileEditViewState extends State<ProfileEditView> {
-
   Uint8List? pickedImage;
   late String displayUrl;
-  
+  User? user;
+  late final TextEditingController _firstname;
+  late final TextEditingController _username;
+  late final TextEditingController _lastname;
+  late final TextEditingController _email;
+  String newUserName = '';
+  String newEmail = '';
+  String newUsername = '';
+
   String profileImageID = "defaultProfilePic";
-  List<String> name = ['Beth', 'Tes'];
-  String username = '@JustMeHopeless';
-  String email = 'bethelhemtesfaye95@gmail.com';
 
   @override
   void initState() {
@@ -31,6 +37,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         displayUrl = result;
       });
     });
+    _firstname = TextEditingController();
+    _username = TextEditingController();
+    _lastname = TextEditingController();
+    _email = TextEditingController();
     super.initState();
   }
 
@@ -41,10 +51,19 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     });
   }
 
-
+  @override
+  void dispose() {
+    _firstname.dispose();
+    _username.dispose();
+    _lastname.dispose();
+    _email.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    user = widget.currentUser;
+    newUserName = user!.fullName;
     NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
@@ -60,14 +79,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             if (pickedImage != null)
               Stack(children: [
                 IconButton(
-                    icon: CircleAvatar(
-                        radius: 62,
-                        backgroundColor: ColorsUtil.accentColorDark,
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: MemoryImage(pickedImage!),
-                        )),
-                    onPressed: pick,
+                  icon: CircleAvatar(
+                      radius: 62,
+                      backgroundColor: ColorsUtil.accentColorDark,
+                      child: CircleAvatar(
+                        radius: 60,
+                        backgroundImage: MemoryImage(pickedImage!),
+                      )),
+                  onPressed: pick,
                 ),
                 const Positioned(
                   bottom: 10,
@@ -77,20 +96,18 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               ])
             else
               Stack(children: [
-                if (displayUrl.isEmpty) 
+                if (displayUrl.isEmpty)
                   const CircleAvatar(
-                    radius: 70,
-                    backgroundColor: Color(0x00000000),
-                    child: 
-                    CircleAvatar(
-                    radius: 62,
-                    backgroundColor: ColorsUtil.accentColorDark,
-                    child: CircleAvatar(
-                      radius: 60,
-                      child: CircularProgressIndicator(),
-                    )
-                  ))                  
-                  else
+                      radius: 70,
+                      backgroundColor: Color(0x00000000),
+                      child: CircleAvatar(
+                          radius: 62,
+                          backgroundColor: ColorsUtil.accentColorDark,
+                          child: CircleAvatar(
+                            radius: 60,
+                            child: CircularProgressIndicator(),
+                          )))
+                else
                   IconButton(
                     icon: CircleAvatar(
                         radius: 62,
@@ -107,7 +124,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   child: Icon(Icons.add_a_photo),
                 ),
               ]),
-            
             const Divider(
               height: 25,
               color: ColorsUtil.secondaryColorDark,
@@ -159,37 +175,42 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 TextField(
+                                                  controller: _firstname,
                                                   decoration:
                                                       const InputDecoration(
                                                     labelText:
                                                         "Enter your First Name",
                                                   ),
                                                   onChanged: (value) {
-                                                    name[0] = value;
+                                                    user?.firstName = value;
                                                   },
                                                 ),
                                                 TextField(
+                                                  controller: _lastname,
                                                   decoration:
                                                       const InputDecoration(
                                                     labelText:
                                                         "Enter your Last Name",
                                                   ),
                                                   onChanged: (value) {
-                                                    name[1] = value;
+                                                    user?.lastName = value;
                                                   },
                                                 ),
                                               ],
                                             )),
                                         actions: [
                                           TextButton(
-                                            child: const Text('Cancle'),
+                                            child: const Text('Cancel'),
                                             onPressed: () =>
                                                 Navigator.pop(context),
                                           ),
                                           TextButton(
                                             child: const Text('Save'),
-                                            onPressed: () =>
-                                                context.push('/edit-profile'),
+                                            onPressed: () {
+                                              newUserName =
+                                                  '$_firstname.text $_lastname.text';
+                                              Navigator.pop(context);
+                                            },
                                             // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>route.isFirst),
                                           ),
                                         ],
@@ -230,7 +251,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     //     style: const TextStyle(
                     //         fontSize: 18,
                     //         color: ColorsUtil.textColorDark)),
-                    Text("${name[0]} ${name[1]}",
+                    // todo: text should change after button press
+                    Text('${_firstname.text} ${_lastname.text}',
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
@@ -259,23 +281,27 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                   builder: (context) => AlertDialog(
                                         title: const Text("Edit Username"),
                                         content: TextField(
+                                          controller: _username,
                                           decoration: const InputDecoration(
                                             labelText: "Enter your Username",
                                           ),
                                           onChanged: (value) {
-                                            username = value;
+                                            user?.username = value;
+                                            newUsername = value;
                                           },
                                         ),
                                         actions: [
                                           TextButton(
-                                            child: const Text('Cancle'),
+                                            child: const Text('Cancel'),
                                             onPressed: () =>
                                                 Navigator.pop(context),
                                           ),
                                           TextButton(
                                               child: const Text('Save'),
-                                              onPressed: () => context
-                                                  .push('/edit-profile')),
+                                              onPressed: () {
+                                                newUsername = _username.text;
+                                                Navigator.pop(context);
+                                              }),
                                         ],
                                       ));
                               // if (username.trim().isNotEmpty) {
@@ -297,19 +323,100 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     //     style: const TextStyle(
                     //         fontSize: 18,
                     //         color: ColorsUtil.textColorDark)),
-                    Text(username,
+                    Text('${user?.username}',
+                        style: const TextStyle(
+                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                  ])),
+          Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 0, bottom: 10),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 49, 59, 21),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Email',
+                            style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsUtil.primaryColorDark)),
+                        IconButton(
+                            onPressed: () async {
+                              await showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        title: const Text("Edit Email"),
+                                        content: TextField(
+                                          controller: _email,
+                                          decoration: const InputDecoration(
+                                            labelText: "Enter your Email",
+                                          ),
+                                          onChanged: (value) {
+                                            user?.email = value;
+                                            newEmail = value;
+                                          },
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            child: const Text('Cancel'),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                          ),
+                                          TextButton(
+                                              child: const Text('Save'),
+                                              onPressed: () {
+                                                newEmail = _email.text;
+                                                Navigator.pop(context);
+                                              }),
+                                        ],
+                                      ));
+                              // if (username.trim().isNotEmpty) {
+                              //   await FirebaseFirestore.instance
+                              //       .collection("Users")
+                              //       .doc(currentUser.uid)
+                              //       .update({
+                              //     "username": username,
+                              //   });
+                              // }
+                            },
+                            icon: const Icon(
+                              Icons.edit,
+                              color: ColorsUtil.primaryColorDark,
+                            )),
+                      ],
+                    ),
+                    // Text(userData.username,
+                    //     style: const TextStyle(
+                    //         fontSize: 18,
+                    //         color: ColorsUtil.textColorDark)),
+                    Text('${user?.email}',
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
           ElevatedButton(
-              // onPressed: () => navigationService.navigateToProfile(context),
-              onPressed: () {
-                if (pickedImage != null) {
-                  uploadPic(pickedImage!, username);
-                }
-                navigationService.navigateToNavbar(context);
-              },
-              child: const Text('Save'))
+            // onPressed: () => navigationService.navigateToProfile(context),
+            onPressed: () {
+              if (pickedImage != null) {
+                uploadPic(pickedImage!, user?.username);
+              }
+              final firstname = _firstname.text.isNotEmpty
+                  ? _firstname.text
+                  : user!.firstName;
+              final lastname =
+                  _lastname.text.isNotEmpty ? _lastname.text : user!.lastName;
+              final username =
+                  _username.text.isNotEmpty ? _username.text : user!.username;
+              final email = _email.text.isNotEmpty ? _email.text : user!.email;
+              AuthController(navigationService).updateProfileInformation(
+                  username!, email!, firstname!, lastname!, context);
+            },
+            child: const Text('Update'),
+          )
         ])
             //     } else {
             //       return const Center(

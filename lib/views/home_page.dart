@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/main.dart';
+// import 'package:tembeakenya/model/user_model.dart';
 import '../../assets/colors.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final user;
+  const HomeView({super.key, required this.user});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -39,7 +41,7 @@ class _HomeViewState extends State<HomeView> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(children: [
-            const Text('Welcome'),
+            Text('Welcome ${widget.user.fullName}'),
             Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: IconButton(

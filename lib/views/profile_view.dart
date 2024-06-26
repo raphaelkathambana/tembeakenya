@@ -1,12 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_storage.dart';
+import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/model/user_model.dart';
 
 class ProfileView extends StatefulWidget {
-  const ProfileView({super.key});
+  final currentUser;
+  const ProfileView({super.key, required this.currentUser, required user});
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
@@ -14,13 +15,9 @@ class ProfileView extends StatefulWidget {
 
 class _ProfileViewState extends State<ProfileView> {
   late String displayUrl;
-
-  // ****ALL DATA HERE SHALL BE RETRIEVED FROM THE DB ***** //
-
-  String firstName = "Bethelhem";
-  String lastName = "Tesfaye";
-  String username = "@JustMeHopeless";
-  String email = "BethelhemTesfaye95@gmail.com";
+  User? user;
+  late NavigationService navigationService;
+  bool _isLoading = false;
   /*
      In the database, when creating a new user, the user shall have 
      "defaultProfilePic" as the imageID, then when a user chooses 
@@ -28,7 +25,7 @@ class _ProfileViewState extends State<ProfileView> {
 
      This new name will consists of the format "${username}ProfilePic"
 
-     But since we dont have a database that can update the name, 
+     But since we don't have a database that can update the name, 
      this code will only save images as "defaultProfilePic" 
      despite the changes made
     */
@@ -37,8 +34,8 @@ class _ProfileViewState extends State<ProfileView> {
   // ****************************************************** //
   @override
   void initState() {
+    navigationService = NavigationService(router);
     displayUrl = '';
-
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -51,6 +48,7 @@ class _ProfileViewState extends State<ProfileView> {
   Widget build(
     BuildContext context,
   ) {
+    user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 
     NavigationService navigationService = NavigationService(router);
@@ -67,28 +65,25 @@ class _ProfileViewState extends State<ProfileView> {
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Edit Profile'),
-              onTap: () => navigationService.navigateToEditProfile(context),
+              onTap: () =>
+                  navigationService.navigatePushToEditProfile(context, user),
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Change Password'),
-              onTap: () => navigationService.navigateToEditProfile(context),
+              onTap: () =>
+                  // todo implement change password page
+                  navigationService.navigateToEditProfile(context, user),
             ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Sign Out'),
-              onTap: () async {
-                await FirebaseAuth.instance.signOut();
-                if (!context.mounted) return;
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/welcome/', (route) => false);
-              },
+              onTap: _isLoading ? null : _handleLogout,
             ),
           ]),
         ),
         body: SingleChildScrollView(
             child: Column(children: [
-          
           Card(
             color: const Color.fromARGB(55, 99, 126, 32),
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -100,24 +95,19 @@ class _ProfileViewState extends State<ProfileView> {
                 endIndent: 12,
               ),
               Row(
-                
                 children: [
                   const SizedBox(width: 10),
-                  
-                  
-                  if (displayUrl.isEmpty) 
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Color(0x00000000),
-                    child: 
-                    CircleAvatar(
-                    radius: 42,
-                    backgroundColor: ColorsUtil.accentColorDark,
-                    child: CircleAvatar(
-                      radius: 40,
-                      child: CircularProgressIndicator(),
-                    )
-                  ))                  
+                  if (displayUrl.isEmpty)
+                    const CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Color(0x00000000),
+                        child: CircleAvatar(
+                            radius: 42,
+                            backgroundColor: ColorsUtil.accentColorDark,
+                            child: CircleAvatar(
+                              radius: 40,
+                              child: CircularProgressIndicator(),
+                            )))
                   else
                     IconButton(
                       icon: CircleAvatar(
@@ -144,21 +134,26 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                   const SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("$firstName $lastName",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: ColorsUtil.textColorDark)),
-
-                      Text(username,
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal,
-                              color: ColorsUtil.secondaryColorDark)),
-                    ],
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * .55,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width * 0.85,
+                          child: Text(user!.fullName,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.textColorDark)),
+                        ),
+                        Text(user!.username.toString(),
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.secondaryColorDark)),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -192,7 +187,7 @@ class _ProfileViewState extends State<ProfileView> {
                                 color: ColorsUtil.primaryColorDark)),
                       ],
                     ),
-                    Text(email,
+                    Text(user!.email.toString(),
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
@@ -300,7 +295,31 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ]),
           ),
-        ])
-            ));
+        ])));
+  }
+
+  Future<void> _handleLogout() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    bool isLoggedOut = await AuthController(navigationService).logout();
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (!mounted) return;
+    if (isLoggedOut) {
+      // Navigate to the login or welcome screen
+      if (!mounted) return;
+      // context.go('/login');
+      navigationService.navigateToLogin(context);
+    } else {
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Logout failed')),
+      );
+    }
   }
 }

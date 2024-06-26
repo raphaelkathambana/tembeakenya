@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
+import 'package:tembeakenya/model/user_model.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/login_view.dart';
@@ -41,23 +42,26 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/verify',
       name: '/email-verify',
-      pageBuilder: (context, state) => const MaterialPage(
-          child: VerifyEmailView(id: '', params: null, token: '')),
+      pageBuilder: (context, state) => MaterialPage(
+          child: VerifyEmailView(
+              user: state.extra as User, id: '', params: null, token: '')),
     ),
     GoRoute(
-      path: '/navbar',
-      name: '/navbar',
-      pageBuilder: (context, state) => const MaterialPage(child: LayoutView()),
-    ),
-        GoRoute(
       path: '/profile',
       name: '/profile',
-      pageBuilder: (context, state) => const MaterialPage(child: ProfileView()),
+      pageBuilder: (context, state) => MaterialPage(
+          child: ProfileView(
+        user: state.extra as User,
+        currentUser: state.extra as User,
+      )),
     ),
-        GoRoute(
+    GoRoute(
       path: '/edit-profile',
       name: '/edit-profile',
-      pageBuilder: (context, state) => const MaterialPage(child: ProfileEditView()),
+      pageBuilder: (context, state) => MaterialPage(
+          child: ProfileEditView(
+        currentUser: state.extra as User,
+      )),
     ),
     GoRoute(
       path: '${apiVersion1Uri}email/verify/:userId/:token',
@@ -66,6 +70,7 @@ final GoRouter router = GoRouter(
         final token = state.pathParameters['token']!;
         final queryParams = state.uri.queryParameters;
         return VerifyEmailView(
+          user: null,
           id: userId,
           token: token,
           params: queryParams,
@@ -90,12 +95,24 @@ final GoRouter router = GoRouter(
           const MaterialPage(child: ForgotPasswordView()),
     ),
     GoRoute(
+      path: '/navbar',
+      name: '/navbar',
+      pageBuilder: (context, state) => MaterialPage(
+          child: LayoutView(
+        user: state.extra as User,
+      )),
+    ),
+    GoRoute(
         name: '/home',
         path: '/home',
-        builder: (context, state) => const HomeView()),
+        builder: (context, state) => HomeView(
+              user: state.extra as User,
+            )),
     GoRoute(
       path: '/verify-email-success',
-      builder: (context, state) => const HomeView(),
+      builder: (context, state) => HomeView(
+        user: state.extra as User,
+      ),
     ),
   ],
   redirect: (BuildContext context, GoRouterState state) {
@@ -134,12 +151,16 @@ class NavigationService {
 
   NavigationService(this._router);
 
-  void navigateToHome(BuildContext context) {
-    _router.go('/home');
+  void navigateToHome(BuildContext context, User user) {
+    _router.go('/home', extra: user);
   }
 
-  void navigateToEmailVerify(BuildContext context) {
-    _router.goNamed('/email-verify');
+  void navigateToProfile(BuildContext context, User user) {
+    _router.go('/profile', extra: user);
+  }
+
+  void navigateToEmailVerify(BuildContext context, User user) {
+    _router.goNamed('/email-verify', extra: user);
   }
 
   void navigateToLogin(BuildContext context) {
@@ -158,13 +179,16 @@ class NavigationService {
       BuildContext context, String token, String email) {
     _router.go('/reset-password/$token?email=$email');
   }
-  void navigateToProfile(BuildContext context) {
-    _router.go('/profile');
+
+  void navigateToEditProfile(BuildContext context, User? user) {
+    _router.go('/edit-profile', extra: user);
   }
-    void navigateToEditProfile(BuildContext context) {
-    _router.go('/edit-profile');
+
+  navigatePushToEditProfile(BuildContext context, User? user) {
+    _router.push('/edit-profile', extra: user);
   }
-    void navigateToNavbar(BuildContext context) {
-    _router.go('/navbar');
+
+  void navigateToNavbar(BuildContext context, User user) {
+    _router.go('/navbar', extra: user);
   }
 }
