@@ -7,12 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/model/user_model.dart';
 
 /// The controller class responsible for handling authentication logic.
-class AuthController {
+class AuthController with ChangeNotifier {
   final APICall apiCall = APICall();
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   NavigationService navigationService = NavigationService(router);
+  User? user;
+
+  // User? get user => _user;
+
+  set setUser(User? value) {
+    user = value;
+  }
 
   AuthController(this.navigationService);
 
@@ -44,27 +52,42 @@ class AuthController {
         final token = response.data['token'];
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
+        var getUserData = await apiCall.client.get('${url}api/user');
+        final userData = getUserData.data;
+        // Load the user data into the user model
+        final user = User.fromJson(userData);
         if (!context.mounted) return;
-        isVerified(await apiCall.client.get('${url}api/user'), context);
-        if (!context.mounted) return;
+        await isVerified(user, context);
+        // if (!context.mounted) return;
         // context.goNamed('/home');
-        navigationService.navigateToNavbar(context);
+        // navigationService.navigateToHome(context);
       }
     } on DioException catch (e) {
       if (e.response?.statusCode == 302) {
         debugPrint(
             "User Might be Logged in, Attempting to get User information");
-        final user = await apiCall.client.get('${url}api/user');
+        final userData = await apiCall.client.get('${url}api/user');
         if (!context.mounted) return;
-        if (user.statusCode == 200) {
-          navigationService
-              .navigateToNavbar(context); // context.goNamed('/home');
+        if (userData.statusCode == 200) {
+          // Load the user data into the user model
+          final user = User.fromJson(userData.data);
+          notifyListeners();
+          if (!context.mounted) return;
+          await isVerified(user, context);
         }
       } else {
         if (!context.mounted) return;
-        debugPrint('Error Occurred: Getting Message');
-        debugPrint(e.response?.data.toString());
-        alertErrorHandler(context, e.response?.data);
+        // check if there's Internet connectivity
+        if (await checkInternetConnection()) {
+          if (!context.mounted) return;
+          showNoInternetSnackbar(context);
+        } else {
+          debugPrint('Error Occurred: Getting Message');
+          debugPrint(e.response?.data.toString());
+          if (!context.mounted) return;
+          alertErrorHandler(
+              context, e.response?.data ?? <String, dynamic>{'message': ''});
+        }
       }
     }
   }
@@ -90,8 +113,8 @@ class AuthController {
     try {
       final response = await apiCall.client.post('${url}api/v1/register',
           data: jsonEncode({
-            'firstname': firstname,
-            'lastname': lastname,
+            'firstName': firstname,
+            'lastName': lastname,
             'email': email,
             'password': password,
             'password_confirmation': passwordConfirm
@@ -107,7 +130,8 @@ class AuthController {
         final userResponse = await apiCall.client.get('${url}api/user');
         if (userResponse.statusCode == 200) {
           debugPrint('User Data Retrieved Successfully');
-          final user = userResponse.data;
+          final user = User.fromJson(userResponse.data);
+          notifyListeners();
           debugPrint(user.toString());
           debugPrint('attempting to assign a new user a token');
           final deviceName = await _getDeviceName();
@@ -126,7 +150,7 @@ class AuthController {
           debugPrint('Auth Token Saved');
           if (!context.mounted) return;
           // context.goNamed('/email-verify');
-          navigationService.navigateToEmailVerify(context);
+          navigationService.navigateToEmailVerify(context, user);
         } else {
           debugPrint('Failed to get User Data');
           debugPrint(userResponse.data.toString());
@@ -135,7 +159,7 @@ class AuthController {
         }
         if (!context.mounted) return;
         // context.goNamed('/email-verify');
-        navigationService.navigateToEmailVerify(context);
+        navigationService.navigateToEmailVerify(context, user!);
       }
     } on DioException catch (e) {
       debugPrint('Error Occurred: Getting Message');
@@ -180,33 +204,43 @@ class AuthController {
   /// The error message is extracted using the [getMainErrorMessage] function.
   /// The dialog shows the error message without the surrounding square brackets.
   /// Returns a [Future] that completes when the dialog is dismissed.
-  Future<dynamic> alertErrorHandler(BuildContext context, dynamic message) {
+  Future<dynamic>? alertErrorHandler(BuildContext context, dynamic message) {
     debugPrint("Extracting Errors");
-    var error = message is String ? message : getMainErrorMessage(message);
-    return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(error.toString().split('[').last.split(']').first),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    if (message == null) {
+      return null;
+    } else {
+      var error = message is String ? message : getMainErrorMessage(message);
+      return showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(error.toString().split('[').last.split(']').first),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
-  Future<void> isVerified(Response response, BuildContext context) async {
+  Future<void> isVerified(User user, BuildContext context) async {
+    debugPrint(user.toJson().toString());
     //check if the response has an email verified field and if it has a value
-    if (response.data['email_verified_at'] == null) {
-      //if the email_verified_at field is null, then the user has not verified their email
+    if (!user.isVerified) {
+      //if false, then the user has not verified their email
       //navigate to the verify page
       if (!context.mounted) return;
-      navigationService.navigateToEmailVerify(context);
+      navigationService.navigateToEmailVerify(context, user);
+    } else {
+      //if true, then the user has verified their email
+      //navigate to the home page
+      if (!context.mounted) return;
+      navigationService.navigateToNavbar(context, user);
     }
   }
 
@@ -340,19 +374,26 @@ class AuthController {
   /// Returns a map with the following keys:
   /// - 'isAuthenticated': A boolean indicating if the user is authenticated.
   /// - 'isVerified': A boolean indicating if the user's email is verified.
-  Future<Map<String, bool>> isAuthenticated() async {
+  /// - 'user': A User object.
+  Future<Map<String, dynamic>> isAuthenticated() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     if (token != null) {
       debugPrint('Hmm, Let us see how this goes...');
+      await getCsrfToken();
       final response = await apiCall.client.get('${url}api/user');
       debugPrint(response.statusCode.toString());
       debugPrint('We got a User :)');
       if (response.statusCode == 200) {
         debugPrint('Should return true, true');
+        final userData = response.data;
+        // Load the user data into the user model
+        final user = User.fromJson(userData);
+        notifyListeners();
         return {
           'isAuthenticated': true,
           'isVerified': response.data['email_verified_at'] != null,
+          'user': user,
         };
         // final userData = json.decode(response.data);
       } else {
@@ -360,6 +401,7 @@ class AuthController {
         return {
           'isVerified': response.data['email_verified_at'] != null,
           'isAuthenticated': false,
+          'user': user
         };
       }
     } else {
@@ -370,6 +412,7 @@ class AuthController {
       return {
         'isVerified': userData['email_verified_at'] != null,
         'isAuthenticated': false,
+        'user': user
       };
     }
   }
@@ -406,10 +449,90 @@ class AuthController {
         );
         await Future.delayed(const Duration(seconds: 1));
         if (!context.mounted) return;
-        // context.go('/login');
         navigationService.navigateToLogin(context);
       }
     } on DioException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.response?.data}'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updatePassword(String currentPassword, String newPassword,
+      String newPasswordConfirmation, BuildContext context) async {
+    String token = await getCsrfToken();
+    try {
+      final response = await apiCall.client.put(
+        '${url}api/v1/user/password',
+        data: jsonEncode({
+          'current_password': currentPassword,
+          'password': newPassword,
+          'password_confirmation': newPasswordConfirmation,
+        }),
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'X-XSRF-TOKEN': token,
+        }),
+      );
+      if (response.statusCode == 200) {
+        debugPrint('Password updated successfully');
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Password has been Updated'),
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${e.response?.data}'),
+        ),
+      );
+    }
+  }
+
+  Future<void> updateProfileInformation(String username, String email,
+      String firstName, String lastName, BuildContext context) async {
+    debugPrint(firstName);
+    debugPrint(lastName);
+    debugPrint(email);
+    debugPrint(username);
+    String token = await getCsrfToken();
+    debugPrint(token);
+    try {
+      final response = await apiCall.client.put(
+        '${url}api/v1/user/profile-information',
+        data: jsonEncode({
+          'username': username,
+          'email': email,
+          'firstName': firstName,
+          'lastName': lastName,
+        }),
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'X-XSRF-TOKEN': token,
+        }),
+      );
+      if (response.statusCode == 200) {
+        debugPrint('Profile information updated successfully');
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile information has been updated'),
+          ),
+        );
+      }
+    } on DioException catch (e) {
+      debugPrint('Error Occurred: Getting Message');
+      debugPrint(e.response?.data.toString());
+      if (!context.mounted) return;
+      alertErrorHandler(
+          context, e.response?.data ?? <String, dynamic>{'message': ''});
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

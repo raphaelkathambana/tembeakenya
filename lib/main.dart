@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import '../assets/colors.dart';
-import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
 
@@ -12,8 +13,8 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(
     MaterialApp.router(
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.dark,
+      title: 'Tembea Kenya',
+      themeMode: ThemeMode.system,
       darkTheme: darkThemeData,
       theme: lightThemeData,
       debugShowCheckedModeBanner: false,
@@ -54,10 +55,10 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Map<String, bool>>(
+    return FutureBuilder<Map<String, dynamic>>(
       future: AuthController(NavigationService(router)).isAuthenticated(),
       builder:
-          (BuildContext context, AsyncSnapshot<Map<String, bool>> snapshot) {
+          (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
@@ -67,9 +68,15 @@ class MainPage extends StatelessWidget {
         } else {
           if (snapshot.data?['isAuthenticated'] == true) {
             if (snapshot.data?['isVerified'] == true) {
-              return const LayoutView();
+              return LayoutView(
+                user: snapshot.data?['user'],
+              );
             } else {
-              return const VerifyEmailView(id: '', params: null, token: '');
+              return VerifyEmailView(
+                  user: snapshot.data?['user'],
+                  id: '',
+                  params: null,
+                  token: '');
             }
           } else {
             return const WelcomeView();

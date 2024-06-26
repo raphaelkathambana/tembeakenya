@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/model/user_model.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
 
@@ -10,12 +11,14 @@ class VerifyEmailView extends StatefulWidget {
   final Map<String, String>? params;
   final String? id;
   final String? token;
+  final User? user;
 
   const VerifyEmailView({
     super.key,
     this.params,
     this.id,
     this.token,
+    this.user,
   });
 
   @override
@@ -31,8 +34,11 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   void initState() {
     navigationService = NavigationService(router);
     super.initState();
-    if (widget.id != null && widget.token != null && widget.params != null) {
-      _verifyEmail(widget.id!, widget.token!, widget.params!);
+    if (widget.id != null &&
+        widget.token != null &&
+        widget.params != null &&
+        widget.user != null) {
+      _verifyEmail(widget.id!, widget.token!, widget.params!, widget.user!);
     } else {
       _verificationMessage =
           'A Verification Link has been Sent to your Address. Please Click it to verify your account.';
@@ -92,7 +98,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     );
   }
 
-  Future<void> _verifyEmail(String id, String token, params) async {
+  Future<void> _verifyEmail(String id, String token, params, User? user) async {
     setState(() {
       _isLoading = true;
     });
@@ -112,10 +118,23 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
       // delay 1 second before continuing to home
       await Future.delayed(const Duration(seconds: 1));
-      // Navigate to the home page or perform other actions
-      if (!mounted) return;
+
+      // check if the user variable is present or null and pass it to the route
+      if (user != null) {
+        debugPrint('User should be loaded');
+        debugPrint(user.toJson().toString());
+        // Navigate to the home page or perform other actions
+        if (!mounted) return;
+        navigationService.navigateToNavbar(context, user);
+      } else {
+        debugPrint('User is null');
+        final userData = await APICall().client.get('${url}api/user');
+        user = User.fromJson(userData.data);
+        if (!mounted) return;
+        navigationService.navigateToNavbar(context, user);
+      }
       // context.go('/home');
-      navigationService.navigateToNavbar(context);
+      // navigationService.navigateToNavbar(context, user);
     } on DioException catch (e) {
       setState(() {
         _verificationMessage = 'Verification failed: ${e.response?.data}';

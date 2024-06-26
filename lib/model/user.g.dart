@@ -7,20 +7,20 @@ part of 'user_model.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-      firstname: json['firstname'] as String?,
-      lastname: json['lastname'] as String?,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
       username: json['username'] as String?,
       email: json['email'] as String?,
       password: json['password'] as String?,
       roleNo: json['roleNo'] as String?,
-      emailVerifiedAt: json['emailVerifiedAt'] == null
+      emailVerifiedAt: json['email_verified_at'] == null
           ? null
-          : DateTime.parse(json['emailVerifiedAt'] as String),
+          : DateTime.parse(json['email_verified_at'] as String),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
-      'firstname': instance.firstname,
-      'lastname': instance.lastname,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
       'username': instance.username,
       'email': instance.email,
       'password': instance.password,
