@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/constants/image_storage.dart';
+import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user_model.dart';
 
 class ProfileView extends StatefulWidget {
-  final currentUser;
+  final dynamic currentUser;
   const ProfileView({super.key, required this.currentUser, required user});
 
   @override
-  State<ProfileView> createState() => _ProfileViewState();
+  State<ProfileView> createState() => _CommunityViewState();
 }
 
-class _ProfileViewState extends State<ProfileView> {
+class _CommunityViewState extends State<ProfileView> {
   late String displayUrl;
   User? user;
   late NavigationService navigationService;
@@ -147,11 +147,11 @@ class _ProfileViewState extends State<ProfileView> {
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        Text(user!.username.toString(),
+                        Text('@${user!.username.toString()}',
                             style: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 15,
                                 fontWeight: FontWeight.normal,
-                                color: ColorsUtil.secondaryColorDark)),
+                                color: ColorsUtil.accentColorDark)),
                       ],
                     ),
                   ),

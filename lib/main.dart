@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/constants/nav_bar.dart';
+import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
@@ -14,7 +14,7 @@ Future<void> main() async {
   runApp(
     MaterialApp.router(
       title: 'Tembea Kenya',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode.dark,
       darkTheme: darkThemeData,
       theme: lightThemeData,
       debugShowCheckedModeBanner: false,

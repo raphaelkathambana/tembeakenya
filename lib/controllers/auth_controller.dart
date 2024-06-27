@@ -94,7 +94,7 @@ class AuthController with ChangeNotifier {
 
   /// Registers a new user with the provided information.
   ///
-  /// The [firstname], [lastname], [email], [password], and [passwordConfirm] parameters
+  /// The [firstName], [lastName], [email], [password], and [passwordConfirm] parameters
   /// are used to create a new user account. The [context] parameter is used for navigation.
   ///
   /// This method sends a POST request to the server's registration endpoint with the user's

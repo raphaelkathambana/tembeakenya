@@ -1,10 +1,11 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/navigations/community_nav_bar.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 
 class LayoutView extends StatefulWidget {
-  final user;
+  final dynamic user;
   const LayoutView({super.key, required this.user});
 
   @override
@@ -22,9 +23,8 @@ class _LayoutViewState extends State<LayoutView> {
       HomeView(
         user: widget.user,
       ),
-      ProfileView(
+      CommunityView(
         user: widget.user,
-        currentUser: widget.user,
       ),
       ProfileView(
         user: widget.user,

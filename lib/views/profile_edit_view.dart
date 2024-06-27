@@ -3,12 +3,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/constants/image_storage.dart';
+import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {
-  final currentUser;
+  final dynamic currentUser;
   const ProfileEditView({super.key, required this.currentUser});
 
   @override
@@ -23,29 +24,34 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _username;
   late final TextEditingController _lastname;
   late final TextEditingController _email;
-  String newUserName = '';
-  String newEmail = '';
-  String newUsername = '';
+
+  String theFullName = '';
+  String theUsername = '';
+  String theEmail = '';
 
   String profileImageID = "defaultProfilePic";
 
   @override
   void initState() {
+    user = widget.currentUser;
+
     displayUrl = '';
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
-    _firstname = TextEditingController();
-    _username = TextEditingController();
-    _lastname = TextEditingController();
-    _email = TextEditingController();
+
+    _firstname = TextEditingController(text: user?.firstName);
+    _lastname = TextEditingController(text: user?.lastName);
+    _username = TextEditingController(text: user?.username);
+    _email = TextEditingController(text: user?.email);
     super.initState();
   }
 
   void pick() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
+
+    Uint8List? img = await pickImage(ImageSource.gallery);
     setState(() {
       pickedImage = img;
     });
@@ -62,12 +68,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
   @override
   Widget build(BuildContext context) {
-    user = widget.currentUser;
-    newUserName = user!.fullName;
+    // user = widget.currentUser;
+
+    theFullName = user!.fullName;
+    theUsername = user!.username.toString();
+    theEmail = user!.email.toString();
+
     NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
-            automaticallyImplyLeading: false,
             backgroundColor: ColorsUtil.backgroundColorDark,
             title: const Text(
               'Edit Profile Page',
@@ -207,38 +216,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           TextButton(
                                             child: const Text('Save'),
                                             onPressed: () {
-                                              newUserName =
-                                                  '$_firstname.text $_lastname.text';
+                                              setState(() {
+                                                theFullName =
+                                                    '${_firstname.text} ${_lastname.text}';
+                                              });
                                               Navigator.pop(context);
                                             },
-                                            // onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil('/editprofile/', (route)=>route.isFirst),
                                           ),
                                         ],
                                       ));
-                              // if (name[0].trim().isNotEmpty &&
-                              //     name[1].trim().isNotEmpty) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection("Users")
-                              //       .doc(currentUser.uid)
-                              //       .update({
-                              //     "fname": name[0],
-                              //     "lname": name[1],
-                              //   });
-                              // } else if (name[0]
-                              //     .trim()
-                              //     .isNotEmpty) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection("Users")
-                              //       .doc(currentUser.uid)
-                              //       .update({"fname": name[0]});
-                              // } else if (name[1]
-                              //     .trim()
-                              //     .isNotEmpty) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection("Users")
-                              //       .doc(currentUser.uid)
-                              //       .update({"lname": name[1]});
-                              // }
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -246,13 +232,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                             )),
                       ],
                     ),
-                    // TODO: ADD THE IF STATEMENT AND CHANGE ROUTE SETTINGS TO ADD THE BACK FUNCTIONALITY
-                    // Text("${userData.fname} ${userData.lname}",
-                    //     style: const TextStyle(
-                    //         fontSize: 18,
-                    //         color: ColorsUtil.textColorDark)),
-                    // todo: text should change after button press
-                    Text('${_firstname.text} ${_lastname.text}',
+                    Text(theFullName,
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
@@ -287,7 +267,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           ),
                                           onChanged: (value) {
                                             user?.username = value;
-                                            newUsername = value;
+                                            theUsername = value;
                                           },
                                         ),
                                         actions: [
@@ -299,19 +279,13 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           TextButton(
                                               child: const Text('Save'),
                                               onPressed: () {
-                                                newUsername = _username.text;
+                                                setState(() {
+                                                  theUsername = '$_username';
+                                                });
                                                 Navigator.pop(context);
                                               }),
                                         ],
                                       ));
-                              // if (username.trim().isNotEmpty) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection("Users")
-                              //       .doc(currentUser.uid)
-                              //       .update({
-                              //     "username": username,
-                              //   });
-                              // }
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -319,11 +293,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                             )),
                       ],
                     ),
-                    // Text(userData.username,
-                    //     style: const TextStyle(
-                    //         fontSize: 18,
-                    //         color: ColorsUtil.textColorDark)),
-                    Text('${user?.username}',
+                    Text(theUsername,
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
@@ -357,8 +327,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                             labelText: "Enter your Email",
                                           ),
                                           onChanged: (value) {
-                                            user?.email = value;
-                                            newEmail = value;
+                                            setState(() {
+                                              theEmail = '$_email';
+                                            });
+                                            theEmail = value;
                                           },
                                         ),
                                         actions: [
@@ -370,19 +342,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                           TextButton(
                                               child: const Text('Save'),
                                               onPressed: () {
-                                                newEmail = _email.text;
+                                                theEmail = _email.text;
                                                 Navigator.pop(context);
                                               }),
                                         ],
                                       ));
-                              // if (username.trim().isNotEmpty) {
-                              //   await FirebaseFirestore.instance
-                              //       .collection("Users")
-                              //       .doc(currentUser.uid)
-                              //       .update({
-                              //     "username": username,
-                              //   });
-                              // }
                             },
                             icon: const Icon(
                               Icons.edit,
@@ -390,16 +354,13 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                             )),
                       ],
                     ),
-                    // Text(userData.username,
-                    //     style: const TextStyle(
-                    //         fontSize: 18,
-                    //         color: ColorsUtil.textColorDark)),
-                    Text('${user?.email}',
+                    Text(theEmail,
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
           ElevatedButton(
-            // onPressed: () => navigationService.navigateToProfile(context),
+            style: const MainPage().raisedButtonStyle, 
+            
             onPressed: () {
               if (pickedImage != null) {
                 uploadPic(pickedImage!, user?.username);
@@ -414,21 +375,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               final email = _email.text.isNotEmpty ? _email.text : user!.email;
               AuthController(navigationService).updateProfileInformation(
                   username!, email!, firstname!, lastname!, context);
+
+              int count = 0;
+              Navigator.of(context).popUntil((_) => count++ >= 2);
             },
             child: const Text('Update'),
           )
-        ])
-            //     } else {
-            //       return const Center(
-            //         child: Text('Error'),
-            //       );
-            //     }
-            //   } else {
-            //     return const Center(
-            //       child: CircularProgressIndicator(),
-            //     );
-            //   }
-            // })
-            ));
+        ])));
   }
 }
