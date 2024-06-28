@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
-// import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/views/user_profile_view.dart';
 
+// ******************* DUMMY DATABASE ******************* //
+import 'package:tembeakenya/dummy_db.dart';
+  // ****************************************************** //
 class PeopleView extends StatefulWidget {
   final dynamic currentUser;
   const PeopleView({super.key, required user, this.currentUser});
@@ -26,21 +29,20 @@ class _PeopleViewState extends State<PeopleView> {
 
   // ****************************************************** //
 
-  // ******************* DUMMY DATABASE ******************* //
-  List<String> fullName = [
-    'Raphael Kathambana',
-    'Blen Tesfaye',
-    'Bitania Tesfaye'
-  ];
-  List<String> username = ['HikeLover_69', 'blenn.08', 'Bitu_Pichu'];
-  List<bool> friend = [true, false, false];
-
-  // ****************************************************** //
-
-  userCard(int num) {    
-      return Card(
-      color: const Color.fromARGB(55, 99, 126, 32),
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+  userCard(int num) {
+    return TextButton(    
+    onPressed: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileView(userID: num)));
+    },
+    style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(Color.fromARGB(0,0,0,0))),
+      child:
+    Container(
+      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(10)),
+        color: Color.fromARGB(55, 99, 126, 32),
+        ),
       child: Column(children: [
         const Divider(
           height: 2,
@@ -49,50 +51,53 @@ class _PeopleViewState extends State<PeopleView> {
           endIndent: 12,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            if (displayUrl.isEmpty)
-              const CircleAvatar(
-                  radius: 45,
-                  backgroundColor: Color(0x00000000),
-                  child: CircleAvatar(
-                      radius: 37,
-                      backgroundColor: ColorsUtil.accentColorDark,
-                      child: CircleAvatar(
-                        radius: 35,
-                        child: CircularProgressIndicator(),
-                      )))
-            else
-              CircleAvatar(
-                  radius: 45,
-                  backgroundColor: const Color(0x00000000),
-                  child: CircleAvatar(
-                      radius: 37,
-                      backgroundColor: ColorsUtil.accentColorDark,
-                      child: CircleAvatar(
-                        radius: 35,
-                        backgroundImage: NetworkImage(displayUrl),
-                      ))),
-            SizedBox(
-              width: MediaQuery.sizeOf(context).width * .47,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: Text(fullName[num],
+            Row(children: [
+              if (displayUrl.isEmpty)
+                const CircleAvatar(
+                    radius: 45,
+                    backgroundColor: Color(0x00000000),
+                    child: CircleAvatar(
+                        radius: 37,
+                        backgroundColor: ColorsUtil.accentColorDark,
+                        child: CircleAvatar(
+                          radius: 35,
+                          child: CircularProgressIndicator(),
+                        )))
+              else
+                CircleAvatar(
+                    radius: 45,
+                    backgroundColor: const Color(0x00000000),
+                    child: CircleAvatar(
+                        radius: 37,
+                        backgroundColor: ColorsUtil.accentColorDark,
+                        child: CircleAvatar(
+                          radius: 35,
+                          backgroundImage: NetworkImage(displayUrl),
+                        ))),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width * .47,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width,
+                      child: Text(fullName[num],
+                          style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: ColorsUtil.textColorDark)),
+                    ),
+                    Text('@${username[num]}',
                         style: const TextStyle(
                             fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: ColorsUtil.textColorDark)),
-                  ),
-                  Text('@${username[num]}',
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.accentColorDark)),
-                ],
+                            fontWeight: FontWeight.normal,
+                            color: ColorsUtil.accentColorDark)),
+                  ],
+                ),
               ),
-            ),
+            ]),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -116,8 +121,8 @@ class _PeopleViewState extends State<PeopleView> {
           endIndent: 12,
         ),
       ]),
-    );
-    
+    ));
+
     // }
   }
 
@@ -182,10 +187,10 @@ class _PeopleViewState extends State<PeopleView> {
                   value: dropdownValue,
                   style: const TextStyle(fontSize: 14),
                   underline: Container(height: 2),
-                  onChanged: (value) {                         
+                  onChanged: (value) {
                     setState(() {
                       dropdownValue = value!;
-                    });             
+                    });
                   },
                   items: list.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -197,21 +202,19 @@ class _PeopleViewState extends State<PeopleView> {
               )
             ],
           )),
-
       const Divider(
         height: 2,
         color: ColorsUtil.secondaryColorDark,
         indent: 12,
         endIndent: 12,
       ),
-
       Column(
-        children: [          
-          for (int i = 0; i <= 2; i++) 
-          if(dropdownValue == list.last && friend[i] == true)
-            userCard(i)
-          else if (dropdownValue == list.first)
-            userCard(i),          
+        children: [
+          for (int i = 0; i <= 2; i++)
+            if (dropdownValue == list.last && friend[i] == true)
+              userCard(i)
+            else if (dropdownValue == list.first)
+              userCard(i),
         ],
       ),
     ])));
