@@ -37,8 +37,8 @@ class _PeopleViewState extends State<PeopleView> {
     style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(Color.fromARGB(0,0,0,0))),
       child:
     Container(
-      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
         color: Color.fromARGB(55, 99, 126, 32),
@@ -77,7 +77,7 @@ class _PeopleViewState extends State<PeopleView> {
                           backgroundImage: NetworkImage(displayUrl),
                         ))),
               SizedBox(
-                width: MediaQuery.sizeOf(context).width * .47,
+                width: MediaQuery.sizeOf(context).width * .4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

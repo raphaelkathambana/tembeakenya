@@ -120,13 +120,16 @@ class _CommunityViewState extends State<ProfileView> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                                  content: CircleAvatar(
-                                      radius: 140,
+                            builder: (context) => Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: CircleAvatar(
+                                      radius: MediaQuery.sizeOf(context).width,
                                       backgroundColor:
                                           ColorsUtil.accentColorDark,
                                       child: CircleAvatar(
-                                        radius: 138,
+                                        radius:
+                                            MediaQuery.sizeOf(context).width *
+                                                .45,
                                         backgroundImage:
                                             NetworkImage(displayUrl),
                                       )),

@@ -50,7 +50,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   void pick() async {
-
     Uint8List? img = await pickImage(ImageSource.gallery);
     setState(() {
       pickedImage = img;
@@ -83,7 +82,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               style: TextStyle(color: ColorsUtil.textColorDark),
             )),
         body: SingleChildScrollView(
-            child: Column(children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
           Column(children: [
             if (pickedImage != null)
               Stack(children: [
@@ -305,6 +305,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   color: const Color.fromARGB(255, 49, 59, 21),
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -358,29 +359,41 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                         style: const TextStyle(
                             fontSize: 18, color: ColorsUtil.textColorDark)),
                   ])),
-          ElevatedButton(
-            style: const MainPage().raisedButtonStyle, 
-            
-            onPressed: () {
-              if (pickedImage != null) {
-                uploadPic(pickedImage!, user?.username);
-              }
-              final firstname = _firstname.text.isNotEmpty
-                  ? _firstname.text
-                  : user!.firstName;
-              final lastname =
-                  _lastname.text.isNotEmpty ? _lastname.text : user!.lastName;
-              final username =
-                  _username.text.isNotEmpty ? _username.text : user!.username;
-              final email = _email.text.isNotEmpty ? _email.text : user!.email;
-              AuthController(navigationService).updateProfileInformation(
-                  username!, email!, firstname!, lastname!, context);
+          Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 16),
+                  minimumSize: const Size(120, 50),
+                  foregroundColor: ColorsUtil.textColorDark,
+                  backgroundColor: ColorsUtil.secondaryColorDark,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                ),
+                onPressed: () {
+                  if (pickedImage != null) {
+                    uploadPic(pickedImage!, user?.username);
+                  }
+                  final firstname = _firstname.text.isNotEmpty
+                      ? _firstname.text
+                      : user!.firstName;
+                  final lastname = _lastname.text.isNotEmpty
+                      ? _lastname.text
+                      : user!.lastName;
+                  final username = _username.text.isNotEmpty
+                      ? _username.text
+                      : user!.username;
+                  final email =
+                      _email.text.isNotEmpty ? _email.text : user!.email;
+                  AuthController(navigationService).updateProfileInformation(
+                      username!, email!, firstname!, lastname!, context);
 
-              int count = 0;
-              Navigator.of(context).popUntil((_) => count++ >= 2);
-            },
-            child: const Text('Update'),
-          )
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                },
+                child: const Text('Update'),
+              ))
         ])));
   }
 }
