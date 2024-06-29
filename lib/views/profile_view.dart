@@ -73,7 +73,7 @@ class _CommunityViewState extends State<ProfileView> {
               title: const Text('Change Password'),
               onTap: () =>
                   // todo implement change password page
-                  navigationService.navigateToEditProfile(context, user),
+                  navigationService.navigatePushToChangePassword(context, user),
             ),
             ListTile(
               leading: const Icon(Icons.logout),
