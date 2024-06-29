@@ -5,7 +5,6 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user_model.dart';
 
 class ProfileEditView extends StatefulWidget {

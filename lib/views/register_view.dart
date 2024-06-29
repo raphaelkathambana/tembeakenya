@@ -21,6 +21,9 @@ class _RegisterViewState extends State<RegisterView> {
   late final TextEditingController _passwordConfirm;
   late NavigationService navigationService;
 
+  bool hidePassword = true;
+  bool isCheched = false;
+
   @override
   void initState() {
     _firstName = TextEditingController();
@@ -58,14 +61,14 @@ class _RegisterViewState extends State<RegisterView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // const SizedBox(
-              //   height: 20,
-              //   child: Center(
-              //     child: Padding(
-              //       padding: EdgeInsets.all(10),
-              //     ),
-              //   ),
-              // ),
+              const SizedBox(
+                height: 20,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                  ),
+                ),
+              ),
               const Image(
                 image: AssetImage('lib/assets/images/mountbg.png'),
               ),
@@ -120,6 +123,19 @@ class _RegisterViewState extends State<RegisterView> {
                             labelText: 'Re-enter your password here',
                           ),
                         ),
+                        Row(
+                    children: [
+                      Checkbox(
+                          value: isCheched,
+                          onChanged: (value) {
+                            setState(() {
+                              isCheched = value!;
+                              hidePassword = !hidePassword;
+                            });
+                          }),
+                      const Text('Show Password'),
+                    ],
+                  )
                       ],
                     ),
                   ),
