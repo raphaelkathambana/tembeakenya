@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
@@ -12,13 +13,18 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(
-    MaterialApp.router(
+    GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Tembea Kenya',
       themeMode: ThemeMode.system,
-      darkTheme: darkThemeData,
-      theme: lightThemeData,
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+      home: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        title: 'Tembea Kenya',
+        themeMode: ThemeMode.system,
+        darkTheme: darkThemeData,
+        theme: lightThemeData,
+        routerConfig: router,
+      ),
     ),
   );
 }
