@@ -52,3 +52,13 @@ ThemeData lightThemeData = ThemeData(
   ),
   useMaterial3: true,
 );
+AppBar titleAppBar(String title) => AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: ColorsUtil.backgroundColorDark,
+      title: Text(title,
+          style: const TextStyle(
+            color: ColorsUtil.primaryColorLight,
+            fontSize: 35,
+            fontWeight: FontWeight.bold,
+          )),
+    );

@@ -27,16 +27,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: ColorsUtil.backgroundColorDark,
-        title: const Text('Home Page',
-            style: TextStyle(
-              color: ColorsUtil.primaryColorLight,
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-            )),
-      ),
+      appBar: titleAppBar('Home Page'),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
