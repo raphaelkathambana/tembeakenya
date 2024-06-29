@@ -370,16 +370,24 @@ class AuthController with ChangeNotifier {
     }
   }
 
+  Future<bool> isSignedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('auth_token');
+    return token != null;
+  }
+
   /// Checks if the user is authenticated and returns a map with the authentication status and verification status.
   /// Returns a map with the following keys:
   /// - 'isAuthenticated': A boolean indicating if the user is authenticated.
   /// - 'isVerified': A boolean indicating if the user's email is verified.
   /// - 'user': A User object.
   Future<Map<String, dynamic>> isAuthenticated() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('auth_token');
-    if (token != null) {
-      debugPrint('Hmm, Let us see how this goes...');
+    final state = await isSignedIn();
+    if (!state) {
+      return {'isAuthenticated': false, 'isVerified': false, 'user': user};
+    }
+    if (state) {
+      debugPrint('Token is there, should be signed in...');
       await getCsrfToken();
       final response = await apiCall.client.get('${url}api/user');
       debugPrint(response.statusCode.toString());
@@ -397,7 +405,7 @@ class AuthController with ChangeNotifier {
         };
         // final userData = json.decode(response.data);
       } else {
-        debugPrint('Should return false, false');
+        debugPrint('There is a token, but api did not return a user');
         return {
           'isVerified': response.data['email_verified_at'] != null,
           'isAuthenticated': false,
@@ -405,9 +413,10 @@ class AuthController with ChangeNotifier {
         };
       }
     } else {
+      await getCsrfToken();
       final response = await apiCall.client.get('${url}api/user');
       final userData = json.decode(response.data);
-      debugPrint('Hmm, Let us see how this goes ');
+      debugPrint('Hmm, No token so let us see what happens');
       debugPrint(userData);
       return {
         'isVerified': userData['email_verified_at'] != null,
