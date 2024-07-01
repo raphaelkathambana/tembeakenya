@@ -4,7 +4,6 @@ import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user_model.dart';
-import 'package:tembeakenya/views/test_step_count.dart';
 
 class ProfileView extends StatefulWidget {
   final dynamic currentUser;
@@ -204,15 +203,15 @@ class _ProfileViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: Column(
+            child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Statistics',
+                  Text('Statistics',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  const Divider(
+                  Divider(
                     height: 15,
                     color: ColorsUtil.secondaryColorDark,
                   ),
@@ -221,12 +220,12 @@ class _ProfileViewState extends State<ProfileView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Number of Hikes',
+                          Text('Number of Hikes',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   color: ColorsUtil.primaryColorDark)),
-                          const Row(children: [
+                          Row(children: [
                             Text('1 ',
                                 style: TextStyle(
                                     fontSize: 35,
@@ -237,10 +236,7 @@ class _ProfileViewState extends State<ProfileView> {
                                     fontSize: 20,
                                     fontWeight: FontWeight.normal,
                                     color: ColorsUtil.textColorDark)),
-                            ]),
-                          ElevatedButton(onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CountStepView()));
-                            }, child: const Text('Step Count'))
+                          ]),
                         ],
                       ),
                     ],
@@ -256,54 +252,50 @@ class _ProfileViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const Text('Milestones',
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: ColorsUtil.primaryColorDark)),
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
+              const Divider(
+                height: 2,
+                color: ColorsUtil.secondaryColorDark,
+              ),
+              const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
+              Row(
                 children: [
-                  const Text('Milestones',
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark)),
-                  const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-                  const Divider(
-                    height: 2,
-                    color: ColorsUtil.secondaryColorDark,
-                  ),
-                  const Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.sizeOf(context).width * .7,
-                            child: 
-                          const Text('There are no Milestones yet',
+                      SizedBox(
+                          width: MediaQuery.sizeOf(context).width * .7,
+                          child: const Text('There are no Milestones yet',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   color: ColorsUtil.primaryColorDark))),
-                          const Row(children: [
-                            Text(' ',
-                                style: TextStyle(
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.textColorDark)),
-                            Text(' ',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal,
-                                    color: ColorsUtil.textColorDark)),
-                          ])
-                        ],
-                      ),
+                      const Row(children: [
+                        Text(' ',
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsUtil.textColorDark)),
+                        Text(' ',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.textColorDark)),
+                      ])
                     ],
                   ),
-                ]),
+                ],
+              ),
+            ]),
           ),
         ])));
   }
