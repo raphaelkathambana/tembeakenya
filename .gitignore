@@ -48,4 +48,7 @@ lib/firebase_options.Dart
 android/app/google-services.json
 firebase.json
 
+# Useless Folder
+lib/views/unused views
+
 *.kra

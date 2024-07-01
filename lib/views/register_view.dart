@@ -14,17 +14,20 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
-  late final TextEditingController _firstname;
-  late final TextEditingController _lastname;
+  late final TextEditingController _firstName;
+  late final TextEditingController _lastName;
   late final TextEditingController _email;
   late final TextEditingController _password;
   late final TextEditingController _passwordConfirm;
   late NavigationService navigationService;
 
+  bool hidePassword = true;
+  bool isCheched = false;
+
   @override
   void initState() {
-    _firstname = TextEditingController();
-    _lastname = TextEditingController();
+    _firstName = TextEditingController();
+    _lastName = TextEditingController();
     _email = TextEditingController();
     _password = TextEditingController();
     _passwordConfirm = TextEditingController();
@@ -34,8 +37,8 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
-    _firstname.dispose();
-    _lastname.dispose();
+    _firstName.dispose();
+    _lastName.dispose();
     _email.dispose();
     _password.dispose();
     _passwordConfirm.dispose();
@@ -58,14 +61,14 @@ class _RegisterViewState extends State<RegisterView> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // const SizedBox(
-              //   height: 20,
-              //   child: Center(
-              //     child: Padding(
-              //       padding: EdgeInsets.all(10),
-              //     ),
-              //   ),
-              // ),
+              const SizedBox(
+                height: 20,
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                  ),
+                ),
+              ),
               const Image(
                 image: AssetImage('lib/assets/images/mountbg.png'),
               ),
@@ -76,7 +79,7 @@ class _RegisterViewState extends State<RegisterView> {
                     child: Column(
                       children: [
                         TextField(
-                          controller: _firstname,
+                          controller: _firstName,
                           enableSuggestions: false,
                           autocorrect: false,
                           keyboardType: TextInputType.name,
@@ -85,7 +88,7 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         TextField(
-                          controller: _lastname,
+                          controller: _lastName,
                           enableSuggestions: false,
                           autocorrect: false,
                           keyboardType: TextInputType.name,
@@ -120,6 +123,19 @@ class _RegisterViewState extends State<RegisterView> {
                             labelText: 'Re-enter your password here',
                           ),
                         ),
+                        Row(
+                    children: [
+                      Checkbox(
+                          value: isCheched,
+                          onChanged: (value) {
+                            setState(() {
+                              isCheched = value!;
+                              hidePassword = !hidePassword;
+                            });
+                          }),
+                      const Text('Show Password'),
+                    ],
+                  )
                       ],
                     ),
                   ),
@@ -130,14 +146,14 @@ class _RegisterViewState extends State<RegisterView> {
                         children: [
                           ElevatedButton(
                             onPressed: () async {
-                              final firstname = _firstname.text;
-                              final lastname = _lastname.text;
+                              final firstName = _firstName.text;
+                              final lastName = _lastName.text;
                               final email = _email.text;
                               final password = _password.text;
                               final passwordConfirm = _passwordConfirm.text;
                               AuthController(navigationService).register(
-                                  firstname,
-                                  lastname,
+                                  firstName,
+                                  lastName,
                                   email,
                                   password,
                                   passwordConfirm,

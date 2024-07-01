@@ -1,4 +1,4 @@
-import 'package:app_settings/app_settings.dart';
+// import 'package:app_settings/app_settings.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -14,11 +14,11 @@ Future<String> getCsrfToken() async {
   Dio dio = Dio();
   var cookieJar = CookieJar();
   dio.interceptors.add(CookieManager(cookieJar));
-  final connectivityResult = await APICall()._connectivity.checkConnectivity();
-  if (connectivityResult == ConnectivityResult.none) {
-    AppSettings.openAppSettings(type: AppSettingsType.wifi);
-    return '';
-  }
+  // final connectivityResult = await APICall()._connectivity.checkConnectivity();
+  // if (connectivityResult == ConnectivityResult.none) {
+    // AppSettings.openAppSettings(type: AppSettingsType.wifi);
+    // return '';
+  // }
   Response response = await APICall().client.get('${url}sanctum/csrf-cookie');
 
   if (response.statusCode == 200 || response.statusCode == 204) {
@@ -47,7 +47,7 @@ String convertQueryParametersToString(Map<String, List<String>> queryParams) {
 
 class APICall {
   final Dio _dio;
-  final Connectivity _connectivity = Connectivity();
+  // final Connectivity _connectivity = Connectivity();
 
   static final APICall _instance = APICall._internal();
   final SharedPrefCookieStore _cookieStore = SharedPrefCookieStore();
@@ -63,16 +63,16 @@ class APICall {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
-          final connectivityResult = await _connectivity.checkConnectivity();
-          if (connectivityResult == ConnectivityResult.none) {
-            AppSettings.openAppSettings(type: AppSettingsType.wifi);
-            return handler.reject(
-              DioException(
-                requestOptions: options,
-                error: 'No internet connection',
-              ),
-            );
-          }
+          // final connectivityResult = await _connectivity.checkConnectivity();
+          // if (connectivityResult == ConnectivityResult.none) {
+          //   AppSettings.openAppSettings(type: AppSettingsType.wifi);
+          //   return handler.reject(
+          //     DioException(
+          //       requestOptions: options,
+          //       error: 'No internet connection',
+          //     ),
+          //   );
+          // }
 
           final prefs = await SharedPreferences.getInstance();
           final token = prefs.getString('auth_token');

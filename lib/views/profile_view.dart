@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/constants/image_storage.dart';
+import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/views/test_step_count.dart';
 
 class ProfileView extends StatefulWidget {
-  final currentUser;
+  final dynamic currentUser;
   const ProfileView({super.key, required this.currentUser, required user});
 
   @override
@@ -73,7 +74,7 @@ class _ProfileViewState extends State<ProfileView> {
               title: const Text('Change Password'),
               onTap: () =>
                   // todo implement change password page
-                  navigationService.navigateToEditProfile(context, user),
+                  navigationService.navigatePushToChangePassword(context, user),
             ),
             ListTile(
               leading: const Icon(Icons.logout),
@@ -120,13 +121,16 @@ class _ProfileViewState extends State<ProfileView> {
                       onPressed: () {
                         showDialog(
                             context: context,
-                            builder: (context) => AlertDialog(
-                                  content: CircleAvatar(
-                                      radius: 140,
+                            builder: (context) => Container(
+                                  padding: const EdgeInsets.all(15),
+                                  child: CircleAvatar(
+                                      radius: MediaQuery.sizeOf(context).width,
                                       backgroundColor:
                                           ColorsUtil.accentColorDark,
                                       child: CircleAvatar(
-                                        radius: 138,
+                                        radius:
+                                            MediaQuery.sizeOf(context).width *
+                                                .45,
                                         backgroundImage:
                                             NetworkImage(displayUrl),
                                       )),
@@ -147,11 +151,11 @@ class _ProfileViewState extends State<ProfileView> {
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        Text(user!.username.toString(),
+                        Text('@${user!.username.toString()}',
                             style: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 15,
                                 fontWeight: FontWeight.normal,
-                                color: ColorsUtil.secondaryColorDark)),
+                                color: ColorsUtil.accentColorDark)),
                       ],
                     ),
                   ),
@@ -200,15 +204,15 @@ class _ProfileViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Column(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Statistics',
+                  const Text('Statistics',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  Divider(
+                  const Divider(
                     height: 15,
                     color: ColorsUtil.secondaryColorDark,
                   ),
@@ -217,12 +221,12 @@ class _ProfileViewState extends State<ProfileView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Number of Hikes',
+                          const Text('Number of Hikes',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
+                          const Row(children: [
                             Text('1 ',
                                 style: TextStyle(
                                     fontSize: 35,
@@ -233,7 +237,10 @@ class _ProfileViewState extends State<ProfileView> {
                                     fontSize: 20,
                                     fontWeight: FontWeight.normal,
                                     color: ColorsUtil.textColorDark)),
-                          ])
+                            ]),
+                          ElevatedButton(onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CountStepView()));
+                            }, child: const Text('Step Count'))
                         ],
                       ),
                     ],
@@ -249,22 +256,22 @@ class _ProfileViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Column(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Milestones',
+                  const Text('Milestones',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  Padding(
+                  const Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-                  Divider(
+                  const Divider(
                     height: 2,
                     color: ColorsUtil.secondaryColorDark,
                   ),
-                  Padding(
+                  const Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
                   Row(
@@ -272,12 +279,15 @@ class _ProfileViewState extends State<ProfileView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('There are no Milestones yet',
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width * .7,
+                            child: 
+                          const Text('There are no Milestones yet',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
+                                  color: ColorsUtil.primaryColorDark))),
+                          const Row(children: [
                             Text(' ',
                                 style: TextStyle(
                                     fontSize: 35,

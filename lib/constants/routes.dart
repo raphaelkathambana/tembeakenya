@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tembeakenya/constants/nav_bar.dart';
+import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/views/change_password.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/login_view.dart';
@@ -60,6 +61,14 @@ final GoRouter router = GoRouter(
       name: '/edit-profile',
       pageBuilder: (context, state) => MaterialPage(
           child: ProfileEditView(
+        currentUser: state.extra as User,
+      )),
+    ),
+    GoRoute(
+      path: '/change-password',
+      name: '/change-password',
+      pageBuilder: (context, state) => MaterialPage(
+          child: ChangePasswordView(
         currentUser: state.extra as User,
       )),
     ),
@@ -186,6 +195,10 @@ class NavigationService {
 
   navigatePushToEditProfile(BuildContext context, User? user) {
     _router.push('/edit-profile', extra: user);
+  }
+
+  navigatePushToChangePassword(BuildContext context, User? user) {
+    _router.push('/change-password', extra: user);
   }
 
   void navigateToNavbar(BuildContext context, User user) {

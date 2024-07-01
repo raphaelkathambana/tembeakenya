@@ -34,8 +34,14 @@ class _LoginViewState extends State<LoginView> {
   late final TextEditingController _password;
   late NavigationService navigationService;
 
+  bool hidePassword = true;
+  bool isCheched = false;
+
+
   @override
   void initState() {
+    // hidePassword = true;
+
     _email = TextEditingController();
     _password = TextEditingController();
     navigationService = NavigationService(router);
@@ -62,7 +68,9 @@ class _LoginViewState extends State<LoginView> {
                   color: ColorsUtil.primaryColorLight)),
         ),
         body: SingleChildScrollView(
-          child: Column(children: [
+          child: Column(
+            
+            children: [
             const SizedBox(
               height: 100,
               child: Center(
@@ -91,13 +99,27 @@ class _LoginViewState extends State<LoginView> {
                   // 'Enter your password here'
                   TextField(
                     controller: _password,
-                    obscureText: true,
+                    obscureText: hidePassword,
                     enableSuggestions: false,
                     autocorrect: false,
                     decoration: const InputDecoration(
                       labelText: 'Enter your password here',
                     ),
                   ),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                          value: isCheched,
+                          onChanged: (value) {
+                            setState(() {
+                              isCheched = value!;
+                              hidePassword = !hidePassword;
+                            });
+                          }),
+                      const Text('Show Password'),
+                    ],
+                  )
                 ],
               ),
             ),
