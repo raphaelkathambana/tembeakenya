@@ -4,16 +4,17 @@ import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/views/test_step_count.dart';
 
 class ProfileView extends StatefulWidget {
   final dynamic currentUser;
   const ProfileView({super.key, required this.currentUser, required user});
 
   @override
-  State<ProfileView> createState() => _CommunityViewState();
+  State<ProfileView> createState() => _ProfileViewState();
 }
 
-class _CommunityViewState extends State<ProfileView> {
+class _ProfileViewState extends State<ProfileView> {
   late String displayUrl;
   User? user;
   late NavigationService navigationService;
@@ -203,15 +204,15 @@ class _CommunityViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Column(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Statistics',
+                  const Text('Statistics',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  Divider(
+                  const Divider(
                     height: 15,
                     color: ColorsUtil.secondaryColorDark,
                   ),
@@ -220,12 +221,12 @@ class _CommunityViewState extends State<ProfileView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Number of Hikes',
+                          const Text('Number of Hikes',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
                                   color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
+                          const Row(children: [
                             Text('1 ',
                                 style: TextStyle(
                                     fontSize: 35,
@@ -236,7 +237,10 @@ class _CommunityViewState extends State<ProfileView> {
                                     fontSize: 20,
                                     fontWeight: FontWeight.normal,
                                     color: ColorsUtil.textColorDark)),
-                          ])
+                            ]),
+                          ElevatedButton(onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => const CountStepView()));
+                            }, child: const Text('Step Count'))
                         ],
                       ),
                     ],
