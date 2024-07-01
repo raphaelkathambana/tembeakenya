@@ -7,7 +7,8 @@ import 'package:tembeakenya/views/user_profile_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 import 'package:tembeakenya/dummy_db.dart';
-  // ****************************************************** //
+
+// ****************************************************** //
 class PeopleView extends StatefulWidget {
   final dynamic currentUser;
   const PeopleView({super.key, required user, this.currentUser});
@@ -30,98 +31,102 @@ class _PeopleViewState extends State<PeopleView> {
   // ****************************************************** //
 
   userCard(int num) {
-    return TextButton(    
-    onPressed: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileView(userID: num)));
-    },
-    style: const ButtonStyle(overlayColor: MaterialStatePropertyAll(Color.fromARGB(0,0,0,0))),
-      child:
-    Container(
-      margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 6),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Color.fromARGB(55, 99, 126, 32),
-        ),
-      child: Column(children: [
-        const Divider(
-          height: 2,
-          color: ColorsUtil.secondaryColorDark,
-          indent: 12,
-          endIndent: 12,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(children: [
-              if (displayUrl.isEmpty)
-                const CircleAvatar(
-                    radius: 45,
-                    backgroundColor: Color(0x00000000),
-                    child: CircleAvatar(
-                        radius: 37,
-                        backgroundColor: ColorsUtil.accentColorDark,
+    return TextButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => UserProfileView(userID: num)));
+        },
+        style: const ButtonStyle(
+            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+        child: Card(
+          color: const Color.fromARGB(55, 99, 126, 32),
+          margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+          
+          child: Column(children: [
+            const Divider(
+              height: 2,
+              color: ColorsUtil.secondaryColorDark,
+              indent: 12,
+              endIndent: 12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(children: [
+                  if (displayUrl.isEmpty)
+                    const CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Color(0x00000000),
                         child: CircleAvatar(
-                          radius: 35,
-                          child: CircularProgressIndicator(),
-                        )))
-              else
-                CircleAvatar(
-                    radius: 45,
-                    backgroundColor: const Color(0x00000000),
-                    child: CircleAvatar(
-                        radius: 37,
-                        backgroundColor: ColorsUtil.accentColorDark,
+                            radius: 37,
+                            backgroundColor: ColorsUtil.accentColorDark,
+                            child: CircleAvatar(
+                              radius: 35,
+                              child: CircularProgressIndicator(),
+                            )))
+                  else
+                    CircleAvatar(
+                        radius: 45,
+                        backgroundColor: const Color(0x00000000),
                         child: CircleAvatar(
-                          radius: 35,
-                          backgroundImage: NetworkImage(displayUrl),
-                        ))),
-              SizedBox(
-                width: MediaQuery.sizeOf(context).width * .4,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width,
-                      child: Text(fullName[num],
-                          style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: ColorsUtil.textColorDark)),
+                            radius: 37,
+                            backgroundColor: ColorsUtil.accentColorDark,
+                            child: CircleAvatar(
+                              radius: 35,
+                              backgroundImage: NetworkImage(displayUrl),
+                            ))),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width * .35,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width,
+                          child: Text(fullName[num],
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.textColorDark)),
+                        ),
+                        Text('@${username[num]}',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorDark)),
+                      ],
                     ),
-                    Text('@${username[num]}',
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: ColorsUtil.accentColorDark)),
-                  ],
-                ),
-              ),
-            ]),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  friend[num] = !friend[num];
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(95, 35),
-                  foregroundColor: ColorsUtil.textColorDark,
-                  backgroundColor: friend[num]
-                      ? ColorsUtil.accentColorDark
-                      : ColorsUtil.secondaryColorDark),
-              child: friend[num] ? const Text('Friends') : const Text('Add'),
-            )
-          ],
-        ),
-        const Divider(
-          height: 2,
-          color: ColorsUtil.secondaryColorDark,
-          indent: 12,
-          endIndent: 12,
-        ),
-      ]),
-    ));
+                  ),
+                ]),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3.5),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        friend[num] = !friend[num];
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(95, 35),
+                        foregroundColor: ColorsUtil.textColorDark,
+                        backgroundColor: friend[num]
+                            ? ColorsUtil.accentColorDark
+                            : ColorsUtil.secondaryColorDark),
+                    child:
+                        friend[num] ? const Text('Friends') : const Text('Add'),
+                  ),
+                )
+              ],
+            ),
+            const Divider(
+              height: 2,
+              color: ColorsUtil.secondaryColorDark,
+              indent: 12,
+              endIndent: 12,
+            ),
+          ]),
+        ));
 
     // }
   }
@@ -148,8 +153,7 @@ class _PeopleViewState extends State<PeopleView> {
 
     // NavigationService navigationService = NavigationService(router);
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(children: [
+        body: SingleChildScrollView( child: Column(children: [
       Container(
           width: MediaQuery.sizeOf(context).width * .90,
           margin: const EdgeInsets.only(top: 20, bottom: 25),
@@ -159,7 +163,8 @@ class _PeopleViewState extends State<PeopleView> {
             color: const Color.fromARGB(55, 99, 126, 32),
             borderRadius: BorderRadius.circular(25.0),
           ),
-          child: Row(
+          child: 
+          Row(
             children: [
               const Expanded(
                 child: TextField(
@@ -202,21 +207,32 @@ class _PeopleViewState extends State<PeopleView> {
               )
             ],
           )),
-      const Divider(
-        height: 2,
-        color: ColorsUtil.secondaryColorDark,
-        indent: 12,
-        endIndent: 12,
-      ),
-      Column(
-        children: [
-          for (int i = 0; i <= 2; i++)
-            if (dropdownValue == list.last && friend[i] == true)
-              userCard(i)
-            else if (dropdownValue == list.first)
-              userCard(i),
-        ],
-      ),
+      // const Divider(
+      //   height: 2,
+      //   color: ColorsUtil.secondaryColorDark,
+      //   indent: 12,
+      //   endIndent: 12,
+      // ),
+       Container(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+          // margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+
+            decoration: const BoxDecoration(
+              // borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Color.fromARGB(0, 0, 0, 0),
+            ),
+            
+        child: Column(
+              children: [
+                for (int i = 0; i <= 2; i++)
+                  if (dropdownValue == list.last && friend[i] == true)
+                    userCard(i)
+                  else if (dropdownValue == list.first)
+                    userCard(i),
+                
+              ],
+            )),
+       
     ])));
   }
 }

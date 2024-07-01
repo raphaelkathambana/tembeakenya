@@ -252,22 +252,22 @@ class _CommunityViewState extends State<ProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Column(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Milestones',
+                  const Text('Milestones',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  Padding(
+                  const Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-                  Divider(
+                  const Divider(
                     height: 2,
                     color: ColorsUtil.secondaryColorDark,
                   ),
-                  Padding(
+                  const Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
                   Row(
@@ -275,12 +275,15 @@ class _CommunityViewState extends State<ProfileView> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('There are no Milestones yet',
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width * .7,
+                            child: 
+                          const Text('There are no Milestones yet',
                               style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
+                                  color: ColorsUtil.primaryColorDark))),
+                          const Row(children: [
                             Text(' ',
                                 style: TextStyle(
                                     fontSize: 35,

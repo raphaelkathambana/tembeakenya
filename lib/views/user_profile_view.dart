@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
@@ -65,7 +66,7 @@ class _CommunityViewState extends State<UserProfileView> {
             child: Column(children: [
           Container(
             margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.only(right: 3.5),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               color: Color.fromARGB(55, 99, 126, 32),
@@ -125,12 +126,12 @@ class _CommunityViewState extends State<UserProfileView> {
                         ),
                       // const SizedBox(width: 10),
                       SizedBox(
-                        width: MediaQuery.sizeOf(context).width * .4,
+                        width: MediaQuery.sizeOf(context).width * .35,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: MediaQuery.sizeOf(context).width * 0.85,
+                              width: MediaQuery.sizeOf(context).width * .35,
                               child: Text(theFullName,
                                   style: const TextStyle(
                                       fontSize: 15,
@@ -139,7 +140,7 @@ class _CommunityViewState extends State<UserProfileView> {
                             ),
                             Text('@$theUsername',
                                 style: const TextStyle(
-                                    fontSize: 15,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.normal,
                                     color: ColorsUtil.accentColorDark)),
                           ],
@@ -230,35 +231,39 @@ class _CommunityViewState extends State<UserProfileView> {
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
-            child: const Column(
+            child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Milestones',
+                  const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+                      child: Text('Milestones',
                       style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorDark)),
-                  Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-                  Divider(
+                      ),
+                  const Divider(
                     height: 2,
                     color: ColorsUtil.secondaryColorDark,
                   ),
-                  Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
+                  // Padding(
+                  //     padding:
+                  //         EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
                   Row(
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('There are no Milestones yet',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width * .7,
+                            child: const Text('There are no Milestones yet',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.normal,
+                                    color: ColorsUtil.primaryColorDark)),
+                          ),
+                          const Row(children: [
                             Text(' ',
                                 style: TextStyle(
                                     fontSize: 35,
