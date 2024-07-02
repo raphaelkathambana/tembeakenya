@@ -16,8 +16,8 @@ Future<String> getCsrfToken() async {
   dio.interceptors.add(CookieManager(cookieJar));
   // final connectivityResult = await APICall()._connectivity.checkConnectivity();
   // if (connectivityResult == ConnectivityResult.none) {
-    // AppSettings.openAppSettings(type: AppSettingsType.wifi);
-    // return '';
+  // AppSettings.openAppSettings(type: AppSettingsType.wifi);
+  // return '';
   // }
   Response response = await APICall().client.get('${url}sanctum/csrf-cookie');
 
@@ -77,6 +77,7 @@ class APICall {
           final prefs = await SharedPreferences.getInstance();
           final token = prefs.getString('auth_token');
           if (token != null) {
+            debugPrint('Token Added as a Bearer token');
             options.headers['Authorization'] = 'Bearer $token';
           }
           debugPrint('Sending request to ${options.uri}');
