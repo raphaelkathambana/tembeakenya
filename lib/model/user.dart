@@ -36,21 +36,29 @@ class User {
     _email = value;
   }
 
-  String? password;
+  String? _image_id;
+
+  String? get image_id => _image_id;
+
+  set profileImageId(String? value) {
+    _image_id = value;
+  }
+
   String? roleNo;
-  DateTime? emailVerifiedAt;
+  DateTime? email_verified_at;
 
   User({
     String? firstName,
     String? lastName,
     String? username,
     String? email,
-    this.password,
+    String? image_id,
     this.roleNo,
-    this.emailVerifiedAt,
+    this.email_verified_at,
   })  : _email = email,
         _username = username,
         _lastName = lastName,
+        _image_id = image_id,
         _firstName = firstName;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
@@ -59,5 +67,5 @@ class User {
 
   String get fullName => '$firstName $lastName';
 
-  bool get isVerified => emailVerifiedAt != null;
+  bool get isVerified => email_verified_at != null;
 }

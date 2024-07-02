@@ -5,7 +5,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 
 class ProfileEditView extends StatefulWidget {
   final dynamic currentUser;
@@ -19,6 +19,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   Uint8List? pickedImage;
   late String displayUrl;
   User? user;
+  late NavigationService navigationService;
   late final TextEditingController _firstname;
   late final TextEditingController _username;
   late final TextEditingController _lastname;
@@ -27,13 +28,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   String theFullName = '';
   String theUsername = '';
   String theEmail = '';
+  String imageId = '';
 
-  String profileImageID = "defaultProfilePic";
+  String profileImageID = "";
 
   @override
   void initState() {
     user = widget.currentUser;
-
+    navigationService = NavigationService(router);
+    profileImageID = "${user!.image_id}";
     displayUrl = '';
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -66,13 +69,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
   @override
   Widget build(BuildContext context) {
-    // user = widget.currentUser;
-
     theFullName = user!.fullName;
     theUsername = user!.username.toString();
     theEmail = user!.email.toString();
 
-    NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
             backgroundColor: ColorsUtil.backgroundColorDark,
@@ -370,9 +370,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (pickedImage != null) {
-                    uploadPic(pickedImage!, user?.username);
+                    await uploadPic(
+                            pickedImage!,
+                            _username.text.isNotEmpty
+                                ? _username.text
+                                : user!.username)
+                        .then((value) => imageId = value);
                   }
                   final firstname = _firstname.text.isNotEmpty
                       ? _firstname.text
@@ -385,11 +390,16 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       : user!.username;
                   final email =
                       _email.text.isNotEmpty ? _email.text : user!.email;
+                  final profileImageId =
+                      imageId.isNotEmpty ? imageId : user!.image_id.toString();
+                  if (!context.mounted) return;
                   AuthController(navigationService).updateProfileInformation(
-                      username!, email!, firstname!, lastname!, context);
-
-                  int count = 0;
-                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                      username!,
+                      email!,
+                      firstname!,
+                      lastname!,
+                      profileImageId,
+                      context);
                 },
                 child: const Text('Update'),
               ))

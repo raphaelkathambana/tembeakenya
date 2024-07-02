@@ -3,7 +3,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 
 class ProfileView extends StatefulWidget {
   final dynamic currentUser;
@@ -29,12 +29,14 @@ class _ProfileViewState extends State<ProfileView> {
      this code will only save images as "defaultProfilePic" 
      despite the changes made
     */
-  String profileImageID = "defaultProfilePic";
+  String profileImageID = "";
 
   // ****************************************************** //
   @override
   void initState() {
     navigationService = NavigationService(router);
+    user = widget.currentUser;
+    profileImageID = "${user!.image_id}";
     displayUrl = '';
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -45,13 +47,9 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    user = widget.currentUser;
+  Widget build(BuildContext context) {
     debugPrint('Ok, Image URL: $displayUrl');
 
-    NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(57, 22, 26, 15),

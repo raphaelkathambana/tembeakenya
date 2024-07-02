@@ -4,10 +4,11 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 
 /// The controller class responsible for handling authentication logic.
 class AuthController with ChangeNotifier {
@@ -505,12 +506,18 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  Future<void> updateProfileInformation(String username, String email,
-      String firstName, String lastName, BuildContext context) async {
+  Future<void> updateProfileInformation(
+      String username,
+      String email,
+      String firstName,
+      String lastName,
+      String imageId,
+      BuildContext context) async {
     debugPrint(firstName);
     debugPrint(lastName);
     debugPrint(email);
     debugPrint(username);
+    debugPrint(imageId);
     String token = await getCsrfToken();
     debugPrint(token);
     try {
@@ -521,6 +528,7 @@ class AuthController with ChangeNotifier {
           'email': email,
           'firstName': firstName,
           'lastName': lastName,
+          'image_id': imageId,
         }),
         options: Options(headers: {
           'Accept': 'application/json',
@@ -529,7 +537,9 @@ class AuthController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         debugPrint('Profile information updated successfully');
+        int count = 0;
         if (!context.mounted) return;
+        context.pop((_) => count++ >= 2);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Profile information has been updated'),

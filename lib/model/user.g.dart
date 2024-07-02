@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_model.dart';
+part of 'user.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -11,9 +11,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       lastName: json['lastName'] as String?,
       username: json['username'] as String?,
       email: json['email'] as String?,
-      password: json['password'] as String?,
+      image_id: json['image_id'] as String?,
       roleNo: json['roleNo'] as String?,
-      emailVerifiedAt: json['email_verified_at'] == null
+      email_verified_at: json['email_verified_at'] == null
           ? null
           : DateTime.parse(json['email_verified_at'] as String),
     );
@@ -23,7 +23,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'lastName': instance.lastName,
       'username': instance.username,
       'email': instance.email,
-      'password': instance.password,
+      'image_id': instance.image_id,
       'roleNo': instance.roleNo,
-      'emailVerifiedAt': instance.emailVerifiedAt?.toIso8601String(),
+      'email_verified_at': instance.email_verified_at?.toIso8601String(),
     };
