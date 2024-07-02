@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/views/change_password.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
@@ -129,7 +129,8 @@ final GoRouter router = GoRouter(
     if (uri.toString().contains('${url}verify-email-success')) {
       return '/verify-email-success';
     }
-    if (uri.toString().contains('${url}api/v1/verify')) {
+    if (uri.toString().contains('${url}api/v1/email') ||
+        uri.toString().contains('api/v1/email')) {
       debugPrint('attempting to extract id and token');
       final userId = uri.pathSegments[4];
       final token = uri.pathSegments[5];

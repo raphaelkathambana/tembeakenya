@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/views/user_profile_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
@@ -43,7 +43,6 @@ class _PeopleViewState extends State<PeopleView> {
         child: Card(
           color: const Color.fromARGB(55, 99, 126, 32),
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-          
           child: Column(children: [
             const Divider(
               height: 2,
@@ -153,7 +152,8 @@ class _PeopleViewState extends State<PeopleView> {
 
     // NavigationService navigationService = NavigationService(router);
     return Scaffold(
-        body: SingleChildScrollView( child: Column(children: [
+        body: SingleChildScrollView(
+            child: Column(children: [
       Container(
           width: MediaQuery.sizeOf(context).width * .90,
           margin: const EdgeInsets.only(top: 20, bottom: 25),
@@ -163,8 +163,7 @@ class _PeopleViewState extends State<PeopleView> {
             color: const Color.fromARGB(55, 99, 126, 32),
             borderRadius: BorderRadius.circular(25.0),
           ),
-          child: 
-          Row(
+          child: Row(
             children: [
               const Expanded(
                 child: TextField(
@@ -213,26 +212,23 @@ class _PeopleViewState extends State<PeopleView> {
       //   indent: 12,
       //   endIndent: 12,
       // ),
-       Container(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
+      Container(
+          padding: const EdgeInsets.symmetric(horizontal: 3),
           // margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
 
-            decoration: const BoxDecoration(
-              // borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color.fromARGB(0, 0, 0, 0),
-            ),
-            
-        child: Column(
-              children: [
-                for (int i = 0; i <= 2; i++)
-                  if (dropdownValue == list.last && friend[i] == true)
-                    userCard(i)
-                  else if (dropdownValue == list.first)
-                    userCard(i),
-                
-              ],
-            )),
-       
+          decoration: const BoxDecoration(
+            // borderRadius: BorderRadius.all(Radius.circular(10)),
+            color: Color.fromARGB(0, 0, 0, 0),
+          ),
+          child: Column(
+            children: [
+              for (int i = 0; i <= 2; i++)
+                if (dropdownValue == list.last && friend[i] == true)
+                  userCard(i)
+                else if (dropdownValue == list.first)
+                  userCard(i),
+            ],
+          )),
     ])));
   }
 }

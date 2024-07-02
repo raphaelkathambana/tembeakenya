@@ -3,7 +3,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 // import 'package:tembeakenya/controllers/auth_controller.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 
 class GroupView extends StatefulWidget {
   final dynamic currentUser;
@@ -37,8 +37,8 @@ class _GroupViewState extends State<GroupView> {
 
   // ****************************************************** //
 
-  userCard(int num) {    
-      return Card(
+  userCard(int num) {
+    return Card(
       color: const Color.fromARGB(55, 99, 126, 32),
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Column(children: [
@@ -117,7 +117,7 @@ class _GroupViewState extends State<GroupView> {
         ),
       ]),
     );
-    
+
     // }
   }
 
@@ -182,10 +182,10 @@ class _GroupViewState extends State<GroupView> {
                   value: dropdownValue,
                   style: const TextStyle(fontSize: 14),
                   underline: Container(height: 2),
-                  onChanged: (value) {                         
+                  onChanged: (value) {
                     setState(() {
                       dropdownValue = value!;
-                    });             
+                    });
                   },
                   items: list.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
@@ -197,21 +197,19 @@ class _GroupViewState extends State<GroupView> {
               )
             ],
           )),
-
       const Divider(
         height: 2,
         color: ColorsUtil.secondaryColorDark,
         indent: 12,
         endIndent: 12,
       ),
-
       Column(
-        children: [          
-          for (int i = 0; i <= 2; i++) 
-          if(dropdownValue == list.last && friend[i] == true)
-            userCard(i)
-          else if (dropdownValue == list.first)
-            userCard(i),          
+        children: [
+          for (int i = 0; i <= 2; i++)
+            if (dropdownValue == list.last && friend[i] == true)
+              userCard(i)
+            else if (dropdownValue == list.first)
+              userCard(i),
         ],
       ),
     ])));

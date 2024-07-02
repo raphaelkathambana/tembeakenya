@@ -107,7 +107,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         TextField(
                           controller: _password,
-                          obscureText: true,
+                          obscureText: hidePassword,
                           enableSuggestions: false,
                           autocorrect: false,
                           decoration: const InputDecoration(
@@ -124,18 +124,18 @@ class _RegisterViewState extends State<RegisterView> {
                           ),
                         ),
                         Row(
-                    children: [
-                      Checkbox(
-                          value: isCheched,
-                          onChanged: (value) {
-                            setState(() {
-                              isCheched = value!;
-                              hidePassword = !hidePassword;
-                            });
-                          }),
-                      const Text('Show Password'),
-                    ],
-                  )
+                          children: [
+                            Checkbox(
+                                value: isCheched,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isCheched = value!;
+                                    hidePassword = !hidePassword;
+                                  });
+                                }),
+                            const Text('Show Password'),
+                          ],
+                        )
                       ],
                     ),
                   ),

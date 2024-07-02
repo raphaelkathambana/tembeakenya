@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
-import 'package:tembeakenya/model/user_model.dart';
+import 'package:tembeakenya/model/user.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
 
@@ -34,11 +34,8 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   void initState() {
     navigationService = NavigationService(router);
     super.initState();
-    if (widget.id != null &&
-        widget.token != null &&
-        widget.params != null &&
-        widget.user != null) {
-      _verifyEmail(widget.id!, widget.token!, widget.params!, widget.user!);
+    if (widget.id != null && widget.token != null && widget.params != null) {
+      _verifyEmail(widget.id!, widget.token!, widget.params!, widget.user);
     } else {
       _verificationMessage =
           'A Verification Link has been Sent to your Address. Please Click it to verify your account.';
