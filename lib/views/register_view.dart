@@ -116,7 +116,7 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         TextField(
                           controller: _passwordConfirm,
-                          obscureText: true,
+                          obscureText: hidePassword,
                           enableSuggestions: false,
                           autocorrect: false,
                           decoration: const InputDecoration(

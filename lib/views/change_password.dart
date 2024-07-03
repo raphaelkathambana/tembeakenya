@@ -33,6 +33,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   String profileImageID = "";
 
+  bool hidePassword = true;
+  bool isCheched = false;
+
   @override
   void initState() {
     navigationService = NavigationService(router);
@@ -68,9 +71,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   @override
   Widget build(BuildContext context) {
-    // user = widget.currentUser;
-
-    // theUsername = user!.username.toString();
 
     // NavigationService navigationService = NavigationService(router);
     return Scaffold(
@@ -114,8 +114,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ),
                         TextField(
                           controller: _currentPassword,
+                          obscureText: hidePassword,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           onChanged: (value) {
-                            user?.username = value;
+                            // user?.username = value;
                             currentPassword = value;
                           },
                         ),
@@ -143,8 +146,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ),
                         TextField(
                           controller: _newPassword,
+                          obscureText: hidePassword,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           onChanged: (value) {
-                            user?.username = value;
+                            // user?.username = value;
                             newPassword = value;
                           },
                         ),
@@ -171,13 +177,34 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           ],
                         ),
                         TextField(
+                          obscureText: hidePassword,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           controller: _confirmPassword,
                           onChanged: (value) {
-                            user?.username = value;
+                            // user?.username = value;
                             confirmPassword = value;
                           },
                         ),
                       ])),
+              Container(
+                margin:
+                      const EdgeInsets.only(left: 20),
+                child: 
+              Row(
+                children: [
+                  Checkbox(
+                      value: isCheched,
+                      onChanged: (value) {
+                        setState(() {
+                          isCheched = value!;
+                          hidePassword = !hidePassword;
+                        });
+                      }),
+                  const Text('Show Password'),
+                ],
+              )
+              ),
               Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

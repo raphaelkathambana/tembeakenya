@@ -38,16 +38,18 @@ class _ProfileViewState extends State<ProfileView> {
     user = widget.currentUser;
     profileImageID = "${user!.image_id}";
     displayUrl = '';
+    super.initState();
+  }
+ 
+
+  @override
+  Widget build(BuildContext context) {
+    
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     debugPrint('Ok, Image URL: $displayUrl');
 
     return Scaffold(
@@ -67,7 +69,7 @@ class _ProfileViewState extends State<ProfileView> {
                   navigationService.navigatePushToEditProfile(context, user),
             ),
             ListTile(
-              leading: const Icon(Icons.person),
+              leading: const Icon(Icons.key),
               title: const Text('Change Password'),
               onTap: () =>
                   // todo implement change password page
