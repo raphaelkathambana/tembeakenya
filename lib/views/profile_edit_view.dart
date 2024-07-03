@@ -400,7 +400,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       lastname!,
                       profileImageId,
                       context);
+                int count = 0;
+                Navigator.of(context).popUntil((_) => count++ >= 2);
+
                 },
+                
                 child: const Text('Update'),
               ))
         ])));

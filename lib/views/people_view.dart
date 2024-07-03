@@ -3,9 +3,10 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/views/user_profile_view.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
+
 import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
@@ -22,13 +23,39 @@ class _PeopleViewState extends State<PeopleView> {
 
   late String displayUrl;
   late String? dropdownValue;
-  List<String> list = <String>['All', 'Friend'];
+  List<String> listUser = <String>['All', 'Friend'];
   late NavigationService navigationService;
   User? user;
 
   String profileImageID = "defaultProfilePic";
+  late int loadNum;
+
+  final TextEditingController _search = TextEditingController();
+  String search = '';
 
   // ****************************************************** //
+  searchCard(String search, int num, bool isFriend){ 
+    if (search != '') {
+      if (fullName[num].toLowerCase().contains(search.toLowerCase())){
+        return userFriend(num, isFriend);
+        }    
+        return const SizedBox();
+    } else {
+      return userFriend(num, isFriend);
+    }
+  }
+
+  userFriend(int num, bool isFriend){
+    if (isFriend == true) {
+      if (friend[num] == true) {
+      return userCard(num);
+      } else {
+        return const SizedBox();
+      }
+    } else {
+      return userCard(num);
+    }
+  }
 
   userCard(int num) {
     return TextButton(
@@ -36,7 +63,7 @@ class _PeopleViewState extends State<PeopleView> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => UserProfileView(userID: num)));
+                  builder: (context) => PeopleDetailView(userID: num)));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
@@ -126,15 +153,16 @@ class _PeopleViewState extends State<PeopleView> {
             ),
           ]),
         ));
-
-    // }
   }
 
   // ****************************************************** //
 
   @override
   void initState() {
-    dropdownValue = list.first;
+    // _search = TextEditingController();
+    // search = '';
+
+    dropdownValue = listUser.first;    
     displayUrl = '';
     navigationService = NavigationService(router);
     getImageUrl(profileImageID).then((String result) {
@@ -147,6 +175,14 @@ class _PeopleViewState extends State<PeopleView> {
 
   @override
   Widget build(BuildContext context) {
+    // if (dropdownValue == listUser.first) {
+      // All Users Shall Be displayed
+      loadNum = fullName.length;
+    // } else {
+    //   // All Users that are friends shall be displayed 
+    //   // The statement below doesn't reflect that though
+    //   loadNum = fullName.length - 6;
+    // }
     // user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 
@@ -165,16 +201,21 @@ class _PeopleViewState extends State<PeopleView> {
           ),
           child: Row(
             children: [
-              const Expanded(
+              Expanded(
                 child: TextField(
-                  // controller: _password,
+                  controller: _search,
                   enableSuggestions: true,
                   autocorrect: true,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
                     icon: Icon(Icons.search),
                     hintText: 'Search',
                   ),
+                  onChanged: (value) {
+                    setState(() {
+                      search = _search.text;
+                    });
+                  },
                 ),
               ),
               Container(
@@ -196,7 +237,7 @@ class _PeopleViewState extends State<PeopleView> {
                       dropdownValue = value!;
                     });
                   },
-                  items: list.map<DropdownMenuItem<String>>((String value) {
+                  items: listUser.map<DropdownMenuItem<String>>((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
                       child: Text(value),
@@ -206,27 +247,18 @@ class _PeopleViewState extends State<PeopleView> {
               )
             ],
           )),
-      // const Divider(
-      //   height: 2,
-      //   color: ColorsUtil.secondaryColorDark,
-      //   indent: 12,
-      //   endIndent: 12,
-      // ),
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 3),
-          // margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-
           decoration: const BoxDecoration(
-            // borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Color.fromARGB(0, 0, 0, 0),
           ),
           child: Column(
             children: [
-              for (int i = 0; i <= 2; i++)
-                if (dropdownValue == list.last && friend[i] == true)
-                  userCard(i)
-                else if (dropdownValue == list.first)
-                  userCard(i),
+              for (int i = 0; i < loadNum; i++)
+                if (dropdownValue == listUser.last) // If dropdown indicates "Friends"
+                  searchCard(search, i, true)
+                else if (dropdownValue == listUser.first) // If dropdown indicates "All"
+                  searchCard(search, i, false)
             ],
           )),
     ])));

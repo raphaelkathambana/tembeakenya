@@ -2,25 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
-import 'package:tembeakenya/model/user.dart';
+// import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/dummy_db.dart';
 
-class UserProfileView extends StatefulWidget {
+class PeopleDetailView extends StatefulWidget {
   // final dynamic currentUser;
   // const UserProfileView({super.key, required this.currentUser, required user});
   final int userID;
-  const UserProfileView({super.key, required this.userID});
+  const PeopleDetailView({super.key, required this.userID});
 
   @override
-  State<UserProfileView> createState() => _CommunityViewState();
+  State<PeopleDetailView> createState() => _CommunityViewState();
 }
 
-class _CommunityViewState extends State<UserProfileView> {
+class _CommunityViewState extends State<PeopleDetailView> {
   late String displayUrl;
-  User? user;
+  // User? user;
   late NavigationService navigationService;
   // bool _isLoading = false;
-  String profileImageID = "";
+  // String profileImageID = "";
+  String profileImageID = "defaultProfilePic";
 
   // ****************************************************** //
   late String theFullName;
@@ -32,17 +33,16 @@ class _CommunityViewState extends State<UserProfileView> {
   void initState() {
     navigationService = NavigationService(router);
     displayUrl = '';
-    profileImageID = "${user!.image_id}";
-    getImageUrl(profileImageID).then((String result) {
-      setState(() {
-        displayUrl = result;
-      });
-    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    getImageUrl(profileImageID).then((String result) {
+      setState(() {
+        displayUrl = result;
+      });
+    });
     // ****************************************************** //
     int uID = widget.userID;
     theFullName = fullName[uID];
