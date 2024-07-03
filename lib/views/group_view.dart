@@ -174,14 +174,9 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   Widget build(BuildContext context) {
-    if (dropdownValue == listGroup.first) {
-      // All Users Shall Be displayed
+    
       loadNum = groupName.length;
-    } else {
-      // All Users that are friends shall be displayed
-      // The statement below doesn't reflect that though
-      loadNum = groupName.length - 2;
-    }
+    
     // user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 

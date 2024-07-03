@@ -118,7 +118,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                         ),
                       // const SizedBox(width: 10),
                       SizedBox(
-                        width: MediaQuery.sizeOf(context).width * .35,
+                        width: MediaQuery.sizeOf(context).width * .6,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -136,12 +136,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal,
                                     color: ColorsUtil.accentColorDark)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (!theMember)
+                            if (!theMember)
                   ElevatedButton(
 
                     onPressed: () {
@@ -150,7 +145,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                       });
                     },
                     style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(150, 40),
+                        minimumSize: const Size(150, 30),
                         foregroundColor: ColorsUtil.textColorDark,
                         backgroundColor: request[uID]
                             ? ColorsUtil.accentColorDark
@@ -158,6 +153,12 @@ class _CommunityViewState extends State<GroupDetailView> {
                     child:
                         request[uID] ? const Text('Pending...') : const Text('Request to Join'),
                   )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  
                 ],
               ),
               const Divider(
@@ -168,6 +169,7 @@ class _CommunityViewState extends State<GroupDetailView> {
               ),
             ]),
           ),
+          
 
           // Statistic has dummy writing
           // Container(
