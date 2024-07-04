@@ -374,9 +374,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   if (pickedImage != null) {
                     await uploadPic(
                             pickedImage!,
-                            _username.text.isNotEmpty
-                                ? _username.text
-                                : user!.username)
+                            user!.id.toString())
                         .then((value) => imageId = value);
                   }
                   final firstname = _firstname.text.isNotEmpty

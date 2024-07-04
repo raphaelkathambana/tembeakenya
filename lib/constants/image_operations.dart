@@ -10,7 +10,7 @@ Future<String> getImageUrl(String picID) async {
   String profilePicName = "$picID.png";
   Reference? image = storageRef.ref().child("profile_images/$profilePicName");
   final url = await image.getDownloadURL();
-
+    // Future.delayed(const Duration(microseconds: 300));
   return url;
 }
 // ****************************************** //
@@ -35,7 +35,7 @@ Future<Uint8List?> pickImage(ImageSource source) async {
 // ****************************************** //
 
 // ************** UPLOAD IMAGE ************** //
-Future<String> uploadPic(Uint8List newImage, String? username) async {
+Future<String> uploadPic(Uint8List newImage, String? id) async {
   /*
     Since we don't have a database that changes image ID from 
     "defaultProfilePic" to "${username}ProfilePic" all images
@@ -46,7 +46,7 @@ Future<String> uploadPic(Uint8List newImage, String? username) async {
   */
 
   // String imageID = "defaultProfilePic";
-  String imageID = "${username}ProfilePic";
+  String imageID = "${id}ProfilePic";
   Reference reference = storageRef.ref().child("profile_images/$imageID.png");
   reference.putData(newImage);
   return imageID;

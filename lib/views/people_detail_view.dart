@@ -17,9 +17,7 @@ class PeopleDetailView extends StatefulWidget {
 
 class _CommunityViewState extends State<PeopleDetailView> {
   late String displayUrl;
-  // User? user;
   late NavigationService navigationService;
-  // bool _isLoading = false;
   // String profileImageID = "";
   String profileImageID = "defaultProfilePic";
 
@@ -34,15 +32,15 @@ class _CommunityViewState extends State<PeopleDetailView> {
     navigationService = NavigationService(router);
     displayUrl = '';
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // ****************************************************** //
     int uID = widget.userID;
     theFullName = fullName[uID];
@@ -50,10 +48,8 @@ class _CommunityViewState extends State<PeopleDetailView> {
     theFriend = friend[uID];
     // ****************************************************** //
 
-    // user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 
-    // NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(57, 22, 26, 15),
@@ -83,7 +79,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                 children: [
                   Row(
                     children: [
-                      // const SizedBox(width: 10),
                       if (displayUrl.isEmpty)
                         const CircleAvatar(
                             radius: 50,
@@ -124,7 +119,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                                     ));
                           },
                         ),
-                      // const SizedBox(width: 10),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width * .35,
                         child: Column(
@@ -148,21 +142,35 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       ),
                     ],
                   ),
-                  ElevatedButton(
+                  Container(
+                  margin: const EdgeInsets.only(right: 3.5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  color: friend[uID]
+                            ? ColorsUtil.accentColorDark
+                            : ColorsUtil.secondaryColorDark,
+                  ),
+                  height: 35,
+                  width: 95,
+                  child: TextButton(
                     onPressed: () {
                       setState(() {
                         friend[uID] = !friend[uID];
-                      });
+                      }); 
                     },
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(95, 35),
-                        foregroundColor: ColorsUtil.textColorDark,
-                        backgroundColor: friend[uID]
-                            ? ColorsUtil.accentColorDark
-                            : ColorsUtil.secondaryColorDark),
-                    child:
-                        friend[uID] ? const Text('Friends') : const Text('Add'),
+                    child: friend[uID]
+                        ? const Text(
+                            'Following',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          )
+                        : const Text(
+                            'Follow',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          ),
                   )
+                ),
                 ],
               ),
               const Divider(
@@ -245,9 +253,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                 height: 2,
                 color: ColorsUtil.secondaryColorDark,
               ),
-              // Padding(
-              //     padding:
-              //         EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
               Row(
                 children: [
                   Column(

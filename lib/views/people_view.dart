@@ -23,7 +23,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   late String displayUrl;
   late String? dropdownValue;
-  List<String> listUser = <String>['All', 'Friend'];
+  List<String> listUser = <String>['All', 'Follows'];
   late NavigationService navigationService;
   User? user;
 
@@ -34,21 +34,21 @@ class _PeopleViewState extends State<PeopleView> {
   String search = '';
 
   // ****************************************************** //
-  searchCard(String search, int num, bool isFriend){ 
+  searchCard(String search, int num, bool isFriend) {
     if (search != '') {
-      if (fullName[num].toLowerCase().contains(search.toLowerCase())){
+      if (fullName[num].toLowerCase().contains(search.toLowerCase())) {
         return userFriend(num, isFriend);
-        }    
-        return const SizedBox();
+      }
+      return const SizedBox();
     } else {
       return userFriend(num, isFriend);
     }
   }
 
-  userFriend(int num, bool isFriend){
+  userFriend(int num, bool isFriend) {
     if (isFriend == true) {
       if (friend[num] == true) {
-      return userCard(num);
+        return userCard(num);
       } else {
         return const SizedBox();
       }
@@ -60,6 +60,7 @@ class _PeopleViewState extends State<PeopleView> {
   userCard(int num) {
     return TextButton(
         onPressed: () {
+          // TODO: Add to route
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -125,24 +126,35 @@ class _PeopleViewState extends State<PeopleView> {
                     ),
                   ),
                 ]),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3.5),
-                  child: ElevatedButton(
+                Container(
+                  margin: const EdgeInsets.only(right: 3.5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: friend[num]
+                        ? ColorsUtil.accentColorDark
+                        : ColorsUtil.secondaryColorDark,
+                  ),
+                  height: 35,
+                  width: 95,
+                  child: TextButton(
                     onPressed: () {
                       setState(() {
                         friend[num] = !friend[num];
                       });
                     },
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(95, 35),
-                        foregroundColor: ColorsUtil.textColorDark,
-                        backgroundColor: friend[num]
-                            ? ColorsUtil.accentColorDark
-                            : ColorsUtil.secondaryColorDark),
-                    child:
-                        friend[num] ? const Text('Friends') : const Text('Add'),
+                    child: friend[num]
+                        ? const Text(
+                            'Following',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          )
+                        : const Text(
+                            'Follow',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          ),
                   ),
-                )
+                ),
               ],
             ),
             const Divider(
@@ -159,12 +171,11 @@ class _PeopleViewState extends State<PeopleView> {
 
   @override
   void initState() {
-    // _search = TextEditingController();
-    // search = '';
-
-    dropdownValue = listUser.first;    
+    dropdownValue = listUser.first;
+    loadNum = fullName.length;
     displayUrl = '';
     navigationService = NavigationService(router);
+
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -175,92 +186,90 @@ class _PeopleViewState extends State<PeopleView> {
 
   @override
   Widget build(BuildContext context) {
-    // if (dropdownValue == listUser.first) {
-      // All Users Shall Be displayed
-      loadNum = fullName.length;
-    // } else {
-    //   // All Users that are friends shall be displayed 
-    //   // The statement below doesn't reflect that though
-    //   loadNum = fullName.length - 6;
-    // }
-    // user = widget.currentUser;
-    debugPrint('Ok, Image URL: $displayUrl');
-
-    // NavigationService navigationService = NavigationService(router);
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(children: [
-      Container(
-          width: MediaQuery.sizeOf(context).width * .90,
-          margin: const EdgeInsets.only(top: 20, bottom: 25),
-          height: 50,
-          padding: const EdgeInsets.only(left: 10),
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(55, 99, 126, 32),
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _search,
-                  enableSuggestions: true,
-                  autocorrect: true,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
-                    hintText: 'Search',
+      body: SingleChildScrollView(
+          child: Column(children: [
+        const Divider(
+          height: 2,
+          color: ColorsUtil.secondaryColorDark,
+          indent: 12,
+          endIndent: 12,
+        ),
+        Container(
+            width: MediaQuery.sizeOf(context).width * .90,
+            margin: const EdgeInsets.only(top: 20, bottom: 25),
+            height: 50,
+            padding: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(55, 99, 126, 32),
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _search,
+                    enableSuggestions: true,
+                    autocorrect: true,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                      hintText: 'Search',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        search = _search.text;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      search = _search.text;
-                    });
-                  },
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(
-                      color: Colors.grey,
-                      style: BorderStyle.solid,
-                      width: 0.80),
-                ),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  style: const TextStyle(fontSize: 14),
-                  underline: Container(height: 2),
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  items: listUser.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              )
-            ],
-          )),
-      Container(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(0, 0, 0, 0),
-          ),
-          child: Column(
-            children: [
-              for (int i = 0; i < loadNum; i++)
-                if (dropdownValue == listUser.last) // If dropdown indicates "Friends"
-                  searchCard(search, i, true)
-                else if (dropdownValue == listUser.first) // If dropdown indicates "All"
-                  searchCard(search, i, false)
-            ],
-          )),
-    ])));
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    border: Border.all(
+                        color: Colors.grey,
+                        style: BorderStyle.solid,
+                        width: 0.80),
+                  ),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    style: const TextStyle(fontSize: 14),
+                    underline: Container(height: 2),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
+                    items:
+                        listUser.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                )
+              ],
+            )),
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(0, 0, 0, 0),
+            ),
+            child: Column(
+              children: [
+                for (int i = 0; i < loadNum; i++)
+                  if (dropdownValue ==
+                      listUser.last) // If dropdown indicates "Friends"
+                    searchCard(search, i, true)
+                  else if (dropdownValue ==
+                      listUser.first) // If dropdown indicates "All"
+                    searchCard(search, i, false)
+              ],
+            )),
+      ])),
+    );
   }
 }

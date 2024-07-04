@@ -49,7 +49,7 @@ flutter run
 
 ## Project Structure
 
-All the application code can be found on the ```/lib``` folder. Specific code for iOS adn Android can be found in the ```/ios``` and ```/android``` Ffolders respectively.
+All the application code can be found on the ```/lib``` folder. Specific code for iOS and Android can be found in the ```/ios``` and ```/android``` folders respectively.
 
 ### File Structure
 
