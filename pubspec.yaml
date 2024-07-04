@@ -57,6 +57,7 @@ dependencies:
   cloud_firestore: ^4.17.5
   firebase_storage: ^11.7.7
   flutter_dotenv: ^5.1.0
+  location: ^6.0.2
   # mapbox_maps_flutter: ^2.0.0
 
 dev_dependencies:
