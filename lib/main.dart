@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
@@ -11,6 +12,7 @@ import 'package:tembeakenya/views/welcome_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeLocationAndSave();
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp();
   runApp(
