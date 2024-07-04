@@ -4,7 +4,7 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/views/change_password.dart';
+import 'package:tembeakenya/views/profile_change_password_view.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/login_view.dart';

@@ -3,12 +3,30 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/group_create_view.dart';
 import 'package:tembeakenya/views/group_detail_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-import 'package:tembeakenya/dummy_db.dart';
+  import 'package:tembeakenya/dummy_db.dart';
+
+  // ****************************************************** //
+
+  //      | RoleID | Role        |
+  //      | ------ | ----------- |
+  //      | 1      | Hike        |
+  //      | 2      | Guide       |
+  //      | 3      | Super Admin |
+
+  // *********** EXAMPLE DB ************ //
+
+  //      | UserID | RoleID |
+  //      | ------ | ------ |
+  //      | 1      | 1      |
+  //      | 1      | 2      |
+  //      | 2      | 1      |
 
 // ****************************************************** //
+
 class GroupView extends StatefulWidget {
   final dynamic currentUser;
   const GroupView({super.key, required user, this.currentUser});
@@ -18,7 +36,29 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  // ****************************************************** //
+  // ***** ROLE *****  //
+  late int roleID;
+  late bool roleSwitch;
+
+  // TEMPORARY ROLE SWITCH BUTTON
+  roleButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          roleSwitch = !roleSwitch;
+          roleID = roleSwitch ? 2 : 1;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+          minimumSize: const Size(150, 30),
+          foregroundColor: ColorsUtil.textColorDark,
+          backgroundColor: roleSwitch
+              ? ColorsUtil.secondaryColorDark
+              : ColorsUtil.accentColorDark),
+      child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
+    );
+  }
+  // ***************** //
 
   late String displayUrl;
   late String? dropdownValue;
@@ -32,14 +72,13 @@ class _GroupViewState extends State<GroupView> {
   final TextEditingController _search = TextEditingController();
   String search = '';
 
-  // ****************************************************** //
 
-  searchCard(String search, int num, bool isMember){ 
+  searchCard(String search, int num, bool isMember) {
     if (search != '') {
-      if (groupName[num].toLowerCase().contains(search.toLowerCase())){
+      if (groupName[num].toLowerCase().contains(search.toLowerCase())) {
         return groupMember(num, isMember);
-        }    
-        return const SizedBox();
+      }
+      return const SizedBox();
     } else {
       return groupMember(num, isMember);
     }
@@ -47,11 +86,11 @@ class _GroupViewState extends State<GroupView> {
 
   groupMember(int num, bool isMember) {
     if (isMember == true) {
-        if (member[num] == true) {
-          return groupCard(num);
-        } else {
+      if (member[num] == true) {
+        return groupCard(num);
+      } else {
         return const SizedBox();
-        }
+      }
     } else {
       return groupCard(num); // If isMember is false, continue with userCard
     }
@@ -60,6 +99,7 @@ class _GroupViewState extends State<GroupView> {
   groupCard(int num) {
     return TextButton(
         onPressed: () {
+          // TODO: Add to route
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -144,23 +184,69 @@ class _GroupViewState extends State<GroupView> {
                   border: Border.all(color: ColorsUtil.backgroundColorDark),
                   color: const Color.fromARGB(29, 99, 126, 32),
                 ),
-                child: const Text(
-                    'This is where we have descriptions of the group',
-                    style: TextStyle(
+                child: Text(
+                    description[num],
+                    style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
                         color: ColorsUtil.primaryColorDark))),
           ]),
         ));
-    // } catch (e) {
-    //   return debugPrint("Error: $e");
-    // }
   }
 
+  createGroup() {
+    return TextButton(
+      onPressed: () {
+        // TODO: Add to route
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const GroupCreateView()));
+        },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: ColorsUtil.secondaryColorDark),
+          color: const Color.fromARGB(55, 99, 126, 32),
+        ),
+        height: 70,
+        padding: const EdgeInsets.all(5),
+        margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+        child: Column(
+          children: [
+            Container(
+              // width: MediaQuery.sizeOf(context).width * .35,
+              padding: const EdgeInsets.all(15),
+              child: const Row(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.add_box_outlined),
+                  Text('  Create New Group',
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: ColorsUtil.primaryColorDark)),
+                  
+                ],
+              ),
+            ),
+          ],
+        ),
+      ));
+  }
   // ****************************************************** //
 
   @override
   void initState() {
+    // ***** ROLE *****  //
+    roleID = 2;
+    roleSwitch = true;
+    // ***************** //
+
     dropdownValue = listGroup.first;
     displayUrl = '';
     navigationService = NavigationService(router);
@@ -174,16 +260,23 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   Widget build(BuildContext context) {
-    
-      loadNum = groupName.length;
-    
-    // user = widget.currentUser;
-    debugPrint('Ok, Image URL: $displayUrl');
+    debugPrint('URL: $displayUrl');
 
-    // NavigationService navigationService = NavigationService(router);
+    loadNum = groupName.length;
+
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(children: [
+      // TEMPORARY ROLE SWITCH BUTTON
+      roleButton(),
+      
+      const Divider(
+        height: 2,
+        color: ColorsUtil.secondaryColorDark,
+        indent: 12,
+        endIndent: 12,
+      ),
+
       Container(
           width: MediaQuery.sizeOf(context).width * .90,
           margin: const EdgeInsets.only(top: 20, bottom: 25),
@@ -242,6 +335,10 @@ class _GroupViewState extends State<GroupView> {
               )
             ],
           )),
+
+      if (roleID == 2) 
+        createGroup(),
+      
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 3),
           decoration: const BoxDecoration(
@@ -250,9 +347,11 @@ class _GroupViewState extends State<GroupView> {
           child: Column(
             children: [
               for (int i = 0; i < loadNum; i++)
-                if (dropdownValue == listGroup.last) // If dropdown indicates "Friends"
+                if (dropdownValue ==
+                    listGroup.last) // If dropdown indicates "Friends"
                   searchCard(search, i, true)
-                else if (dropdownValue == listGroup.first) // If dropdown indicates "All"
+                else if (dropdownValue ==
+                    listGroup.first) // If dropdown indicates "All"
                   searchCard(search, i, false)
             ],
           )),

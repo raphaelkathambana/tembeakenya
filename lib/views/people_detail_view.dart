@@ -32,15 +32,15 @@ class _CommunityViewState extends State<PeopleDetailView> {
     navigationService = NavigationService(router);
     displayUrl = '';
     super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     // ****************************************************** //
     int uID = widget.userID;
     theFullName = fullName[uID];
@@ -142,21 +142,35 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       ),
                     ],
                   ),
-                  ElevatedButton(
+                  Container(
+                  margin: const EdgeInsets.only(right: 3.5),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                  color: friend[uID]
+                            ? ColorsUtil.accentColorDark
+                            : ColorsUtil.secondaryColorDark,
+                  ),
+                  height: 35,
+                  width: 95,
+                  child: TextButton(
                     onPressed: () {
                       setState(() {
                         friend[uID] = !friend[uID];
-                      });
+                      }); 
                     },
-                    style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(95, 35),
-                        foregroundColor: ColorsUtil.textColorDark,
-                        backgroundColor: friend[uID]
-                            ? ColorsUtil.accentColorDark
-                            : ColorsUtil.secondaryColorDark),
-                    child:
-                        friend[uID] ? const Text('Friends') : const Text('Add'),
+                    child: friend[uID]
+                        ? const Text(
+                            'Following',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          )
+                        : const Text(
+                            'Follow',
+                            style: TextStyle(
+                                fontSize: 15, color: ColorsUtil.textColorDark),
+                          ),
                   )
+                ),
                 ],
               ),
               const Divider(

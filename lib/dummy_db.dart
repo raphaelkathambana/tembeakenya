@@ -45,4 +45,18 @@
       true, 
       false,
     ];
+    List<String> description = [
+      'Official group of the be best hike app',
+      'Competitive guild of hikers. \nMust qualify to join!',
+      'Developer\'s hike group.',
+      'This is where we have descriptions of the group',
+    ];
+    List<String> locations = [
+      'Karura', 
+      'Karura 2', 
+      'Karura 3', 
+      'Karura 4', 
+      'Karura 5', 
+      'Karura 6',
+      ];
   // ****************************************************** //
