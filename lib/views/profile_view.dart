@@ -18,20 +18,8 @@ class _ProfileViewState extends State<ProfileView> {
   User? user;
   late NavigationService navigationService;
   bool _isLoading = false;
-  /*
-     In the database, when creating a new user, the user shall have 
-     "defaultProfilePic" as the imageID, then when a user chooses 
-     a new profile picture, a new name will be generated.
-
-     This new name will consists of the format "${username}ProfilePic"
-
-     But since we don't have a database that can update the name, 
-     this code will only save images as "defaultProfilePic" 
-     despite the changes made
-    */
   String profileImageID = "";
 
-  // ****************************************************** //
   @override
   void initState() {
     navigationService = NavigationService(router);
@@ -72,7 +60,6 @@ class _ProfileViewState extends State<ProfileView> {
               leading: const Icon(Icons.key),
               title: const Text('Change Password'),
               onTap: () =>
-                  // todo implement change password page
                   navigationService.navigatePushToChangePassword(context, user),
             ),
             ListTile(

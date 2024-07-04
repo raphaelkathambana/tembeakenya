@@ -17,9 +17,7 @@ class PeopleDetailView extends StatefulWidget {
 
 class _CommunityViewState extends State<PeopleDetailView> {
   late String displayUrl;
-  // User? user;
   late NavigationService navigationService;
-  // bool _isLoading = false;
   // String profileImageID = "";
   String profileImageID = "defaultProfilePic";
 
@@ -50,10 +48,8 @@ class _CommunityViewState extends State<PeopleDetailView> {
     theFriend = friend[uID];
     // ****************************************************** //
 
-    // user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 
-    // NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromARGB(57, 22, 26, 15),
@@ -83,7 +79,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                 children: [
                   Row(
                     children: [
-                      // const SizedBox(width: 10),
                       if (displayUrl.isEmpty)
                         const CircleAvatar(
                             radius: 50,
@@ -124,7 +119,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                                     ));
                           },
                         ),
-                      // const SizedBox(width: 10),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width * .35,
                         child: Column(
@@ -245,9 +239,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
                 height: 2,
                 color: ColorsUtil.secondaryColorDark,
               ),
-              // Padding(
-              //     padding:
-              //         EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
               Row(
                 children: [
                   Column(
