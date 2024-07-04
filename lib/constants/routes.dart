@@ -7,6 +7,7 @@ import 'package:tembeakenya/model/user_model.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
 import 'package:tembeakenya/views/login_view.dart';
+import 'package:tembeakenya/views/nav.dart';
 import 'package:tembeakenya/views/profile_edit_view.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 import 'package:tembeakenya/views/register_view.dart';
@@ -114,6 +115,12 @@ final GoRouter router = GoRouter(
         user: state.extra as User,
       ),
     ),
+    GoRoute(
+      path: '/map',
+      name: '/map',
+      pageBuilder: (context, state) =>
+          const MaterialPage(child: NavigationView()),
+    ),
   ],
   redirect: (BuildContext context, GoRouterState state) {
     final Uri uri = state.uri;
@@ -190,5 +197,9 @@ class NavigationService {
 
   void navigateToNavbar(BuildContext context, User user) {
     _router.go('/navbar', extra: user);
+  }
+
+  void navigateToMap(BuildContext context) {
+    _router.go('/map');
   }
 }
