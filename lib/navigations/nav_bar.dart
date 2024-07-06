@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/navigations/community_nav_bar.dart';
 import 'package:tembeakenya/views/home_page.dart';
+import 'package:tembeakenya/views/navigation_page.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 
 class LayoutView extends StatefulWidget {
@@ -13,14 +14,24 @@ class LayoutView extends StatefulWidget {
 }
 
 class _LayoutViewState extends State<LayoutView> {
+  // late int _currentIndex;
+  
+
+  // @override
+  // initState() {
+  //   super.initState();
+  //   _currentIndex = 0;
+  // }
+
   int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
       HomeView(
         user: widget.user,
       ),
-      HomeView(
+      NavigationView(
         user: widget.user,
       ),
       CommunityView(
