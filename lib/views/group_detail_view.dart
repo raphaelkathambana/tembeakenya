@@ -70,7 +70,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   builder: (context) => GroupEventView(userID: uID)));
         },
         style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Container(
                 width: MediaQuery.sizeOf(context).width,
                 // height: 100,
@@ -79,7 +79,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: ColorsUtil.accentColorDark),
-                  color: const Color.fromARGB(29, 99, 126, 32),
+                  color: ColorsUtil.describtionColorDark,
                 ),
                 child: const Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -286,7 +286,6 @@ class _CommunityViewState extends State<GroupDetailView> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(57, 22, 26, 15),
           title: const Text(
             'Hike Group',
             style: TextStyle(color: ColorsUtil.textColorDark),
@@ -301,7 +300,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             padding: const EdgeInsets.only(right: 3.5),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color.fromARGB(55, 99, 126, 32),
+              color: ColorsUtil.cardColorDark,
             ),
             child: Column(children: [
               const Divider(
@@ -318,7 +317,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                       if (displayUrl.isEmpty)
                         const CircleAvatar(
                             radius: 50,
-                            backgroundColor: Color(0x00000000),
+                            backgroundColor: Colors.transparent,
                             child: CircleAvatar(
                                 radius: 42,
                                 backgroundColor: ColorsUtil.accentColorDark,
@@ -413,7 +412,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -437,7 +436,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: ColorsUtil.backgroundColorDark),
-                    color: const Color.fromARGB(29, 99, 126, 32),
+                    color: ColorsUtil.describtionColorDark,
                   ),
                   child: Text(theDescription,
                       style: const TextStyle(
@@ -455,7 +454,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 const EdgeInsets.only(top: 15, bottom: 15, left: 5, right: 5),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: Color.fromARGB(150, 49, 59, 21),
+                color: ColorsUtil.cardColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

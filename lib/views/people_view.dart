@@ -67,9 +67,9 @@ class _PeopleViewState extends State<PeopleView> {
                   builder: (context) => PeopleDetailView(userID: num)));
         },
         style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Card(
-          color: const Color.fromARGB(55, 99, 126, 32),
+          color: ColorsUtil.cardColorDark,
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           child: Column(children: [
             const Divider(
@@ -85,7 +85,7 @@ class _PeopleViewState extends State<PeopleView> {
                   if (displayUrl.isEmpty)
                     const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -96,7 +96,7 @@ class _PeopleViewState extends State<PeopleView> {
                   else
                     CircleAvatar(
                         radius: 45,
-                        backgroundColor: const Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -201,7 +201,7 @@ class _PeopleViewState extends State<PeopleView> {
             height: 50,
             padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(55, 99, 126, 32),
+              color: ColorsUtil.cardColorDark,
               borderRadius: BorderRadius.circular(25.0),
             ),
             child: Row(
@@ -256,7 +256,7 @@ class _PeopleViewState extends State<PeopleView> {
         Container(
             padding: const EdgeInsets.symmetric(horizontal: 3),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(0, 0, 0, 0),
+              color: Colors.transparent,
             ),
             child: Column(
               children: [

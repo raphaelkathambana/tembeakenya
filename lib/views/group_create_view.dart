@@ -124,7 +124,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                 if (displayUrl.isEmpty)
                   const CircleAvatar(
                       radius: 70,
-                      backgroundColor: Color(0x00000000),
+                      backgroundColor: Colors.transparent,
                       child: CircleAvatar(
                           radius: 62,
                           backgroundColor: ColorsUtil.accentColorDark,
@@ -172,7 +172,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.describtionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,7 +211,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.describtionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
