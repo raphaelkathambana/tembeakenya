@@ -201,34 +201,6 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  /// Displays an error dialog with the given [message] in the specified [context].
-  /// The error message is extracted using the [getMainErrorMessage] function.
-  /// The dialog shows the error message without the surrounding square brackets.
-  /// Returns a [Future] that completes when the dialog is dismissed.
-  Future<dynamic>? alertErrorHandler(BuildContext context, dynamic message) {
-    debugPrint("Extracting Errors");
-    if (message == null) {
-      return null;
-    } else {
-      var error = message is String ? message : getMainErrorMessage(message);
-      return showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Error'),
-          content: Text(error.toString().split('[').last.split(']').first),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
   Future<void> isVerified(User user, BuildContext context) async {
     debugPrint(user.toJson().toString());
     //check if the response has an email verified field and if it has a value
@@ -267,18 +239,6 @@ class AuthController with ChangeNotifier {
     }
 
     return deviceName;
-  }
-
-  /// Returns the main error message from a given map.
-  ///
-  /// If the map contains a key named 'message', the value associated with that key is returned.
-  /// Otherwise, the string 'Key not found' is returned.
-  dynamic getMainErrorMessage(Map<String, dynamic> map) {
-    if (map.containsKey('message')) {
-      return map['message'];
-    } else {
-      return 'Key not found';
-    }
   }
 
   /// Sends a forgot password link to the specified email address.
