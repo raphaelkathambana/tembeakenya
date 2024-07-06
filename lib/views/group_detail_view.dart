@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/get_group_members.dart';
+import 'package:tembeakenya/repository/get_users.dart';
 
 import 'package:tembeakenya/views/group_create_hike_view.dart';
 import 'package:tembeakenya/views/group_edit_view.dart';
-import 'package:tembeakenya/views/group_event_view.dart';
+// import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-import 'package:tembeakenya/dummy_db.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
@@ -36,8 +39,9 @@ import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 class GroupDetailView extends StatefulWidget {
-  final int userID;
-  const GroupDetailView({super.key, required this.userID});
+  final user;
+  final group;
+  const GroupDetailView({super.key, required this.user, required this.group});
 
   @override
   State<GroupDetailView> createState() => _CommunityViewState();
@@ -49,7 +53,7 @@ class _CommunityViewState extends State<GroupDetailView> {
   String profileImageID = "defaultProfilePic";
 
   late String theGroupName;
-  late bool theMember;
+  // late bool theMember;
   late String theDescription;
 
   late int uID;
@@ -60,67 +64,67 @@ class _CommunityViewState extends State<GroupDetailView> {
   late bool roleSwitch;
   // ***************** //
 
-  eventCard(){
+  eventCard() {
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GroupEventView(userID: uID)));
-        },
-        style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
-        child: Container(
-                width: MediaQuery.sizeOf(context).width,
-                // height: 100,
-                margin: const EdgeInsets.all(7),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: ColorsUtil.accentColorDark),
-                  color: const Color.fromARGB(29, 99, 126, 32),
+      onPressed: () {
+        // TODO: Add to route
+        // Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //         builder: (context) => GroupEventView(userID: uID)));
+      },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        // height: 100,
+        margin: const EdgeInsets.all(7),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: ColorsUtil.accentColorDark),
+          color: const Color.fromARGB(29, 99, 126, 32),
+        ),
+        child: const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Title of the Hike',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsUtil.primaryColorDark,
                 ),
-                child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Title of the Hike',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark,
-                        ),
-                      ),
-                      Divider(
-                        height: 6,
-                        color: ColorsUtil.accentColorDark,
-                      ),
-                      Text(
-                        'Come Join us on the hike! If you want to attend the hike, make sure you fill out the form and pay.',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.textColorDark,
-                        ),
-                      ),
-                      Text(
-                        'Location: Karura Forest',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.primaryColorDark,
-                        ),
-                      ),
-                      Text('Date: July 7, 2024',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: ColorsUtil.primaryColorDark,
-                          ))
-                    ]),
               ),
+              Divider(
+                height: 6,
+                color: ColorsUtil.accentColorDark,
+              ),
+              Text(
+                'Come Join us on the hike! If you want to attend the hike, make sure you fill out the form and pay.',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.textColorDark,
+                ),
+              ),
+              Text(
+                'Location: Karura Forest',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.primaryColorDark,
+                ),
+              ),
+              Text('Date: July 7, 2024',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.primaryColorDark,
+                  ))
+            ]),
+      ),
     );
   }
 
@@ -128,8 +132,9 @@ class _CommunityViewState extends State<GroupDetailView> {
   void initState() {
     // TODO: Temporary
     // ***** ROLE *****  //
-    roleID = 2;
-    roleSwitch = true;
+    User user = widget.user;
+    roleID = user.roleNo!;
+    roleSwitch = canEdit(roleID);
     // ***************** //
 
     getImageUrl(profileImageID).then((String result) {
@@ -146,10 +151,10 @@ class _CommunityViewState extends State<GroupDetailView> {
   @override
   Widget build(BuildContext context) {
     // ****************************************************** //
-    uID = widget.userID;
-    theGroupName = groupName[uID];
-    theMember = member[uID];
-    theDescription = description[uID];
+    var group = widget.group;
+    theGroupName = group['name'];
+    // theMember = ;
+    theDescription = group['description'];
     // ****************************************************** //
 
     // user = widget.currentUser;
@@ -182,10 +187,15 @@ class _CommunityViewState extends State<GroupDetailView> {
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
               // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupMemberView())),
+              onTap: () {
+                debugPrint(getGroupMembers().toString());
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupMemberView(
+                              user: widget.user,
+                            )));
+              },
             ),
             ListTile(
                 leading: const Icon(Icons.logout),
@@ -221,10 +231,15 @@ class _CommunityViewState extends State<GroupDetailView> {
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
               // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupMemberView())),
+              onTap: () {
+                debugPrint(getGroupMembers().toString());
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupMemberView(
+                              user: widget.user,
+                            )));
+              },
             ),
             ListTile(
               leading: const Icon(Icons.edit_note),
@@ -242,7 +257,9 @@ class _CommunityViewState extends State<GroupDetailView> {
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const GroupJoinView())),
+                      builder: (context) => GroupJoinView(
+                            user: widget.user,
+                          ))),
             ),
             ListTile(
               leading: const Icon(Icons.event),
@@ -368,26 +385,27 @@ class _CommunityViewState extends State<GroupDetailView> {
                                       fontWeight: FontWeight.bold,
                                       color: ColorsUtil.textColorDark)),
                             ),
-                            if (theMember)
+                            if (isGroupMember(widget.user))
                               const Text('Member',
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                       color: ColorsUtil.accentColorDark)),
-                            if (!theMember)
+                            if (!isGroupMember(widget.user))
                               ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    request[uID] = !request[uID];
+                                    // todo add the request functionality
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: const Size(150, 30),
                                     foregroundColor: ColorsUtil.textColorDark,
-                                    backgroundColor: request[uID]
-                                        ? ColorsUtil.accentColorDark
-                                        : ColorsUtil.secondaryColorDark),
-                                child: request[uID]
+                                    backgroundColor:
+                                        hasRequestedToJoinGroup(widget.user)
+                                            ? ColorsUtil.accentColorDark
+                                            : ColorsUtil.secondaryColorDark),
+                                child: hasRequestedToJoinGroup(widget.user)
                                     ? const Text('Pending...')
                                     : const Text('Request to Join'),
                               )
@@ -455,7 +473,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 const EdgeInsets.only(top: 15, bottom: 15, left: 5, right: 5),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: Color.fromARGB(150, 49, 59, 21),
+                color: const Color.fromARGB(150, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -471,9 +489,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 height: 6,
                 color: ColorsUtil.accentColorDark,
               ),
-
               eventCard(),
-              
             ]),
           ),
           // TEMPORARY ROLE SWITCH BUTTON
