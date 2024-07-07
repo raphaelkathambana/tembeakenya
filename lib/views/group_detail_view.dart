@@ -60,67 +60,86 @@ class _CommunityViewState extends State<GroupDetailView> {
   late bool roleSwitch;
   // ***************** //
 
-  eventCard(){
+  String hikeName = 'Karura...? More like KAZUMA!!!';
+  String hikeDescription =
+      'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
+  String hikeLocation = 'Katura Forest';
+  String hikeDate = 'July 7, 2024';
+
+  eventCard() {
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GroupEventView(userID: uID)));
-        },
-        style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
-        child: Container(
-                width: MediaQuery.sizeOf(context).width,
-                // height: 100,
-                margin: const EdgeInsets.all(7),
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: ColorsUtil.accentColorDark),
-                  color: ColorsUtil.describtionColorDark,
+      onPressed: () {
+        // TODO: Add to route
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupEventView(userID: uID)));
+      },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        // height: 100,
+        margin: const EdgeInsets.all(7),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: ColorsUtil.accentColorDark),
+          color: ColorsUtil.describtionColorDark,
+        ),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                hikeName,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsUtil.primaryColorDark,
                 ),
-                child: const Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Title of the Hike',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark,
-                        ),
-                      ),
-                      Divider(
-                        height: 6,
-                        color: ColorsUtil.accentColorDark,
-                      ),
-                      Text(
-                        'Come Join us on the hike! If you want to attend the hike, make sure you fill out the form and pay.',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.textColorDark,
-                        ),
-                      ),
-                      Text(
-                        'Location: Karura Forest',
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.primaryColorDark,
-                        ),
-                      ),
-                      Text('Date: July 7, 2024',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: ColorsUtil.primaryColorDark,
-                          ))
-                    ]),
               ),
+              const Divider(
+                height: 6,
+                color: ColorsUtil.accentColorDark,
+              ),
+              Text(
+                hikeDescription,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.textColorDark,
+                ),
+              ),
+              Text(
+                'Location: $hikeLocation',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.primaryColorDark,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Date: $hikeDate',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.normal,
+                        color: ColorsUtil.primaryColorDark,
+                      )),
+                  const Text(
+                    'Click for more detail',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: ColorsUtil.secondaryColorDark,
+                    ),
+                  ),
+                ],
+              )
+            ]),
+      ),
     );
   }
 
@@ -464,15 +483,13 @@ class _CommunityViewState extends State<GroupDetailView> {
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: ColorsUtil.primaryColorDark)),
+                        color: ColorsUtil.textColorDark)),
               ),
               const Divider(
                 height: 6,
                 color: ColorsUtil.accentColorDark,
               ),
-
               eventCard(),
-              
             ]),
           ),
           // TEMPORARY ROLE SWITCH BUTTON
