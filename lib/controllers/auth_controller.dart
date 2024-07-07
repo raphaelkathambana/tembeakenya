@@ -292,9 +292,9 @@ class AuthController with ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
 
-      if (token != null) {
+      if (token != null && token.isNotEmpty) {
         final response = await apiCall.client.post('${url}api/v1/logout');
-        if (response.statusCode == 200) {
+        if (response.statusCode == 204) {
           await prefs.remove('auth_token');
           debugPrint('token has been removed');
           apiCall.clearCookies();
