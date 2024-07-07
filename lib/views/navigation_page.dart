@@ -58,6 +58,7 @@ class _NavigationViewState extends State<NavigationView> {
     }
 
     if (lineText[0] != '00:00:00') {
+      isStart = true;
       startDuration = startCountUp(lineText[0]);
       if (lineText[1] != '00:00:00') {
         pauseCountUp(lineText[1]);
@@ -99,7 +100,7 @@ class _NavigationViewState extends State<NavigationView> {
             snap: true,
             initialChildSize: 50 / height,
             minChildSize: 50 / height,
-            maxChildSize: 275 / height,
+            maxChildSize: 250 / (height * .85),
             builder: (context, scrollController) {
               return Container(
                 width: width,
@@ -205,7 +206,7 @@ class _NavigationViewState extends State<NavigationView> {
                           Container(
                             // color: ColorsUtil.cardColorDark,
                             padding: const EdgeInsets.all(10),
-                            width: width * .4,
+                            width: width * .6,
                             child: Column(
                               children: [
                                 if (lineText[0] == '00:00:00')
@@ -236,6 +237,7 @@ class _NavigationViewState extends State<NavigationView> {
                                       : Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
+                                              // width: width,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () async {
