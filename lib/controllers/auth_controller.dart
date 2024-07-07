@@ -294,7 +294,7 @@ class AuthController with ChangeNotifier {
 
       if (token != null) {
         final response = await apiCall.client.post('${url}api/v1/logout');
-        if (response.statusCode == 200) {
+        if (response.statusCode == 204) {
           await prefs.remove('auth_token');
           debugPrint('token has been removed');
           apiCall.clearCookies();
