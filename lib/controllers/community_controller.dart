@@ -39,7 +39,7 @@ class CommunityController {
     try {
       var response = await apiCall.client.post('${url}api/users/$id/follow');
       if (response.statusCode == 200) {
-        // return await  getCommunityData();
+        debugPrint('Successfully Followed');
       }
     } on DioException catch (e) {
       debugPrint('Error: ${e.message}');
@@ -50,7 +50,7 @@ class CommunityController {
     try {
       var response = await apiCall.client.post('${url}api/users/$id/unfollow');
       if (response.statusCode == 200) {
-        // return await getCommunityData();
+        debugPrint('Successfully Unfollowed');
       }
     } on DioException catch (e) {
       debugPrint('Error: ${e.message}');
@@ -112,7 +112,7 @@ class CommunityController {
           ),
         );
         // delay 3 seconds
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 1));
         // return to group view
         if (!context.mounted) return;
         context.pop();
@@ -129,10 +129,5 @@ class CommunityController {
     }
   }
 
-  void navigateToProfile(User user) {
-    navigationService.navigateTo(
-      '',
-      arguments: user,
-    );
-  }
+  //
 }
