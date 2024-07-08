@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import '../../assets/colors.dart';
-import 'package:tembeakenya/views/timer_operation.dart';
+import 'package:tembeakenya/constants/timer_operation.dart';
 
 class NavigationView extends StatefulWidget {
   final user;
@@ -92,7 +92,13 @@ class _NavigationViewState extends State<NavigationView> {
                 Text('Reference Time: ${lineText[0]}'),
                 Text('Paused Time: ${lineText[1]}'),
                 Text('Started Time: ${lineText[2]}'),
-                // TODO: Map Section
+                /**************
+                
+                
+                  Map Section
+ 
+
+                **************/
               ],
             ),
           ),
@@ -100,14 +106,15 @@ class _NavigationViewState extends State<NavigationView> {
             snap: true,
             initialChildSize: 50 / height,
             minChildSize: 50 / height,
-            maxChildSize: 250 / (height * .85),
+            maxChildSize: 250 / (height * .9),
             builder: (context, scrollController) {
               return Container(
                 width: width,
-                decoration: const BoxDecoration(
-                  color: ColorsUtil.backgroundColorDark,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                ),
+                decoration: BoxDecoration(
+                    color: ColorsUtil.cardColorDark,
+                    borderRadius:
+                        const BorderRadius.vertical(top: Radius.circular(30)),
+                    border: Border.all(color: ColorsUtil.backgroundColorDark)),
                 child: ListView(
                   controller: scrollController,
                   children: [
@@ -133,18 +140,19 @@ class _NavigationViewState extends State<NavigationView> {
                             children: [
                               // TODO: DISTANCE
                               Container(
-                                  padding: const EdgeInsets.all(10),
-                                  width: width * .3,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text('${distance}m',
-                                            style: const TextStyle(fontSize: 20)),
-                                        const Text('Distance',
-                                            style: TextStyle(fontSize: 15)),
-                                      ])),
-                              // TODO: TIMER
+                                padding: const EdgeInsets.all(10),
+                                width: width * .3,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('${distance}m',
+                                        style: const TextStyle(fontSize: 20)),
+                                    const Text('Distance',
+                                        style: TextStyle(fontSize: 15)),
+                                  ],
+                                ),
+                              ),
+                              //  TIMER
                               Container(
                                 padding: const EdgeInsets.all(10),
                                 width: width * .3,
@@ -202,7 +210,7 @@ class _NavigationViewState extends State<NavigationView> {
                             height: 1,
                             color: ColorsUtil.describtionColorDark,
                           ),
-                          // TODO: BUTTON
+                          //  BUTTON
                           Container(
                             // color: ColorsUtil.cardColorDark,
                             padding: const EdgeInsets.all(10),
@@ -237,7 +245,7 @@ class _NavigationViewState extends State<NavigationView> {
                                       : Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
-                                              // width: width,
+                                          // width: width,
                                           children: [
                                             ElevatedButton(
                                               onPressed: () async {
@@ -272,10 +280,10 @@ class _NavigationViewState extends State<NavigationView> {
                               ],
                             ),
                           ),
-                          Container(
-                            height: 0.5,
-                            color: ColorsUtil.secondaryColorDark,
-                          ),
+                          // Container(
+                          //   height: 0.5,
+                          //   color: ColorsUtil.secondaryColorDark,
+                          // ),
                         ],
                       ),
                     ),
