@@ -8,6 +8,7 @@ import 'package:tembeakenya/repository/get_users.dart';
 
 import 'package:tembeakenya/views/group_create_hike_view.dart';
 import 'package:tembeakenya/views/group_edit_view.dart';
+import 'package:tembeakenya/views/group_event_view.dart';
 // import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
@@ -64,17 +65,23 @@ class _CommunityViewState extends State<GroupDetailView> {
   late bool roleSwitch;
   // ***************** //
 
+  String hikeName = 'Karura...? More like KAZUMA!!!';
+  String hikeDescription =
+      'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
+  String hikeLocation = 'Katura Forest';
+  String hikeDate = 'July 7, 2024';
+
   eventCard() {
     return TextButton(
       onPressed: () {
         // TODO: Add to route
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => GroupEventView(userID: uID)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupEventView(userID: uID)));
       },
       style: const ButtonStyle(
-          overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         // height: 100,
@@ -83,46 +90,54 @@ class _CommunityViewState extends State<GroupDetailView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: ColorsUtil.accentColorDark),
-          color: const Color.fromARGB(29, 99, 126, 32),
+          color: ColorsUtil.describtionColorDark,
         ),
-        child: const Column(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Title of the Hike',
-                style: TextStyle(
+                hikeName,
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: ColorsUtil.primaryColorDark,
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 6,
                 color: ColorsUtil.accentColorDark,
               ),
               Text(
-                'Come Join us on the hike! If you want to attend the hike, make sure you fill out the form and pay.',
-                style: TextStyle(
+                hikeDescription,
+                style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.normal,
                   color: ColorsUtil.textColorDark,
                 ),
               ),
               Text(
-                'Location: Karura Forest',
-                style: TextStyle(
+                'Location: $hikeLocation',
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
                   color: ColorsUtil.primaryColorDark,
                 ),
               ),
-              Text('Date: July 7, 2024',
-                  style: TextStyle(
+              Text('Date: $hikeDate',
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                     color: ColorsUtil.primaryColorDark,
-                  ))
+                  )),
+              const Text(
+                'Click for more detail',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsUtil.secondaryColorDark,
+                ),
+              ),
             ]),
       ),
     );
@@ -303,7 +318,6 @@ class _CommunityViewState extends State<GroupDetailView> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(57, 22, 26, 15),
           title: const Text(
             'Hike Group',
             style: TextStyle(color: ColorsUtil.textColorDark),
@@ -318,7 +332,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             padding: const EdgeInsets.only(right: 3.5),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color.fromARGB(55, 99, 126, 32),
+              color: ColorsUtil.cardColorDark,
             ),
             child: Column(children: [
               const Divider(
@@ -335,7 +349,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                       if (displayUrl.isEmpty)
                         const CircleAvatar(
                             radius: 50,
-                            backgroundColor: Color(0x00000000),
+                            backgroundColor: Colors.transparent,
                             child: CircleAvatar(
                                 radius: 42,
                                 backgroundColor: ColorsUtil.accentColorDark,
@@ -431,7 +445,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -455,7 +469,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: ColorsUtil.backgroundColorDark),
-                    color: const Color.fromARGB(29, 99, 126, 32),
+                    color: ColorsUtil.describtionColorDark,
                   ),
                   child: Text(theDescription,
                       style: const TextStyle(
@@ -483,7 +497,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                     style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
-                        color: ColorsUtil.primaryColorDark)),
+                        color: ColorsUtil.textColorDark)),
               ),
               const Divider(
                 height: 6,

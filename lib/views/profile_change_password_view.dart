@@ -97,7 +97,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.describtionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +129,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.describtionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +161,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.describtionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

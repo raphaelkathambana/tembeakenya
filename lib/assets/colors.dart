@@ -11,7 +11,11 @@ class ColorsUtil {
   static const Color secondaryColorDark = Color(0xFF695130);
   static const Color accentColorDark = Color(0xFF637e20);
   static const Color textColorDark = Color(0xfffcfef6);
-  static const Color backgroundColorDark = Color(0xff161a0f);
+  static const Color backgroundColorDark = Color(0xff161a0f);  
+  static const Color cardColorDark = Color(0xff262f14);
+  static const Color describtionColorDark = Color(0xff2d3915);
+  // static const Color cardColorDark = ColorsUtil.cardColorDark;
+  // static const Color describtionColorDark = ColorsUtil.describtionColorDark;
 }
 
 ThemeData darkThemeData = ThemeData(
@@ -24,7 +28,8 @@ ThemeData darkThemeData = ThemeData(
     secondary: ColorsUtil.secondaryColorDark,
     surface: ColorsUtil.backgroundColorDark,
     background: ColorsUtil.backgroundColorDark,
-    onPrimary: ColorsUtil.textColorDark,
+    // card: ColorsUtil.cardColorDark,
+    // describtion: ColorsUtil.describtionColorDark,
     onSecondary: ColorsUtil.textColorDark,
     onSurface: ColorsUtil.textColorDark,
     onBackground: ColorsUtil.textColorDark,

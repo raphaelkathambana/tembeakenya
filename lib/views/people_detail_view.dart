@@ -66,7 +66,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(57, 22, 26, 15),
           title: const Text(
             'Profile Page',
             style: TextStyle(color: ColorsUtil.textColorDark),
@@ -79,7 +78,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
             padding: const EdgeInsets.only(right: 3.5),
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color.fromARGB(55, 99, 126, 32),
+              color: ColorsUtil.cardColorDark,
             ),
             child: Column(children: [
               const Divider(
@@ -96,7 +95,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       if (displayUrl.isEmpty)
                         const CircleAvatar(
                             radius: 50,
-                            backgroundColor: Color(0x00000000),
+                            backgroundColor: Colors.transparent,
                             child: CircleAvatar(
                                 radius: 42,
                                 backgroundColor: ColorsUtil.accentColorDark,
@@ -205,7 +204,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -287,7 +286,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -42,7 +42,6 @@ class _ProfileViewState extends State<ProfileView> {
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(57, 22, 26, 15),
           title: const Text(
             'Profile Page',
             style: TextStyle(color: ColorsUtil.textColorDark),
@@ -72,7 +71,7 @@ class _ProfileViewState extends State<ProfileView> {
         body: SingleChildScrollView(
             child: Column(children: [
           Card(
-            color: const Color.fromARGB(55, 99, 126, 32),
+            color: ColorsUtil.cardColorDark,
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             child: Column(children: [
               const Divider(
@@ -87,7 +86,7 @@ class _ProfileViewState extends State<ProfileView> {
                   if (displayUrl.isEmpty)
                     const CircleAvatar(
                         radius: 50,
-                        backgroundColor: Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 42,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -162,7 +161,7 @@ class _ProfileViewState extends State<ProfileView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 10, bottom: 10),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.describtionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +187,7 @@ class _ProfileViewState extends State<ProfileView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,7 +236,7 @@ class _ProfileViewState extends State<ProfileView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.describtionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

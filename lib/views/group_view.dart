@@ -114,12 +114,12 @@ class _GroupViewState extends State<GroupView> {
                       GroupDetailView(user: user, group: widget.groups[num])));
         },
         style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(color: ColorsUtil.secondaryColorDark),
-            color: const Color.fromARGB(55, 99, 126, 32),
+            color: ColorsUtil.cardColorDark,
           ),
           height: 270,
           padding: const EdgeInsets.all(5),
@@ -132,7 +132,7 @@ class _GroupViewState extends State<GroupView> {
                   if (displayUrl.isEmpty)
                     const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -143,7 +143,7 @@ class _GroupViewState extends State<GroupView> {
                   else
                     CircleAvatar(
                         radius: 45,
-                        backgroundColor: const Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -190,7 +190,7 @@ class _GroupViewState extends State<GroupView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: ColorsUtil.backgroundColorDark),
-                  color: const Color.fromARGB(29, 99, 126, 32),
+                  color: ColorsUtil.describtionColorDark,
                 ),
                 child: Text((widget.groups[num]['description']),
                     style: const TextStyle(
@@ -213,13 +213,13 @@ class _GroupViewState extends State<GroupView> {
                       )));
         },
         style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Container(
           width: MediaQuery.sizeOf(context).width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(color: ColorsUtil.secondaryColorDark),
-            color: const Color.fromARGB(55, 99, 126, 32),
+            color: ColorsUtil.cardColorDark,
           ),
           height: 70,
           padding: const EdgeInsets.all(5),
@@ -290,7 +290,7 @@ class _GroupViewState extends State<GroupView> {
           height: 50,
           padding: const EdgeInsets.only(left: 10),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(55, 99, 126, 32),
+            color: ColorsUtil.cardColorDark,
             borderRadius: BorderRadius.circular(25.0),
           ),
           child: Row(
@@ -348,7 +348,7 @@ class _GroupViewState extends State<GroupView> {
       Container(
           padding: const EdgeInsets.symmetric(horizontal: 3),
           decoration: const BoxDecoration(
-            color: Color.fromARGB(0, 0, 0, 0),
+            color: Colors.transparent,
           ),
           child: Column(
             children: [
