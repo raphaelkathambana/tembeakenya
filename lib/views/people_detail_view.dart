@@ -204,7 +204,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -286,7 +286,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

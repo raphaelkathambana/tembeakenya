@@ -78,7 +78,7 @@ class _CommunityViewState extends State<GroupDetailView> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => GroupEventView(userID: uID)));
+                builder: (context) => GroupEventView(user: widget.user)));
       },
       style: const ButtonStyle(
           overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -90,7 +90,7 @@ class _CommunityViewState extends State<GroupDetailView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           border: Border.all(color: ColorsUtil.accentColorDark),
-          color: ColorsUtil.describtionColorDark,
+          color: ColorsUtil.descriptionColorDark,
         ),
         child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -445,7 +445,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             padding: const EdgeInsets.all(0),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -469,7 +469,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: ColorsUtil.backgroundColorDark),
-                    color: ColorsUtil.describtionColorDark,
+                    color: ColorsUtil.descriptionColorDark,
                   ),
                   child: Text(theDescription,
                       style: const TextStyle(

@@ -77,7 +77,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -112,7 +112,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -149,29 +149,27 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
           // width: 250,
           height: 60,
           decoration: BoxDecoration(
-              color: ColorsUtil.describtionColorDark,
+              color: ColorsUtil.descriptionColorDark,
               borderRadius: BorderRadius.circular(10)),
           child: DropdownButton(
-            value: dropdownValue,
-            dropdownColor: ColorsUtil.describtionColorDark,
-            underline: Container(height: 2),
-            onChanged: (value) {
-              setState(() {
-                dropdownValue = value!;
-              });
-            },
-            items: locations.map<DropdownMenuItem>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            hint: 
-              const SizedBox(
+              value: dropdownValue,
+              dropdownColor: ColorsUtil.descriptionColorDark,
+              underline: Container(height: 2),
+              onChanged: (value) {
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              items: locations.map<DropdownMenuItem>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              hint: const SizedBox(
                 width: 195,
                 child: Text('Select Location'),
-              )
-          ),
+              )),
         ),
         Container(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -179,7 +177,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
             width: 250,
             height: 60,
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child: TextField(
               controller: _date,

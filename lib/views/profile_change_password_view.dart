@@ -71,7 +71,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   @override
   Widget build(BuildContext context) {
-
     // NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
@@ -97,7 +96,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: ColorsUtil.describtionColorDark,
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +128,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: ColorsUtil.describtionColorDark,
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,7 +160,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   padding: const EdgeInsets.only(
                       left: 20, right: 20, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: ColorsUtil.describtionColorDark,
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,23 +187,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ),
                       ])),
               Container(
-                margin:
-                      const EdgeInsets.only(left: 20),
-                child: 
-              Row(
-                children: [
-                  Checkbox(
-                      value: isCheched,
-                      onChanged: (value) {
-                        setState(() {
-                          isCheched = value!;
-                          hidePassword = !hidePassword;
-                        });
-                      }),
-                  const Text('Show Password'),
-                ],
-              )
-              ),
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                          value: isCheched,
+                          onChanged: (value) {
+                            setState(() {
+                              isCheched = value!;
+                              hidePassword = !hidePassword;
+                            });
+                          }),
+                      const Text('Show Password'),
+                    ],
+                  )),
               Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

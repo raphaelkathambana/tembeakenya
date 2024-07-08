@@ -127,7 +127,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +163,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

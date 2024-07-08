@@ -1,6 +1,8 @@
 // group_event_view
 
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
 // import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +12,8 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/dummy_db.dart';
 
 class GroupEventView extends StatefulWidget {
-  final int userID;
-  const GroupEventView({super.key, required this.userID});
+  final user;
+  const GroupEventView({super.key, required this.user});
 
   @override
   State<GroupEventView> createState() => _GroupEventViewState();
@@ -20,6 +22,7 @@ class GroupEventView extends StatefulWidget {
 class _GroupEventViewState extends State<GroupEventView> {
   late String displayUrl;
   late int uID;
+  User? selectedUser;
 
   int loadNum = fullName.length;
 
@@ -35,17 +38,23 @@ class _GroupEventViewState extends State<GroupEventView> {
 
   userCard(int num) {
     return TextButton(
-        onPressed: () {
+        onPressed: () async {
+          await CommunityController().getAUsersDetails(num + 1).then((user) {
+            // setState(() {
+            selectedUser = user;
+            // });
+          });
           // TODO: Add to route
+          if (!mounted) return;
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(userID: num)));
+                  builder: (context) => PeopleDetailView(
+                      selectedUser: selectedUser!, currentUser: widget.user)));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Container(
-          // color: ColorsUtil.describtionColorDark,
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
           decoration: BoxDecoration(
             color: ColorsUtil.cardColorDark,
@@ -128,7 +137,7 @@ class _GroupEventViewState extends State<GroupEventView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
 
-    int uID = widget.userID;
+    int uID = widget.user.id;
 
     theGroupName = groupName[uID];
     theDescription = description[uID];
@@ -237,7 +246,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                 // height: 0.25,
                 width: width,
                 decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius:
                       const BorderRadius.vertical(top: Radius.circular(30)),
                   border: Border.all(

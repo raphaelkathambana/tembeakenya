@@ -156,7 +156,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,7 +240,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +301,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -372,9 +372,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 ),
                 onPressed: () async {
                   if (pickedImage != null) {
-                    await uploadPic(
-                            pickedImage!,
-                            user!.id.toString())
+                    await uploadPic(pickedImage!, user!.id.toString())
                         .then((value) => imageId = value);
                   }
                   final firstname = _firstname.text.isNotEmpty
@@ -398,11 +396,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       lastname!,
                       profileImageId,
                       context);
-                int count = 0;
-                Navigator.of(context).popUntil((_) => count++ >= 2);
-
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
                 },
-                
                 child: const Text('Update'),
               ))
         ])));

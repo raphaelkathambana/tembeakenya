@@ -28,11 +28,9 @@ class _ProfileViewState extends State<ProfileView> {
     displayUrl = '';
     super.initState();
   }
- 
 
   @override
   Widget build(BuildContext context) {
-    
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -161,7 +159,7 @@ class _ProfileViewState extends State<ProfileView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 10, bottom: 10),
               decoration: BoxDecoration(
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,7 +185,7 @@ class _ProfileViewState extends State<ProfileView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -236,7 +234,7 @@ class _ProfileViewState extends State<ProfileView> {
             margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
             decoration: BoxDecoration(
-                color: ColorsUtil.describtionColorDark,
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

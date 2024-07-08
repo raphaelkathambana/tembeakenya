@@ -208,7 +208,7 @@ class _NavigationViewState extends State<NavigationView> {
                           ),
                           Container(
                             height: 1,
-                            color: ColorsUtil.describtionColorDark,
+                            color: ColorsUtil.descriptionColorDark,
                           ),
                           //  BUTTON
                           Container(

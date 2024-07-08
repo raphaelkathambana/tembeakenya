@@ -190,7 +190,7 @@ class _GroupViewState extends State<GroupView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   border: Border.all(color: ColorsUtil.backgroundColorDark),
-                  color: ColorsUtil.describtionColorDark,
+                  color: ColorsUtil.descriptionColorDark,
                 ),
                 child: Text((widget.groups[num]['description']),
                     style: const TextStyle(
