@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/navigations/community_nav_bar.dart';
 import 'package:tembeakenya/views/home_page.dart';
+import 'package:tembeakenya/views/map.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 
 class LayoutView extends StatefulWidget {
@@ -21,9 +22,7 @@ class _LayoutViewState extends State<LayoutView> {
       HomeView(
         user: widget.user,
       ),
-      HomeView(
-        user: widget.user,
-      ),
+      const MapView(),
       CommunityView(
         user: widget.user,
       ),

@@ -4,6 +4,7 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/nav.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
 import 'package:tembeakenya/views/profile_change_password_view.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
@@ -103,6 +104,14 @@ final GoRouter router = GoRouter(
       path: '/forgotpassword',
       pageBuilder: (context, state) =>
           const MaterialPage(child: ForgotPasswordView()),
+    ),
+    GoRoute(
+      path: '/map-nav',
+      name: '/map-nav',
+      builder: (context, state) => NavigationPage(
+        isDestination: true,
+        textEditingController: TextEditingController(),
+      ),
     ),
     GoRoute(
       path: '/navbar',
@@ -222,5 +231,9 @@ class NavigationService {
 
   void navigateToPeopleDetailsView(BuildContext context, List<User> users) {
     _router.go('/people-details', extra: users);
+  }
+
+  void navigateToNav(BuildContext context) {
+    _router.pushNamed('/map-nav');
   }
 }
