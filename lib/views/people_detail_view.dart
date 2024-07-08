@@ -159,8 +159,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       margin: const EdgeInsets.only(right: 3.5),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: getFriends(
-                                widget.selectedUser.id!, widget.currentUser)
+                        color: getFriends(widget.selectedUser.id!)
                             ? ColorsUtil.accentColorDark
                             : ColorsUtil.secondaryColorDark,
                       ),
@@ -172,8 +171,7 @@ class _CommunityViewState extends State<PeopleDetailView> {
                             // todo add the following and unfollowing functionality
                           });
                         },
-                        child: getFriends(
-                                widget.selectedUser.id!, widget.currentUser)
+                        child: getFriends(widget.selectedUser.id!)
                             ? const Text(
                                 'Following',
                                 style: TextStyle(

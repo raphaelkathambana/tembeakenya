@@ -1,3 +1,4 @@
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 
 var data = {
@@ -92,13 +93,45 @@ Map<String, Object?>? getMeta() {
 }
 
 // check if the logged in user is following the friend
-bool getFriends(int friendID, User user) {
+bool getFriends(int friendID) {
   // var user = getUsersFromDb()[num];
-  // List<User> friends = getFriendDetails();
-  // for (var friend in friends) {
-  if (friendID == user.id) {
-    return true;
+  List<User> friends = CommunityController().getFollowing();
+  for (var friend in friends) {
+    if (friendID == friend.id) {
+      return true;
+    }
   }
-  // }
   return false;
+}
+
+List<User> getFollowingData(friendData) {
+  if (friendData['data']?['data'] != null) {
+    List<User> users = [];
+    var userData = friendData['data']?['data'] as List<Map<String, dynamic>>?;
+    if (userData != null) {
+      for (var user in userData) {
+        users.add(User.fromJson(user));
+      }
+      return users;
+    } else {
+      return [
+        User(
+          id: 0,
+          firstName: 'empty',
+          lastName: 'empty',
+          username: 'empty',
+          email: 'empty',
+          email_verified_at: DateTime(2024),
+          roleNo: 1,
+          image_id: 'empty',
+          no_of_hikes: 0,
+          total_distance_walked: 0,
+          no_of_steps_taken: 0,
+          followers_count: 0,
+          following_count: 0,
+        )
+      ];
+    }
+  }
+  return []; // Add a return statement here
 }

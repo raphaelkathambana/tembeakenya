@@ -45,7 +45,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   userFriend(int num, bool isFriend) {
     if (isFriend == true) {
-      if (getFriends(num, widget.users[num]) == true) {
+      if (getFriends(num + 1) == true) {
         return userCard(num);
       } else {
         return const SizedBox();
@@ -138,7 +138,7 @@ class _PeopleViewState extends State<PeopleView> {
                   margin: const EdgeInsets.only(right: 3.5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: getFriends(num, widget.users[num])
+                    color: getFriends(num + 1)
                         ? ColorsUtil.accentColorDark
                         : ColorsUtil.secondaryColorDark,
                   ),
@@ -150,7 +150,7 @@ class _PeopleViewState extends State<PeopleView> {
                         // todo add following and unfollowing logic
                       });
                     },
-                    child: getFriends(num, widget.users[num])
+                    child: getFriends(num + 1)
                         ? const Text(
                             'Following',
                             style: TextStyle(

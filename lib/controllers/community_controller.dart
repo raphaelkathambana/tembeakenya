@@ -8,6 +8,7 @@ import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_a_user.dart';
+import 'package:tembeakenya/repository/get_following.dart';
 import 'package:tembeakenya/repository/get_groups.dart';
 import 'package:tembeakenya/repository/get_users.dart';
 
@@ -86,6 +87,17 @@ class CommunityController {
   Future<void> onRefresh() async {
     await Future.delayed(const Duration(seconds: 1));
     // return getCommunityData();
+  }
+
+  getFollowing() async {
+    try {
+      var response = await apiCall.client.get('${url}api/users/following');
+      if (response.statusCode == 200) {
+        return getFollowingData(response.data);
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+    }
   }
 
   Future<void> createGroup(String name, String description, int guideId,
