@@ -50,5 +50,8 @@ ThemeData lightThemeData = ThemeData(
     onError: ColorsUtil.textColorLight,
     surfaceVariant: ColorsUtil.secondaryColorLight,
   ),
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: ColorsUtil.secondaryColorLight,
+  ),
   useMaterial3: true,
 );
