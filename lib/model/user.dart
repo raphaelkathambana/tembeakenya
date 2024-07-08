@@ -52,7 +52,14 @@ class User {
     _image_id = value;
   }
 
-  int? roleNo;
+  int? _roleNo;
+
+  int? get roleNo => _roleNo;
+
+  set roleNo(int? value) {
+    _roleNo = value;
+  }
+
   DateTime? email_verified_at;
 
   int? no_of_steps_taken;
@@ -68,14 +75,15 @@ class User {
     String? username,
     String? email,
     String? image_id,
-    this.roleNo,
+    int? roleNo,
     this.email_verified_at,
     this.no_of_hikes,
     this.total_distance_walked,
     this.no_of_steps_taken,
     this.followers_count,
     this.following_count,
-  })  : _email = email,
+  })  : _roleNo = roleNo,
+        _email = email,
         _username = username,
         _lastName = lastName,
         _image_id = image_id,

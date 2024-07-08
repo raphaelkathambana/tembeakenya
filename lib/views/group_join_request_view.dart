@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 
@@ -11,8 +12,8 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 // ****************************************************** //
 
 class GroupJoinView extends StatefulWidget {
-  // final int userID;
-  const GroupJoinView({super.key});
+  final user;
+  const GroupJoinView({super.key, required this.user});
 
   @override
   State<GroupJoinView> createState() => _GroupJoinViewState();
@@ -36,10 +37,14 @@ class _GroupJoinViewState extends State<GroupJoinView> {
     return TextButton(
         onPressed: () {
           // TODO: Add to route
+          final selectedUser = CommunityController().getAUsersDetails(num);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(userID: num)));
+                  builder: (context) => PeopleDetailView(
+                        selectedUser: selectedUser,
+                        currentUser: widget.user,
+                  )));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),

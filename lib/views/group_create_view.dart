@@ -3,6 +3,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 // import 'package:tembeakenya/dummy_db.dart';
@@ -32,8 +34,8 @@ import 'package:tembeakenya/constants/image_operations.dart';
 // ****************************************************** //
 
 class GroupCreateView extends StatefulWidget {
-  // final int userID;
-  const GroupCreateView({super.key});
+  final user;
+  const GroupCreateView({super.key, required this.user});
 
   @override
   State<GroupCreateView> createState() => _GroupCreateViewState();
@@ -50,14 +52,15 @@ class _GroupCreateViewState extends State<GroupCreateView> {
 
   String theGroupName = '';
   String theDescription = '';
-
   String profileImageID = '';
+  String imageId = '';
+
+  User? user;
 
   @override
   void initState() {
-    // user = widget.currentUser;
+    user = widget.user;
     // navigationService = NavigationService(router);
-    // profileImageID = "${user!.image_id}";
     profileImageID = "defaultGroupPic";
     displayUrl = '';
     getImageUrl(profileImageID).then((String result) {
@@ -100,56 +103,8 @@ class _GroupCreateViewState extends State<GroupCreateView> {
         body: SingleChildScrollView(
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Column(children: [
-            if (pickedImage != null)
-              Stack(children: [
-                IconButton(
-                  icon: CircleAvatar(
-                      radius: 62,
-                      backgroundColor: ColorsUtil.accentColorDark,
-                      child: CircleAvatar(
-                        radius: 60,
-                        backgroundImage: MemoryImage(pickedImage!),
-                      )),
-                  onPressed: pick,
-                ),
-                const Positioned(
-                  bottom: 10,
-                  left: 100,
-                  child: Icon(Icons.add_a_photo),
-                ),
-              ])
-            else
-              Stack(children: [
-                if (displayUrl.isEmpty)
-                  const CircleAvatar(
-                      radius: 70,
-                      backgroundColor: Colors.transparent,
-                      child: CircleAvatar(
-                          radius: 62,
-                          backgroundColor: ColorsUtil.accentColorDark,
-                          child: CircleAvatar(
-                            radius: 60,
-                            child: CircularProgressIndicator(),
-                          )))
-                else
-                  IconButton(
-                    icon: CircleAvatar(
-                        radius: 62,
-                        backgroundColor: ColorsUtil.accentColorDark,
-                        child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(displayUrl),
-                        )),
-                    onPressed: pick,
-                  ),
-                const Positioned(
-                  bottom: 10,
-                  left: 100,
-                  child: Icon(Icons.add_a_photo),
-                ),
-              ]),
-            const Divider(
+          const Column(children: [
+            Divider(
               height: 25,
               color: ColorsUtil.secondaryColorDark,
               indent: 12,
@@ -186,26 +141,23 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                                 fontWeight: FontWeight.bold,
                                 color: ColorsUtil.primaryColorDark)),
                         Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
+                          Icons.edit,
+                          color: ColorsUtil.primaryColorDark,
+                        ),
                       ],
                     ),
                     SizedBox(
-                      child: 
-                          TextField(
-                            controller: _groupName,
-                            decoration:
-                                const InputDecoration(
-                              hintText:
-                                  "Create Group Name",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
+                      child: TextField(
+                        controller: _groupName,
+                        decoration: const InputDecoration(
+                          hintText: "Create Group Name",
+                        ),
+                        onChanged: (value) {
+                          // user?.username = value;
+                          theGroupName = value;
+                        },
                       ),
+                    ),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -225,26 +177,23 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                                 fontWeight: FontWeight.bold,
                                 color: ColorsUtil.primaryColorDark)),
                         Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
+                          Icons.edit,
+                          color: ColorsUtil.primaryColorDark,
+                        ),
                       ],
                     ),
                     SizedBox(
-                      child: 
-                          TextField(
-                            controller: _description,
-                            decoration:
-                                const InputDecoration(
-                              hintText:
-                                  "Write down a description",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
+                      child: TextField(
+                        controller: _description,
+                        decoration: const InputDecoration(
+                          hintText: "Write down a description",
+                        ),
+                        onChanged: (value) {
+                          // user?.username = value;
+                          theDescription = value;
+                        },
                       ),
+                    ),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -259,40 +208,16 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                   ),
                 ),
                 onPressed: () async {
-                //   if (pickedImage != null) {
-                //     await uploadPic(
-                //             pickedImage!,
-                //             _username.text.isNotEmpty
-                //                 ? _username.text
-                //                 : user!.username)
-                //         .then((value) => imageId = value);
-                //   }
-                //   final firstname = _firstname.text.isNotEmpty
-                //       ? _firstname.text
-                //       : user!.firstName;
-                //   final lastname = _lastname.text.isNotEmpty
-                //       ? _lastname.text
-                //       : user!.lastName;
-                //   final username = _username.text.isNotEmpty
-                //       ? _username.text
-                //       : user!.username;
-                //   final email =
-                //       _email.text.isNotEmpty ? _email.text : user!.email;
-                //   final profileImageId =
-                //       imageId.isNotEmpty ? imageId : user!.image_id.toString();
-                //   if (!context.mounted) return;
-                //   AuthController(navigationService).updateProfileInformation(
-                //       username!,
-                //       email!,
-                //       firstname!,
-                //       lastname!,
-                //       profileImageId,
-                //       context);
-                // int count = 0;
-                // Navigator.of(context).popUntil((_) => count++ >= 2);
-
+                  // if (pickedImage != null) {
+                  //   await uploadPic(pickedImage!, _groupName.text)
+                  //       .then((value) => imageId = value);
+                  // }
+                  final groupName = _groupName.text;
+                  final description = _description.text;
+                  final guideId = user!.id;
+                  CommunityController()
+                      .createGroup(groupName, description, guideId!, context);
                 },
-                
                 child: const Text('Update'),
               ))
         ])));

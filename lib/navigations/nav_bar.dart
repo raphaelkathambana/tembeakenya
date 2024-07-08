@@ -7,6 +7,7 @@ import 'package:tembeakenya/views/profile_view.dart';
 
 class LayoutView extends StatefulWidget {
   final dynamic user;
+  // final dynamic users;
   const LayoutView({super.key, required this.user});
 
   @override
@@ -46,7 +47,8 @@ class _LayoutViewState extends State<LayoutView> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
-        onTap: (index) {
+        onTap: (index) async {
+          Future.delayed(const Duration(seconds: 2));
           setState(() {
             _currentIndex = index;
           });

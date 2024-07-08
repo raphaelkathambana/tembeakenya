@@ -2,30 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/get_following.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
 
-// ******************* DUMMY DATABASE ******************* //
-
-import 'package:tembeakenya/dummy_db.dart';
-
-// ****************************************************** //
 class PeopleView extends StatefulWidget {
   final dynamic currentUser;
-  const PeopleView({super.key, required user, this.currentUser});
+  final users;
+  const PeopleView({super.key, this.currentUser, required this.users});
 
   @override
   State<PeopleView> createState() => _PeopleViewState();
 }
 
 class _PeopleViewState extends State<PeopleView> {
-  // ****************************************************** //
-
   late String displayUrl;
   late String? dropdownValue;
   List<String> listUser = <String>['All', 'Follows'];
   late NavigationService navigationService;
-  User? user;
+  // User? user;
+  User? selectedUser;
 
   String profileImageID = "defaultProfilePic";
   late int loadNum;
@@ -33,10 +30,11 @@ class _PeopleViewState extends State<PeopleView> {
   final TextEditingController _search = TextEditingController();
   String search = '';
 
-  // ****************************************************** //
   searchCard(String search, int num, bool isFriend) {
     if (search != '') {
-      if (fullName[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.users[num].fullName
+          .toLowerCase()
+          .contains(search.toLowerCase())) {
         return userFriend(num, isFriend);
       }
       return const SizedBox();
@@ -47,7 +45,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   userFriend(int num, bool isFriend) {
     if (isFriend == true) {
-      if (friend[num] == true) {
+      if (getFriends(num, widget.users[num]) == true) {
         return userCard(num);
       } else {
         return const SizedBox();
@@ -59,12 +57,22 @@ class _PeopleViewState extends State<PeopleView> {
 
   userCard(int num) {
     return TextButton(
-        onPressed: () {
+        onPressed: () async {
+          await CommunityController().getAUsersDetails(num + 1).then((user) {
+            // setState(() {
+            selectedUser = user;
+            // });
+          });
           // TODO: Add to route
+          if (!mounted) return;
+          // navigationService.navigateToPeopleDetailsView(context, selectedUser);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(userID: num)));
+                  builder: (context) => PeopleDetailView(
+                        selectedUser: selectedUser!,
+                        currentUser: widget.currentUser,
+                      )));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -111,13 +119,13 @@ class _PeopleViewState extends State<PeopleView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
+                          child: Text(widget.users[num].fullName,
                               style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        Text('@${username[num]}',
+                        Text('@${widget.users[num].username}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -130,7 +138,7 @@ class _PeopleViewState extends State<PeopleView> {
                   margin: const EdgeInsets.only(right: 3.5),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: friend[num]
+                    color: getFriends(num, widget.users[num])
                         ? ColorsUtil.accentColorDark
                         : ColorsUtil.secondaryColorDark,
                   ),
@@ -139,10 +147,10 @@ class _PeopleViewState extends State<PeopleView> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        friend[num] = !friend[num];
+                        // todo add following and unfollowing logic
                       });
                     },
-                    child: friend[num]
+                    child: getFriends(num, widget.users[num])
                         ? const Text(
                             'Following',
                             style: TextStyle(
@@ -167,12 +175,10 @@ class _PeopleViewState extends State<PeopleView> {
         ));
   }
 
-  // ****************************************************** //
-
   @override
   void initState() {
     dropdownValue = listUser.first;
-    loadNum = fullName.length;
+    loadNum = widget.users.length;
     displayUrl = '';
     navigationService = NavigationService(router);
 

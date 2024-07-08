@@ -4,6 +4,7 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 import 'package:tembeakenya/views/profile_change_password_view.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
 import 'package:tembeakenya/views/home_page.dart';
@@ -112,6 +113,15 @@ final GoRouter router = GoRouter(
       )),
     ),
     GoRoute(
+      path: '/people/details',
+      name: '/people-details',
+      pageBuilder: (context, state) => MaterialPage(
+          child: PeopleDetailView(
+        selectedUser: (state.extra as List<User>)[0],
+        currentUser: (state.extra as List<User>)[1],
+      )),
+    ),
+    GoRoute(
         name: '/home',
         path: '/home',
         builder: (context, state) => HomeView(
@@ -204,5 +214,13 @@ class NavigationService {
 
   void navigateToNavbar(BuildContext context, User user) {
     _router.go('/navbar', extra: user);
+  }
+
+  void navigateTo(route, {required User arguments}) {
+    _router.go(route, extra: arguments);
+  }
+
+  void navigateToPeopleDetailsView(BuildContext context, List<User> users) {
+    _router.go('/people-details', extra: users);
   }
 }

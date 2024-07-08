@@ -1,11 +1,14 @@
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/views/group_view.dart';
 import 'package:tembeakenya/views/people_view.dart';
 
 class CommunityView extends StatefulWidget {
   final dynamic user;
+  // final dynamic users;
   const CommunityView({super.key, required this.user});
 
   @override
@@ -13,38 +16,56 @@ class CommunityView extends StatefulWidget {
 }
 
 class _CommunityViewState extends State<CommunityView> {
+  late List<User> users;
+  late List<dynamic> groups;
   // int _currentIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    CommunityController().getCommunityGroups().then((value) {
+      setState(() {
+        groups = value;
+      });
+    });
+    CommunityController().getCommunityData().then((list) {
+      setState(() {
+        users = list;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
       PeopleView(
-        user: widget.user,
+        currentUser: widget.user,
+        users: users,
       ),
       GroupView(
-        user: widget.user
+        user: widget.user,
+        groups: groups,
       )
     ];
-    return DefaultTabController (
-      length: tabs.length,
-      child: Scaffold (
-      appBar: AppBar(
-        backgroundColor: ColorsUtil.backgroundColorDark,
-        title: const Text(
-          'Community Feed',
-          style: TextStyle(color: ColorsUtil.textColorDark),
-        ),
-        bottom: const TabBar( 
-          labelPadding: EdgeInsets.only(left: 20, right: 20),          
-          tabs: [                       
-            Tab(text: 'People'),
-            Tab(text: 'Group'),
-            ],                              
-        ),
-      ),
-      body: TabBarView(
-          children: tabs,
-      ),      
-    )
-    );
+    return DefaultTabController(
+        length: tabs.length,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: ColorsUtil.backgroundColorDark,
+            title: const Text(
+              'Community Feed',
+              style: TextStyle(color: ColorsUtil.textColorDark),
+            ),
+            bottom: const TabBar(
+              labelPadding: EdgeInsets.only(left: 20, right: 20),
+              tabs: [
+                Tab(text: 'People'),
+                Tab(text: 'Group'),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: tabs,
+          ),
+        ));
   }
 }

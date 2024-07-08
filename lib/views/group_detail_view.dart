@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/get_group_members.dart';
+import 'package:tembeakenya/repository/get_users.dart';
 
 import 'package:tembeakenya/views/group_create_hike_view.dart';
 import 'package:tembeakenya/views/group_edit_view.dart';
 import 'package:tembeakenya/views/group_event_view.dart';
+// import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-import 'package:tembeakenya/dummy_db.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
@@ -36,8 +40,9 @@ import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 class GroupDetailView extends StatefulWidget {
-  final int userID;
-  const GroupDetailView({super.key, required this.userID});
+  final user;
+  final group;
+  const GroupDetailView({super.key, required this.user, required this.group});
 
   @override
   State<GroupDetailView> createState() => _CommunityViewState();
@@ -49,7 +54,7 @@ class _CommunityViewState extends State<GroupDetailView> {
   String profileImageID = "defaultProfilePic";
 
   late String theGroupName;
-  late bool theMember;
+  // late bool theMember;
   late String theDescription;
 
   late int uID;
@@ -119,25 +124,20 @@ class _CommunityViewState extends State<GroupDetailView> {
                   color: ColorsUtil.primaryColorDark,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Date: $hikeDate',
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                        color: ColorsUtil.primaryColorDark,
-                      )),
-                  const Text(
-                    'Click for more detail',
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: ColorsUtil.secondaryColorDark,
-                    ),
-                  ),
-                ],
-              )
+              Text('Date: $hikeDate',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.primaryColorDark,
+                  )),
+              const Text(
+                'Click for more detail',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: ColorsUtil.secondaryColorDark,
+                ),
+              ),
             ]),
       ),
     );
@@ -147,8 +147,9 @@ class _CommunityViewState extends State<GroupDetailView> {
   void initState() {
     // TODO: Temporary
     // ***** ROLE *****  //
-    roleID = 2;
-    roleSwitch = true;
+    User user = widget.user;
+    roleID = user.roleNo!;
+    roleSwitch = canEdit(roleID);
     // ***************** //
 
     getImageUrl(profileImageID).then((String result) {
@@ -165,10 +166,10 @@ class _CommunityViewState extends State<GroupDetailView> {
   @override
   Widget build(BuildContext context) {
     // ****************************************************** //
-    uID = widget.userID;
-    theGroupName = groupName[uID];
-    theMember = member[uID];
-    theDescription = description[uID];
+    var group = widget.group;
+    theGroupName = group['name'];
+    // theMember = ;
+    theDescription = group['description'];
     // ****************************************************** //
 
     // user = widget.currentUser;
@@ -201,10 +202,15 @@ class _CommunityViewState extends State<GroupDetailView> {
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
               // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupMemberView())),
+              onTap: () {
+                debugPrint(getGroupMembers().toString());
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupMemberView(
+                              user: widget.user,
+                            )));
+              },
             ),
             ListTile(
                 leading: const Icon(Icons.logout),
@@ -240,10 +246,15 @@ class _CommunityViewState extends State<GroupDetailView> {
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
               // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupMemberView())),
+              onTap: () {
+                debugPrint(getGroupMembers().toString());
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupMemberView(
+                              user: widget.user,
+                            )));
+              },
             ),
             ListTile(
               leading: const Icon(Icons.edit_note),
@@ -261,7 +272,9 @@ class _CommunityViewState extends State<GroupDetailView> {
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const GroupJoinView())),
+                      builder: (context) => GroupJoinView(
+                            user: widget.user,
+                          ))),
             ),
             ListTile(
               leading: const Icon(Icons.event),
@@ -386,26 +399,27 @@ class _CommunityViewState extends State<GroupDetailView> {
                                       fontWeight: FontWeight.bold,
                                       color: ColorsUtil.textColorDark)),
                             ),
-                            if (theMember)
+                            if (isGroupMember(widget.user))
                               const Text('Member',
                                   style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.normal,
                                       color: ColorsUtil.accentColorDark)),
-                            if (!theMember)
+                            if (!isGroupMember(widget.user))
                               ElevatedButton(
                                 onPressed: () {
                                   setState(() {
-                                    request[uID] = !request[uID];
+                                    // todo add the request functionality
                                   });
                                 },
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: const Size(150, 30),
                                     foregroundColor: ColorsUtil.textColorDark,
-                                    backgroundColor: request[uID]
-                                        ? ColorsUtil.accentColorDark
-                                        : ColorsUtil.secondaryColorDark),
-                                child: request[uID]
+                                    backgroundColor:
+                                        hasRequestedToJoinGroup(widget.user)
+                                            ? ColorsUtil.accentColorDark
+                                            : ColorsUtil.secondaryColorDark),
+                                child: hasRequestedToJoinGroup(widget.user)
                                     ? const Text('Pending...')
                                     : const Text('Request to Join'),
                               )
@@ -473,7 +487,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 const EdgeInsets.only(top: 15, bottom: 15, left: 5, right: 5),
             decoration: BoxDecoration(
                 border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: ColorsUtil.cardColorDark,
+                color: const Color.fromARGB(150, 49, 59, 21),
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
