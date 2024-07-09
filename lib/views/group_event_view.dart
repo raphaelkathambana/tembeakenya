@@ -137,7 +137,8 @@ class _GroupEventViewState extends State<GroupEventView> {
   Widget build(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
 
-    int uID = widget.user.id;
+    // int uID = widget.user.id;
+    int uID = 1;
 
     theGroupName = groupName[uID];
     theDescription = description[uID];
@@ -169,6 +170,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
+                      width: width * .5,
                       margin: const EdgeInsets.all(10),
                       child: Text(
                         hikeName,
@@ -240,7 +242,7 @@ class _GroupEventViewState extends State<GroupEventView> {
           DraggableScrollableSheet(
             initialChildSize: .5,
             minChildSize: .5,
-            maxChildSize: .7,
+            maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
                 // height: 0.25,
@@ -258,6 +260,16 @@ class _GroupEventViewState extends State<GroupEventView> {
                 child: ListView(
                   controller: scrollController,
                   children: [
+                    Container(
+                      alignment: Alignment.topCenter,
+                      margin: const EdgeInsets.only(top: 15),
+                      height: 5,
+                      child: const Icon(
+                        Icons.maximize_rounded,
+                        color: Color.fromARGB(112, 99, 126, 32),
+                        size: 60,
+                      ),
+                    ),
                     Container(
                       // width: width,
                       margin: const EdgeInsets.all(25),

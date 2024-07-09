@@ -11,24 +11,6 @@ import 'package:tembeakenya/views/group_detail_view.dart';
 // ******************* DUMMY DATABASE ******************* //
 // import 'package:tembeakenya/dummy_db.dart';
 
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-// ****************************************************** //
-
 class GroupView extends StatefulWidget {
   final user;
   final groups;
@@ -39,28 +21,28 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-  // ***** ROLE *****  //
+
   late int roleID;
   late bool roleSwitch;
 
-  // // TEMPORARY ROLE SWITCH BUTTON
-  // roleButton() {
-  //   return ElevatedButton(
-  //     onPressed: () {
-  //       setState(() {
-  //         roleSwitch = !roleSwitch;
-  //         roleID = roleSwitch ? 2 : 1;
-  //       });
-  //     },
-  //     style: ElevatedButton.styleFrom(
-  //         minimumSize: const Size(150, 30),
-  //         foregroundColor: ColorsUtil.textColorDark,
-  //         backgroundColor: roleSwitch
-  //             ? ColorsUtil.secondaryColorDark
-  //             : ColorsUtil.accentColorDark),
-  //     child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
-  //   );
-  // }
+  // TEMPORARY ROLE SWITCH BUTTON
+  roleButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          roleSwitch = !roleSwitch;
+          roleID = roleSwitch ? 2 : 1;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+          minimumSize: const Size(150, 30),
+          foregroundColor: ColorsUtil.textColorDark,
+          backgroundColor: roleSwitch
+              ? ColorsUtil.secondaryColorDark
+              : ColorsUtil.accentColorDark),
+      child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
+    );
+  }
   // ***************** //
 
   late String displayUrl;
@@ -105,8 +87,8 @@ class _GroupViewState extends State<GroupView> {
         onPressed: () {
           user = widget.user;
           debugPrint(widget.groups.toString());
+          debugPrint('GROUP DETAIL: ');
           debugPrint(widget.groups[num].toString());
-          // TODO: Add to route
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -160,7 +142,7 @@ class _GroupViewState extends State<GroupView> {
                           width: MediaQuery.sizeOf(context).width,
                           child: Text((widget.groups[num]['name']),
                               style: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
@@ -204,7 +186,6 @@ class _GroupViewState extends State<GroupView> {
   createGroup() {
     return TextButton(
         onPressed: () {
-          // TODO: Add to route
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -274,7 +255,7 @@ class _GroupViewState extends State<GroupView> {
     return Scaffold(
         body: SingleChildScrollView(
             child: Column(children: [
-      // TEMPORARY ROLE SWITCH BUTTON
+
       // roleButton(),
 
       const Divider(

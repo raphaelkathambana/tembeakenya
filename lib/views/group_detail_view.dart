@@ -13,32 +13,6 @@ import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
 
-// ******************* DUMMY DATABASE ******************* //
-// import 'package:tembeakenya/dummy_db.dart';
-
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-//      | UserID | GoupID | RoleID |
-//      | ------ | ------ | ------ |
-//      | 1      | 1      | 1      |
-//      | 1      | 2      | 2      |
-//      | 2      | 2      | 1      |
-
-// ****************************************************** //
 class GroupDetailView extends StatefulWidget {
   final user;
   final group;
@@ -51,107 +25,29 @@ class GroupDetailView extends StatefulWidget {
 class _CommunityViewState extends State<GroupDetailView> {
   late String displayUrl;
   late NavigationService navigationService;
-  String profileImageID = "defaultProfilePic";
+  late int loadNum;
+  late String profileImageID;
 
   late String theGroupName;
-  // late bool theMember;
   late String theDescription;
 
-  late int uID;
-
-  // TODO: Temporary
-  // ***** ROLE *****  //
   late int roleID;
   late bool roleSwitch;
-  // ***************** //
 
   String hikeName = 'Karura...? More like KAZUMA!!!';
   String hikeDescription =
       'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  String hikeLocation = 'Katura Forest';
+  String hikeLocation = 'Karura Forest';
   String hikeDate = 'July 7, 2024';
-
-  eventCard() {
-    return TextButton(
-      onPressed: () {
-        // TODO: Add to route
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => GroupEventView(user: widget.user)));
-      },
-      style: const ButtonStyle(
-          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
-      child: Container(
-        width: MediaQuery.sizeOf(context).width,
-        // height: 100,
-        margin: const EdgeInsets.all(7),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: ColorsUtil.accentColorDark),
-          color: ColorsUtil.descriptionColorDark,
-        ),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                hikeName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.primaryColorDark,
-                ),
-              ),
-              const Divider(
-                height: 6,
-                color: ColorsUtil.accentColorDark,
-              ),
-              Text(
-                hikeDescription,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.textColorDark,
-                ),
-              ),
-              Text(
-                'Location: $hikeLocation',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.primaryColorDark,
-                ),
-              ),
-              Text('Date: $hikeDate',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: ColorsUtil.primaryColorDark,
-                  )),
-              const Text(
-                'Click for more detail',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.secondaryColorDark,
-                ),
-              ),
-            ]),
-      ),
-    );
-  }
 
   @override
   void initState() {
-    // TODO: Temporary
-    // ***** ROLE *****  //
     User user = widget.user;
     roleID = user.roleNo!;
     roleSwitch = canEdit(roleID);
-    // ***************** //
-
+    
+    displayUrl = '';
+    profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -159,23 +55,22 @@ class _CommunityViewState extends State<GroupDetailView> {
     });
 
     navigationService = NavigationService(router);
-    displayUrl = '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // ****************************************************** //
+    // loadNum = widget.group['eventID'].length;
+    // TODO: Temporart loadnum value
+    loadNum = 0;
+
     var group = widget.group;
     theGroupName = group['name'];
-    // theMember = ;
     theDescription = group['description'];
-    // ****************************************************** //
 
-    // user = widget.currentUser;
     debugPrint('Ok, Image URL: $displayUrl');
 
-    // TODO: TEMPORARY ROLE SWITCH BUTTON
+    // TEMPORARY ROLE SWITCH BUTTON
     roleButton() {
       return ElevatedButton(
         onPressed: () {
@@ -193,6 +88,7 @@ class _CommunityViewState extends State<GroupDetailView> {
         child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
       );
     }
+    // ***************** //
 
     sideBar(int theRole) {
       if (theRole == 1) {
@@ -201,7 +97,6 @@ class _CommunityViewState extends State<GroupDetailView> {
             ListTile(
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
-              // TODO: Add to route
               onTap: () {
                 debugPrint(getGroupMembers().toString());
                 Navigator.push(
@@ -239,13 +134,12 @@ class _CommunityViewState extends State<GroupDetailView> {
                 }),
           ]),
         );
-      } else if (theRole == 2) {
+      } else {
         return Drawer(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             ListTile(
               leading: const Icon(Icons.people_outline),
               title: const Text('Members'),
-              // TODO: Add to route
               onTap: () {
                 debugPrint(getGroupMembers().toString());
                 Navigator.push(
@@ -259,16 +153,14 @@ class _CommunityViewState extends State<GroupDetailView> {
             ListTile(
               leading: const Icon(Icons.edit_note),
               title: const Text('Edit Group'),
-              // TODO: Add to route
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => GroupEditView(userID: uID))),
+                      builder: (context) => GroupEditView(group: widget.group))),
             ),
             ListTile(
               leading: const Icon(Icons.read_more),
               title: const Text('Membership Request'),
-              // TODO: Add to route
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -279,7 +171,6 @@ class _CommunityViewState extends State<GroupDetailView> {
             ListTile(
               leading: const Icon(Icons.event),
               title: const Text('Create a Hike Event'),
-              // TODO: Add to route
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -312,6 +203,91 @@ class _CommunityViewState extends State<GroupDetailView> {
                           ));
                 }),
           ]),
+        );
+      }
+    }
+
+    eventCard(int eventID) {
+      // TODO: If event data for specific group exists
+      if (eventID != 0) {
+        return TextButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupEventView(user: widget.user)));
+          },
+          style: const ButtonStyle(
+              overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+          child: Container(
+            width: MediaQuery.sizeOf(context).width,
+            // height: 100,
+            margin: const EdgeInsets.all(7),
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: ColorsUtil.accentColorDark),
+              color: ColorsUtil.descriptionColorDark,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  hikeName,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: ColorsUtil.primaryColorDark,
+                  ),
+                ),
+                const Divider(
+                  height: 6,
+                  color: ColorsUtil.accentColorDark,
+                ),
+                Text(
+                  hikeDescription,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.textColorDark,
+                  ),
+                ),
+                Text(
+                  'Location: $hikeLocation',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.accentColorDark,
+                  ),
+                ),
+                Text('Date: $hikeDate',
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.normal,
+                      color: ColorsUtil.accentColorDark,
+                    )),
+                const Text(
+                  'Click for more detail',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.primaryColorDark,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      } else {
+        return Container(
+          width: MediaQuery.sizeOf(context).width,
+          margin: const EdgeInsets.all(7),
+          padding: const EdgeInsets.all(10),
+          child: const Text(
+            'There are no upcoming events...',
+            style: TextStyle(color: ColorsUtil.primaryColorDark, fontSize: 16),
+          ),
         );
       }
     }
@@ -480,7 +456,6 @@ class _CommunityViewState extends State<GroupDetailView> {
           ),
 
           // Events
-
           Container(
             margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             padding:
@@ -503,11 +478,15 @@ class _CommunityViewState extends State<GroupDetailView> {
                 height: 6,
                 color: ColorsUtil.accentColorDark,
               ),
-              eventCard(),
+              // TODO: Have an eventID in the group table
+              if (loadNum == 0)
+                eventCard(0)
+              else
+                for (int i = 0; i < loadNum; i++) eventCard(i + 1),
             ]),
           ),
-          // TEMPORARY ROLE SWITCH BUTTON
-          roleButton(),
+
+          // roleButton(),
         ])));
   }
 }
