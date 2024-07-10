@@ -82,7 +82,7 @@ User getAUserDetails(data) {
   user.email = data['email'] as String?;
   user.email_verified_at = DateTime.parse(data['email_verified_at'] as String);
   user.roleNo = data['roleNo'] as int?;
-  // user.image_id = data['image_id'];
+  user.profileImageId = data['image_id'] as String?;
   user.no_of_hikes = data['no_of_hikes'] as int?;
   user.total_distance_walked = data['total_distance_walked'] as int?;
   user.no_of_steps_taken = data['no_of_steps_taken'] as int?;

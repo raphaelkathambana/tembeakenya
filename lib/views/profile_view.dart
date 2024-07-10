@@ -14,8 +14,8 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late String displayUrl;
   User? user;
+  late String displayUrl;
   late NavigationService navigationService;
   bool _isLoading = false;
   String profileImageID = "";
@@ -24,7 +24,7 @@ class _ProfileViewState extends State<ProfileView> {
   void initState() {
     navigationService = NavigationService(router);
     user = widget.currentUser;
-    profileImageID = "${user!.image_id}";
+    profileImageID = user!.image_id!;
     displayUrl = '';
     super.initState();
   }
