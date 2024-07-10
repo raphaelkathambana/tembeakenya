@@ -222,6 +222,39 @@ class _PeopleViewState extends State<PeopleView> {
     );
   }
 
+  Future<void> _handleRefresh() async {
+
+  await Future.delayed(const Duration(seconds: 2));
+
+    String profileImageID = '';
+    selectedUsers = List<User?>.filled(loadNum, null);
+    followsLoaded = List<bool>.filled(loadNum, false);
+  
+    for (int i = 0; i < loadNum; i++) {
+      if (followsLoaded[i] == false) {
+        getFriend(i + 1).then((value) => {
+              setState(() {
+                isFriend[i] = value;
+              })
+            });
+        followsLoaded[i] = true;
+      }
+    }
+
+    for (int i = 0; i < loadNum; i++) {
+      if (selectedUsers[i] != null) {
+        profileImageID = selectedUsers[i]!.image_id!;
+        getImageUrl(profileImageID).then((String result) {
+          setState(() {
+            displayUrl[i] = result;
+          });
+        });
+        selectedUsers[i] = null;
+      }
+    }
+
+  }
+
   @override
   void initState() {
     dropdownValue = listUser.first;
@@ -266,89 +299,93 @@ class _PeopleViewState extends State<PeopleView> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(
-          child: Column(children: [
-        const Divider(
-          height: 2,
-          color: ColorsUtil.secondaryColorDark,
-          indent: 12,
-          endIndent: 12,
-        ),
-        Container(
-          width: MediaQuery.sizeOf(context).width * .90,
-          margin: const EdgeInsets.only(top: 20, bottom: 25),
-          height: 50,
-          padding: const EdgeInsets.only(left: 10),
-          decoration: BoxDecoration(
-            color: ColorsUtil.cardColorDark,
-            borderRadius: BorderRadius.circular(25.0),
+      body: RefreshIndicator(
+        onRefresh: _handleRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(children: [
+          const Divider(
+            height: 2,
+            color: ColorsUtil.secondaryColorDark,
+            indent: 12,
+            endIndent: 12,
           ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _search,
-                  enableSuggestions: true,
-                  autocorrect: true,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
-                    hintText: 'Search',
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      search = _search.text;
-                    });
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(
-                      color: Colors.grey,
-                      style: BorderStyle.solid,
-                      width: 0.80),
-                ),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  style: const TextStyle(fontSize: 14),
-                  underline: Container(height: 2),
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  items: listUser.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-            padding: const EdgeInsets.symmetric(horizontal: 3),
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
+          Container(
+            width: MediaQuery.sizeOf(context).width * .90,
+            margin: const EdgeInsets.only(top: 20, bottom: 25),
+            height: 50,
+            padding: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              color: ColorsUtil.cardColorDark,
+              borderRadius: BorderRadius.circular(25.0),
             ),
-            child: Column(
+            child: Row(
               children: [
-                for (int i = 0; i < loadNum; i++)
-                  if (dropdownValue ==
-                      listUser.last) // If dropdown indicates "Friends"
-                    searchCard(search, i, true)
-                  else if (dropdownValue ==
-                      listUser.first) // If dropdown indicates "All"
-                    searchCard(search, i, false)
+                Expanded(
+                  child: TextField(
+                    controller: _search,
+                    enableSuggestions: true,
+                    autocorrect: true,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                      hintText: 'Search',
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        search = _search.text;
+                      });
+                    },
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20.0),
+                    border: Border.all(
+                        color: Colors.grey,
+                        style: BorderStyle.solid,
+                        width: 0.80),
+                  ),
+                  child: DropdownButton<String>(
+                    value: dropdownValue,
+                    style: const TextStyle(fontSize: 14),
+                    underline: Container(height: 2),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
+                    items: listUser.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                )
               ],
-            )),
-      ])),
+            ),
+          ),
+          Container(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+              ),
+              child: Column(
+                children: [
+                  for (int i = 0; i < loadNum; i++)
+                    if (dropdownValue ==
+                        listUser.last) // If dropdown indicates "Friends"
+                      searchCard(search, i, true)
+                    else if (dropdownValue ==
+                        listUser.first) // If dropdown indicates "All"
+                      searchCard(search, i, false)
+                ],
+              )),
+        ])),
+      ),
     );
   }
 }
