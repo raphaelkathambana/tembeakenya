@@ -9,7 +9,7 @@ var data = [
     "username": "goyette.herminia",
     "email": "qdare@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 2,
+    "role_id": 2,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -24,7 +24,7 @@ var data = [
     "username": "superadmin",
     "email": "codeclimberske@gmail.com",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 3,
+    "role_id": 3,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -39,7 +39,7 @@ var data = [
     "username": "rice.rahsaan",
     "email": "toy71@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -54,7 +54,7 @@ var data = [
     "username": "ryan.emerson",
     "email": "brice.bode@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -69,7 +69,7 @@ var data = [
     "username": "larson.frederik",
     "email": "mozelle.smith@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -84,7 +84,7 @@ var data = [
     "username": "antonette.thompson",
     "email": "schamberger.stanton@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -99,7 +99,7 @@ var data = [
     "username": "drew.frami",
     "email": "carlos.gusikowski@example.org",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -114,7 +114,7 @@ var data = [
     "username": "liza.king",
     "email": "kendall.schmeler@example.com",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -148,8 +148,8 @@ bool isGroupMember(User user) {
 // check if user has requested to join a group
 bool hasRequestedToJoinGroup(User user) {
   // var user = getUsersFromDb()[userId];
-  List<dynamic> requests = getRequestData();
-  for (var request in requests) {
+  Map<String, User> data = getRequestData();
+  for (var request in data.values) {
     if (user.id == request.id) {
       return true;
     }

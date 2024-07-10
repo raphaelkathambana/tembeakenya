@@ -43,7 +43,7 @@ class _CommunityViewState extends State<GroupDetailView> {
   @override
   void initState() {
     User user = widget.user;
-    roleID = user.roleNo!;
+    roleID = user.role_id!;
     roleSwitch = canEdit(roleID);
     
     displayUrl = '';
@@ -486,7 +486,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             ]),
           ),
 
-          // roleButton(),
+          roleButton(),
         ])));
   }
 }
