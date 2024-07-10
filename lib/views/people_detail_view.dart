@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+// import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/repository/get_a_user.dart';
 import 'package:tembeakenya/repository/get_following.dart';
 
 class PeopleDetailView extends StatefulWidget {
   final dynamic currentUser;
-  final User selectedUser;
+  final dynamic selectedUser;
   const PeopleDetailView(
       {super.key, required this.selectedUser, required this.currentUser});
 
@@ -17,50 +18,58 @@ class PeopleDetailView extends StatefulWidget {
 }
 
 class _CommunityViewState extends State<PeopleDetailView> {
-  late String displayUrl;
+  User? user;
+  String displayUrl = '';
   late NavigationService navigationService;
-  // String profileImageID = "";
-  String profileImageID = "defaultProfilePic";
+  String profileImageID = '';
 
   // ****************************************************** //
+
   late String theFullName;
   late String theUsername;
   late bool theFriend;
   late int theStepsTaken;
   late int theDistanceWalked;
   late int theHikes;
+  bool isFriend = false;
   // ****************************************************** //
 
   @override
   void initState() {
+    user = widget.selectedUser;
+    profileImageID = user!.image_id!;
+
+    // profileImageID = widget.selectedUser.image_id!;
+
     debugPrint("user: ${widget.selectedUser.fullName.toString()}");
     debugPrint("user: ${widget.selectedUser.no_of_hikes.toString()}");
-    debugPrint(getReviews().toString());
-    navigationService = NavigationService(router);
-    displayUrl = '';
-    super.initState();
+    debugPrint("user: $profileImageID");
+    // debugPrint(getReviews().toString());
+
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
+
+    getFriend(widget.selectedUser.id!).then((value) => {
+      setState(() {
+        isFriend = value;
+      })
+    });
+
+    navigationService = NavigationService(router);
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // ****************************************************** //
-    User user = widget.selectedUser;
-    theFullName = user.fullName;
-    theUsername = user.username!;
-    theStepsTaken = user.no_of_steps_taken!;
-    theDistanceWalked = user.total_distance_walked!;
-    theHikes = user.no_of_hikes!;
 
-    // theFriend = user.followingCount! > 0;
-    // theFullName = fullName[uID];
-    // theUsername = username[uID];
-    // theFriend = friend[uID];
-    // // ****************************************************** //
+    theFullName = user!.fullName;
+    theUsername = user!.username!;
+    theStepsTaken = user!.no_of_steps_taken!;
+    theDistanceWalked = user!.total_distance_walked!;
+    theHikes = user!.no_of_hikes!;
 
     debugPrint('Ok, Image URL: $displayUrl');
 
@@ -155,36 +164,51 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       ),
                     ],
                   ),
-                  Container(
-                      margin: const EdgeInsets.only(right: 3.5),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: getFriends(widget.selectedUser.id!)
-                            ? ColorsUtil.accentColorDark
-                            : ColorsUtil.secondaryColorDark,
-                      ),
-                      height: 35,
-                      width: 95,
-                      child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            // todo add the following and unfollowing functionality
-                          });
-                        },
-                        child: getFriends(widget.selectedUser.id!)
-                            ? const Text(
-                                'Following',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: ColorsUtil.textColorDark),
-                              )
-                            : const Text(
-                                'Follow',
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    color: ColorsUtil.textColorDark),
-                              ),
-                      )),
+                  isFriend
+                      ? Container(
+                          margin: const EdgeInsets.only(right: 3.5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: ColorsUtil.accentColorDark),
+                          height: 35,
+                          width: 95,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isFriend = !isFriend;
+                                CommunityController()
+                                    .unFollowUser(widget.selectedUser.id!);
+                              });
+                            },
+                            child: const Text(
+                              'Following',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: ColorsUtil.textColorDark),
+                            ),
+                          ))
+                      : Container(
+                          margin: const EdgeInsets.only(right: 3.5),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: ColorsUtil.secondaryColorDark),
+                          height: 35,
+                          width: 95,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                isFriend = !isFriend;
+                                CommunityController()
+                                    .followUser(widget.selectedUser.id!);
+                              });
+                            },
+                            child: const Text(
+                              'Follow',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: ColorsUtil.textColorDark),
+                            ),
+                          ))
                 ],
               ),
               const Divider(
@@ -332,5 +356,10 @@ class _CommunityViewState extends State<PeopleDetailView> {
             ]),
           ),
         ])));
+  }
+
+  Future<bool> setFriendState() async {
+    isFriend = await getFriend(user!.id!);
+    return isFriend;
   }
 }
