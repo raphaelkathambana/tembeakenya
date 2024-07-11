@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
@@ -14,14 +16,22 @@ import 'package:tembeakenya/views/welcome_view.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  NavigationService navigationService = NavigationService(router);
   runApp(
-    MaterialApp.router(
-      title: 'Tembea Kenya',
-      themeMode: ThemeMode.dark,
-      darkTheme: darkThemeData,
-      theme: lightThemeData,
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthController(navigationService),
+        )
+      ],
+      child: MaterialApp.router(
+        title: 'Tembea Kenya',
+        themeMode: ThemeMode.dark,
+        darkTheme: darkThemeData,
+        theme: lightThemeData,
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
+      ),
     ),
   );
 }

@@ -3,11 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/main.dart';
+import 'package:tembeakenya/model/user.dart';
 // import 'package:tembeakenya/model/user_model.dart';
 import '../../assets/colors.dart';
 
 class HomeView extends StatefulWidget {
-  final user;
+  final User user;
   const HomeView({super.key, required this.user});
 
   @override

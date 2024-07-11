@@ -14,14 +14,14 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       email: json['email'] as String?,
       image_id: json['image_id'] as String?,
       role_id: (json['role_id'] as num?)?.toInt(),
+      following_count: (json['following_count'] as num?)?.toInt(),
+      followers_count: (json['followers_count'] as num?)?.toInt(),
       email_verified_at: json['email_verified_at'] == null
           ? null
           : DateTime.parse(json['email_verified_at'] as String),
       no_of_hikes: (json['no_of_hikes'] as num?)?.toInt(),
       total_distance_walked: (json['total_distance_walked'] as num?)?.toInt(),
       no_of_steps_taken: (json['no_of_steps_taken'] as num?)?.toInt(),
-      followers_count: (json['followers_count'] as num?)?.toInt(),
-      following_count: (json['following_count'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{

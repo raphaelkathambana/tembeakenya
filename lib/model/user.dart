@@ -60,6 +60,22 @@ class User {
     _role_id = value;
   }
 
+  // int? _following_count;
+
+  // int? get following_count => _following_count;
+
+  // set following_count(int? value) {
+  //   _following_count = value;
+  // }
+
+  // int? _followers_count;
+
+  // int? get followers_count => _followers_count;
+
+  // set followers_count(int? value) {
+  //   _followers_count = value;
+  // }
+
   DateTime? email_verified_at;
 
   int? no_of_steps_taken;
@@ -76,12 +92,12 @@ class User {
     String? email,
     String? image_id,
     int? role_id,
+    this.following_count,
+    this.followers_count,
     this.email_verified_at,
     this.no_of_hikes,
     this.total_distance_walked,
     this.no_of_steps_taken,
-    this.followers_count,
-    this.following_count,
   })  : _role_id = role_id,
         _email = email,
         _username = username,
@@ -89,6 +105,8 @@ class User {
         _image_id = image_id,
         _id = id,
         _firstName = firstName;
+        // _following_count = following_count,
+        // _followers_count = followers_count;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

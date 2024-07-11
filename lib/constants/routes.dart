@@ -53,7 +53,6 @@ final GoRouter router = GoRouter(
       name: '/profile',
       pageBuilder: (context, state) => MaterialPage(
           child: ProfileView(
-        user: state.extra as User,
         currentUser: state.extra as User,
       )),
     ),
