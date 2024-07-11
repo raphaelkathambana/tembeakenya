@@ -21,7 +21,6 @@ class GroupView extends StatefulWidget {
 }
 
 class _GroupViewState extends State<GroupView> {
-
   late int roleID;
   late bool roleSwitch;
 
@@ -40,12 +39,14 @@ class _GroupViewState extends State<GroupView> {
           backgroundColor: roleSwitch
               ? ColorsUtil.secondaryColorDark
               : ColorsUtil.accentColorDark),
-      child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
+      child: roleSwitch
+          ? const Text('debug button: Guide')
+          : const Text('debug button: Hiker'),
     );
   }
   // ***************** //
 
-  late String displayUrl;
+  late List<String> displayUrl;
   late String? dropdownValue;
   List<String> groupFilter = <String>['All Groups', 'My Groups'];
   late NavigationService navigationService;
@@ -86,9 +87,11 @@ class _GroupViewState extends State<GroupView> {
     return TextButton(
         onPressed: () {
           user = widget.user;
+
           debugPrint(widget.groups.toString());
           debugPrint('GROUP DETAIL: ');
           debugPrint(widget.groups[num].toString());
+
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -111,7 +114,7 @@ class _GroupViewState extends State<GroupView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(children: [
-                  if (displayUrl.isEmpty)
+                  if (displayUrl[num].isEmpty)
                     const CircleAvatar(
                         radius: 45,
                         backgroundColor: Colors.transparent,
@@ -131,7 +134,7 @@ class _GroupViewState extends State<GroupView> {
                             backgroundColor: ColorsUtil.accentColorDark,
                             child: CircleAvatar(
                               radius: 35,
-                              backgroundImage: NetworkImage(displayUrl),
+                              backgroundImage: NetworkImage(displayUrl[num]),
                             ))),
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * .35,
@@ -227,121 +230,141 @@ class _GroupViewState extends State<GroupView> {
           ),
         ));
   }
+
+  Future<void> _handleRefresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    String profileImageID = '';
+
+    for (int i = 0; i < loadNum; i++) {
+      profileImageID = widget.groups[i]['image_id'].toString();
+      getImageUrl(profileImageID).then((String result) {
+        setState(() {
+          displayUrl[i] = result;
+        });
+      });
+    }
+  }
   // ****************************************************** //
 
   @override
   void initState() {
-    dropdownValue = groupFilter.first;
-    displayUrl = '';
     navigationService = NavigationService(router);
-    getImageUrl(profileImageID).then((String result) {
-      setState(() {
-        displayUrl = result;
+
+    dropdownValue = groupFilter.first;
+    loadNum = widget.groups.length;
+    displayUrl = List<String>.filled(loadNum, '');
+
+    for (int i = 0; i < loadNum; i++) {
+      profileImageID = widget.groups[i]['image_id']!;
+      getImageUrl(profileImageID).then((String result) {
+        setState(() {
+          displayUrl[i] = result;
+        });
       });
-    });
-    super.initState();
+    }
+
     // ***** ROLE *****  //
-    roleID = widget.user.roleNo;
+    roleID = widget.user.role_id;
     roleSwitch = canEdit(roleID);
     // ***************** //
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('URL: $displayUrl');
-
-    loadNum = widget.groups.length;
 
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Column(children: [
-
-      // roleButton(),
-
-      const Divider(
-        height: 2,
-        color: ColorsUtil.secondaryColorDark,
-        indent: 12,
-        endIndent: 12,
-      ),
-
-      Container(
-          width: MediaQuery.sizeOf(context).width * .90,
-          margin: const EdgeInsets.only(top: 20, bottom: 25),
-          height: 50,
-          padding: const EdgeInsets.only(left: 10),
-          decoration: BoxDecoration(
-            color: ColorsUtil.cardColorDark,
-            borderRadius: BorderRadius.circular(25.0),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _search,
-                  enableSuggestions: true,
-                  autocorrect: true,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    icon: Icon(Icons.search),
-                    hintText: 'Search',
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      search = _search.text;
-                    });
-                  },
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+        body: RefreshIndicator(
+      onRefresh: _handleRefresh,
+      child: 
+      SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: Column(children: [
+            roleButton(),
+            const Divider(
+              height: 2,
+              color: ColorsUtil.secondaryColorDark,
+              indent: 12,
+              endIndent: 12,
+            ),
+            Container(
+                width: MediaQuery.sizeOf(context).width * .90,
+                margin: const EdgeInsets.only(top: 20, bottom: 25),
+                height: 50,
+                padding: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20.0),
-                  border: Border.all(
-                      color: Colors.grey,
-                      style: BorderStyle.solid,
-                      width: 0.80),
+                  color: ColorsUtil.cardColorDark,
+                  borderRadius: BorderRadius.circular(25.0),
                 ),
-                child: DropdownButton<String>(
-                  value: dropdownValue,
-                  style: const TextStyle(fontSize: 14),
-                  underline: Container(height: 2),
-                  onChanged: (value) {
-                    setState(() {
-                      dropdownValue = value!;
-                    });
-                  },
-                  items:
-                      groupFilter.map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _search,
+                        enableSuggestions: true,
+                        autocorrect: true,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          icon: Icon(Icons.search),
+                          hintText: 'Search',
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            search = _search.text;
+                          });
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      margin:
+                          const EdgeInsets.only(top: 10, bottom: 10, right: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20.0),
+                        border: Border.all(
+                            color: Colors.grey,
+                            style: BorderStyle.solid,
+                            width: 0.80),
+                      ),
+                      child: DropdownButton<String>(
+                        value: dropdownValue,
+                        style: const TextStyle(fontSize: 14),
+                        underline: Container(height: 2),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                        items: groupFilter
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  ],
+                )),
+            if (roleSwitch) createGroup(),
+            Container(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                decoration: const BoxDecoration(
+                  color: Colors.transparent,
                 ),
-              )
-            ],
-          )),
-
-      if (roleSwitch) createGroup(),
-
-      Container(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: Column(
-            children: [
-              for (int i = 0; i < loadNum; i++)
-                if (dropdownValue ==
-                    groupFilter.last) // If dropdown indicates "Friends"
-                  searchCard(search, i, true)
-                else if (dropdownValue ==
-                    groupFilter.first) // If dropdown indicates "All"
-                  searchCard(search, i, false)
-            ],
-          )),
-    ])));
+                child: Column(
+                  children: [
+                    for (int i = 0; i < loadNum; i++)
+                      if (dropdownValue ==
+                          groupFilter.last) // If dropdown indicates "Friends"
+                        searchCard(search, i, true)
+                      else if (dropdownValue ==
+                          groupFilter.first) // If dropdown indicates "All"
+                        searchCard(search, i, false)
+                  ],
+                )),
+          ])),
+    ));
   }
 }
