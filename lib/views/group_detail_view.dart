@@ -62,7 +62,7 @@ class _CommunityViewState extends State<GroupDetailView> {
   Widget build(BuildContext context) {
     // loadNum = widget.group['eventID'].length;
     // TODO: Temporart loadnum value
-    loadNum = 0;
+    loadNum = 2;
 
     var group = widget.group;
     theGroupName = group['name'];

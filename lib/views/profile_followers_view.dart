@@ -13,17 +13,17 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ****************************************************** //
 
-class ProfileFollowingView extends StatefulWidget {
+class ProfileFollowersView extends StatefulWidget {
   final dynamic currentUser;
   final users;
-  const ProfileFollowingView(
+  const ProfileFollowersView(
       {super.key, required this.currentUser, required this.users});
 
   @override
-  State<ProfileFollowingView> createState() => _ProfileFollowingViewState();
+  State<ProfileFollowersView> createState() => _ProfileFollowersViewState();
 }
 
-class _ProfileFollowingViewState extends State<ProfileFollowingView> {
+class _ProfileFollowersViewState extends State<ProfileFollowersView> {
   // ****************************************************** //
 
   late NavigationService navigationService;
@@ -316,7 +316,7 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
       appBar: AppBar(
           backgroundColor: ColorsUtil.backgroundColorDark,
           title: const Text(
-            'Following',
+            'Followers',
             style: TextStyle(color: ColorsUtil.textColorDark),
           )),
       body: SingleChildScrollView(
@@ -364,7 +364,7 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
             color: Colors.transparent,
           ),
           child: Column(
-            children: [for (int i = 0; i < loadNum; i++) searchCard(search, i)],
+            // children: [for (int i = 0; i < loadNum; i++) searchCard(search, i)],
           ),
         ),
       ])),

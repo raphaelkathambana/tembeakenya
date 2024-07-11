@@ -64,7 +64,6 @@ class _PeopleViewState extends State<PeopleView> {
 
   userCard(int num) {
     return TextButton(
-      // onPressed: () {
       onPressed: () async {
         await CommunityController().getAUsersDetails(num + 1).then(
           (user) {

@@ -7,6 +7,7 @@ import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/profile_followers_view.dart';
 import 'package:tembeakenya/views/profile_following_view.dart';
 
 class ProfileView extends StatefulWidget {
@@ -188,7 +189,17 @@ class _ProfileViewState extends State<ProfileView> {
                   child: Row(
                     children: [
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      // users.isNotEmpty ?
+                                      ProfileFollowersView(
+                                        currentUser: widget.currentUser,
+                                        users: users,
+                                      )));
+                        },
                         child: Column(
                           children: [
                             Text(
