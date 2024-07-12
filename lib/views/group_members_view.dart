@@ -2,14 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-
 import 'package:tembeakenya/dummy_db.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
-
-// ****************************************************** //
 
 class GroupMemberView extends StatefulWidget {
   final user;
@@ -24,6 +20,8 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   late String displayUrl;
   late NavigationService navigationService;
+
+  User? selectedUser;
 
   String profileImageID = "defaultProfilePic";
   late int loadNum;
@@ -45,18 +43,27 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   userCard(int num) {
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          final selectedUser = CommunityController().getAUsersDetails(num);
-          navigationService.navigateToPeopleDetailsView(context, widget.user);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(
-                        selectedUser: selectedUser,
-                        currentUser: widget.user,
-                      )));
-        },
+        onPressed: () async {
+        // await CommunityController().getAUsersDetails(num + 1).then(
+        //   (user) {
+        //     setState(() {
+        //       selectedUser = user;
+        //     });
+        //   },
+        // );
+
+        // if (!mounted) return;
+
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => PeopleDetailView(
+        //       selectedUser: selectedUser!,
+        //       currentUser: widget.user,
+        //     ),
+        //   ),
+        // );
+      },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Card(

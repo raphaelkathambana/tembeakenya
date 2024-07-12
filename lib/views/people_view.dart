@@ -202,6 +202,7 @@ class _PeopleViewState extends State<PeopleView> {
                               ],
                             ),
                           ),
+                          // TODO
                           isFriend[num]!
                               ? Container(
                                   margin: const EdgeInsets.only(right: 3.5),
@@ -294,6 +295,8 @@ class _PeopleViewState extends State<PeopleView> {
     isFriend = List<bool?>.filled(loadNum, false);
     followsLoaded = List<bool>.filled(loadNum, false);
 
+    int c = 0;
+
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
       getImageUrl(profileImageID).then((String result) {
@@ -309,12 +312,18 @@ class _PeopleViewState extends State<PeopleView> {
   Widget build(BuildContext context) {
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
-        getFriend(i + 1).then((value) => {
-                if (isFriend[i] = value) {
-                  loaded = followsLoaded.every((element) => element = true)
-                }
-            });
-      followsLoaded[i] = true;
+        getFriend(i + 1).then(
+          (value) => {
+            // isFriend[i] = value
+            if (isFriend[i] = value) {
+              loaded = followsLoaded.every((element) => element = true),
+            }
+          },
+        );
+        followsLoaded[i] = true;
+        Future.delayed(const Duration(seconds: 3), () {
+          loaded = followsLoaded.every((element) => element = true);
+        });
       }
     }
 

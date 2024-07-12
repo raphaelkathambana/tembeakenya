@@ -317,8 +317,8 @@ class _GroupEventViewState extends State<GroupEventView> {
           // *********************************************************** //
 
           DraggableScrollableSheet(
-            initialChildSize: .5,
-            minChildSize: .5,
+            initialChildSize: 90/width,
+            minChildSize: 90/width,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
