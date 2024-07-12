@@ -181,7 +181,6 @@ class _GroupEventViewState extends State<GroupEventView> {
     if (users.isNotEmpty) {
       if (!initStateAgain) {
         loadNum = users.length;
-        debugPrint('NUMBER LOADED: $loadNum');
         displayUrl = List<String>.filled(loadNum, '');
         isAttendee = List<bool?>.filled(loadNum, false);
         attendingLoaded = List<bool>.filled(loadNum, false);
@@ -211,7 +210,6 @@ class _GroupEventViewState extends State<GroupEventView> {
 
     double width = MediaQuery.sizeOf(context).width;
 
-    // int uID = widget.user.id;
     int gID = 1;
 
     theGroupName = groupName[gID];

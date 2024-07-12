@@ -31,7 +31,6 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
   void initState() {
     dropdownValue = null;
 
-    // int uID = widget.userID;
     _date = TextEditingController();
     _hikeName = TextEditingController();
     _description = TextEditingController();
@@ -74,134 +73,157 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
               ))
         ]),
         Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-                color: ColorsUtil.descriptionColorDark,
-                borderRadius: BorderRadius.circular(10)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Group Name',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark)),
-                  Icon(
-                    Icons.edit,
-                    color: ColorsUtil.primaryColorDark,
-                  ),
-                ],
-              ),
-              SizedBox(
-                child: TextField(
-                  controller: _hikeName,
-                  decoration: const InputDecoration(
-                    hintText: "Give the Hike a name",
-                  ),
-                  onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
-                  },
-                ),
-              ),
-            ])),
-        Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            padding: const EdgeInsets.all(15),
-            decoration: BoxDecoration(
-                color: ColorsUtil.descriptionColorDark,
-                borderRadius: BorderRadius.circular(10)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Description',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark)),
-                  Icon(
-                    Icons.edit,
-                    color: ColorsUtil.primaryColorDark,
-                  ),
-                ],
-              ),
-              SizedBox(
-                child: TextField(
-                  controller: _description,
-                  decoration: const InputDecoration(
-                    hintText: "Write down a description",
-                  ),
-                  onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
-                  },
-                ),
-              ),
-            ])),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
-          // width: 250,
-          height: 60,
+          width: MediaQuery.sizeOf(context).width,
+          margin: const EdgeInsets.all(7),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
           decoration: BoxDecoration(
-              color: ColorsUtil.descriptionColorDark,
-              borderRadius: BorderRadius.circular(10)),
-          child: DropdownButton(
-              value: dropdownValue,
-              dropdownColor: ColorsUtil.descriptionColorDark,
-              underline: Container(height: 2),
-              onChanged: (value) {
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              items: locations.map<DropdownMenuItem>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              hint: const SizedBox(
-                width: 195,
-                child: Text('Select Location'),
-              )),
-        ),
-        Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            width: 250,
-            height: 60,
-            decoration: BoxDecoration(
-                color: ColorsUtil.descriptionColorDark,
-                borderRadius: BorderRadius.circular(10)),
-            child: TextField(
-              controller: _date,
-              decoration: const InputDecoration(
-                labelText: 'Date',
-                prefixIcon: Icon(Icons.calendar_today),
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: ColorsUtil.accentColorDark),
+            color: ColorsUtil.cardColorDark.withOpacity(0.6),
+          ),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Group Name',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark)),
+                            Icon(
+                              Icons.edit,
+                              color: ColorsUtil.primaryColorDark,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            controller: _hikeName,
+                            decoration: const InputDecoration(
+                              hintText: "Give the Hike a name",
+                            ),
+                            onChanged: (value) {
+                              // user?.username = value;
+                              // theUsername = value;
+                            },
+                          ),
+                        ),
+                      ])),
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Description',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark)),
+                            Icon(
+                              Icons.edit,
+                              color: ColorsUtil.primaryColorDark,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            controller: _description,
+                            decoration: const InputDecoration(
+                              hintText: "Write down a description",
+                            ),
+                            onChanged: (value) {
+                              // user?.username = value;
+                              // theUsername = value;
+                            },
+                          ),
+                        ),
+                      ])),
+              Container(
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+                // width: 250,
+                height: 60,
+                decoration: BoxDecoration(
+                    color: ColorsUtil.descriptionColorDark,
+                    borderRadius: BorderRadius.circular(10)),
+                child: DropdownButton(
+                    value: dropdownValue,
+                    dropdownColor: ColorsUtil.descriptionColorDark,
+                    underline: Container(height: 2),
+                    onChanged: (value) {
+                      setState(() {
+                        dropdownValue = value!;
+                      });
+                    },
+                    items: locations.map<DropdownMenuItem>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    hint: const SizedBox(
+                      width: 195,
+                      child: Text('Select Location'),
+                    )),
               ),
-              readOnly: true,
-              onTap: () async {
-                DateTime? pickedDate = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime(2100),
-                );
-                if (pickedDate != null) {
-                  setState(() {
-                    _date.text = pickedDate.toString().split(" ")[0];
-                  });
-                }
-              },
-            )),
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  width: 250,
+                  height: 60,
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: TextField(
+                    controller: _date,
+                    decoration: const InputDecoration(
+                      labelText: 'Date',
+                      prefixIcon: Icon(Icons.calendar_today),
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2100),
+                      );
+                      if (pickedDate != null) {
+                        setState(() {
+                          _date.text = pickedDate.toString().split(" ")[0];
+                        });
+                      }
+                    },
+                  )),
+            ],
+          ),
+        ),
         Container(
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: ElevatedButton(
