@@ -42,7 +42,7 @@ var requests = [
       "username": "superadmin",
       "email": "codeclimberske@gmail.com",
       "email_verified_at": "2024-07-04T14:25:02.000000Z",
-      "roleNo": 3,
+      "role_id": 3,
       "image_id": "defaultProfilePic",
       "no_of_hikes": 0,
       "total_distance_walked": 0,
@@ -63,8 +63,8 @@ var requests = [
       "lastName": "Kath",
       "username": "raphaelkathambana",
       "email": "maya12raph@gmail.com",
-      "email_verified_at": null,
-      "roleNo": 1,
+      "email_verified_at": '2024-07-04T14:25:02.000000Z',
+      "role_id": 1,
       "image_id": "defaultProfilePic",
       "no_of_hikes": 0,
       "total_distance_walked": 0,
@@ -78,15 +78,16 @@ var requests = [
 ];
 
 // loop through the data to get the list of members who've made a request to join a group
-List<dynamic> getRequestData() {
-  List<dynamic> requestsInfo = [];
-  for (var request in data) {
+Map<String, User> getRequestData() {
+  Map<String, User> requestsInfo = {};
+  for (var request in requests) {
     User user = getAUserDetails(request['user']);
     DateTime created = DateTime.parse(request['created_at'].toString());
     String requestedOn =
         'Requested on: ${created.day}/${created.month}/${created.year}';
-    requestsInfo.add('${user.fullName} - $requestedOn');
-    requestsInfo.add(user);
+    // requestsInfo?.add('${user.fullName} - $requestedOn');
+    final listing = <String, User>{'${user.fullName} - $requestedOn': user};
+    requestsInfo.addEntries(listing.entries);    
   }
   return requestsInfo;
 }

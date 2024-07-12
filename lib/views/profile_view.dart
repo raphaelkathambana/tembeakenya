@@ -1,36 +1,51 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/profile_followers_view.dart';
+import 'package:tembeakenya/views/profile_following_view.dart';
 
 class ProfileView extends StatefulWidget {
-  final dynamic currentUser;
-  const ProfileView({super.key, required this.currentUser, required user});
+  final User currentUser;
+  const ProfileView({super.key, required this.currentUser});
 
   @override
   State<ProfileView> createState() => _ProfileViewState();
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  late String displayUrl;
+  List<User> users = [];
+
   User? user;
+  late String displayUrl;
   late NavigationService navigationService;
   bool _isLoading = false;
-  String profileImageID = "";
+  String profileImageID = '';
+  late int followersCount;
+  late int followingCount;
 
   @override
   void initState() {
-    navigationService = NavigationService(router);
     user = widget.currentUser;
-    profileImageID = "${user!.image_id}";
-    displayUrl = '';
-    super.initState();
-  }
+    followingCount = user!.following_count!;
+    navigationService = NavigationService(router);
 
-  @override
-  Widget build(BuildContext context) {
+    profileImageID = user!.image_id!;
+    displayUrl = '';
+
+    debugPrint('ID NUMBER: ${user!.id}');
+
+    CommunityController().getCommunityData().then((list) async {
+      setState(() {
+        users = list;
+      });
+    });
+
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -38,6 +53,12 @@ class _ProfileViewState extends State<ProfileView> {
     });
     debugPrint('Ok, Image URL: $displayUrl');
 
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // _handleRefresh();
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -66,222 +87,329 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ]),
         ),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          Card(
-            color: ColorsUtil.cardColorDark,
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Column(children: [
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-              Row(
-                children: [
-                  const SizedBox(width: 10),
-                  if (displayUrl.isEmpty)
-                    const CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.transparent,
-                        child: CircleAvatar(
-                            radius: 42,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 40,
-                              child: CircularProgressIndicator(),
-                            )))
-                  else
-                    IconButton(
-                      icon: CircleAvatar(
-                          radius: 42,
-                          backgroundColor: ColorsUtil.accentColorDark,
-                          child: CircleAvatar(
-                            radius: 40,
-                            backgroundImage: NetworkImage(displayUrl),
-                          )),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) => Container(
-                                  padding: const EdgeInsets.all(15),
+        body: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(children: [
+                Card(
+                  color: ColorsUtil.cardColorDark,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  child: Column(children: [
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
+                    ),
+                    Row(
+                      children: [
+                        // const SizedBox(width: 10),
+                        if (displayUrl.isEmpty)
+                          const CircleAvatar(
+                              radius: 50,
+                              backgroundColor: Colors.transparent,
+                              child: CircleAvatar(
+                                  radius: 42,
+                                  backgroundColor: ColorsUtil.accentColorDark,
                                   child: CircleAvatar(
-                                      radius: MediaQuery.sizeOf(context).width,
-                                      backgroundColor:
-                                          ColorsUtil.accentColorDark,
-                                      child: CircleAvatar(
-                                        radius:
-                                            MediaQuery.sizeOf(context).width *
-                                                .45,
-                                        backgroundImage:
-                                            NetworkImage(displayUrl),
-                                      )),
-                                ));
-                      },
-                    ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * .55,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                                    radius: 40,
+                                    child: CircularProgressIndicator(),
+                                  )))
+                        else
+                          IconButton(
+                            icon: CircleAvatar(
+                                radius: 42,
+                                backgroundColor: ColorsUtil.accentColorDark,
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  backgroundImage: NetworkImage(displayUrl),
+                                )),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => Container(
+                                        padding: const EdgeInsets.all(15),
+                                        child: CircleAvatar(
+                                            radius: MediaQuery.sizeOf(context)
+                                                .width,
+                                            backgroundColor:
+                                                ColorsUtil.accentColorDark,
+                                            child: CircleAvatar(
+                                              radius: MediaQuery.sizeOf(context)
+                                                      .width *
+                                                  .45,
+                                              backgroundImage:
+                                                  NetworkImage(displayUrl),
+                                            )),
+                                      ));
+                            },
+                          ),
+                        const SizedBox(width: 10),
                         SizedBox(
-                          width: MediaQuery.sizeOf(context).width * 0.85,
-                          child: Text(user!.fullName,
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.textColorDark)),
+                          width: MediaQuery.sizeOf(context).width * .6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                child: Text(user!.fullName,
+                                    style: const TextStyle(
+                                        fontSize: 15,
+                                        // fontWeight: FontWeight.bold,
+                                        color: ColorsUtil.textColorDark)),
+                              ),
+                              Text('@${user!.username.toString()}',
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.normal,
+                                      color: ColorsUtil.accentColorDark)),
+                            ],
+                          ),
                         ),
-                        Text('@${user!.username.toString()}',
-                            style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.normal,
-                                color: ColorsUtil.accentColorDark)),
                       ],
                     ),
-                  ),
-                ],
-              ),
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-            ]),
-          ),
-
-          // Email
-          Container(
-              margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                  color: ColorsUtil.descriptionColorDark,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Email',
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: ColorsUtil.primaryColorDark)),
-                      ],
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
                     ),
-                    Text(user!.email.toString(),
-                        style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
-                  ])),
+                  ]),
+                ),
 
-          // Statistic has dummy writing
-          Container(
-            height: 350,
-            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            decoration: BoxDecoration(
-                color: ColorsUtil.descriptionColorDark,
-                borderRadius: BorderRadius.circular(10)),
-            child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Statistics',
-                      style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.primaryColorDark)),
-                  Divider(
-                    height: 15,
-                    color: ColorsUtil.secondaryColorDark,
-                  ),
-                  Row(
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10),
+                  // padding: const EdgeInsets.only(
+                  //     left: 20, right: 20,),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Row(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Number of Hikes',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.primaryColorDark)),
-                          Row(children: [
-                            Text('1 ',
-                                style: TextStyle(
-                                    fontSize: 35,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.textColorDark)),
-                            Text('hikes',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.normal,
-                                    color: ColorsUtil.textColorDark)),
-                          ]),
-                        ],
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      // users.isNotEmpty ?
+                                      ProfileFollowersView(
+                                        currentUser: widget.currentUser,
+                                        users: users,
+                                      )));
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              '${user!.followers_count} Followers',
+                              //  textAlign
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorLight,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      // users.isNotEmpty ?
+                                      ProfileFollowingView(
+                                        currentUser: widget.currentUser,
+                                        users: users,
+                                      )));
+                        },
+                        child: Column(
+                          children: [
+                            Text(
+                              '${user!.following_count} Following',
+                              //  textAlign
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorLight,
+                              ),
+                            ),
+                          
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ]),
-          ),
+                ),
 
-          // Milestone has dummy writing
-          Container(
-            height: 350,
-            margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
-            decoration: BoxDecoration(
-                color: ColorsUtil.descriptionColorDark,
-                borderRadius: BorderRadius.circular(10)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Text('Milestones',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: ColorsUtil.primaryColorDark)),
-              const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-              ),
-              const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 0)),
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                          width: MediaQuery.sizeOf(context).width * .7,
-                          child: const Text('There are no Milestones yet',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.primaryColorDark))),
-                      const Row(children: [
-                        Text(' ',
+                // Email
+                Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 20),
+                    padding: const EdgeInsets.only(
+                        left: 20, right: 20, top: 10, bottom: 10),
+                    decoration: BoxDecoration(
+                        color: ColorsUtil.descriptionColorDark,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Email',
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorsUtil.primaryColorDark)),
+                            ],
+                          ),
+                          Text(user!.email.toString(),
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  color: ColorsUtil.textColorDark)),
+                        ])),
+
+                // Statistic has dummy writing
+                Container(
+                  height: 350,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Statistics',
                             style: TextStyle(
-                                fontSize: 35,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: ColorsUtil.textColorDark)),
-                        Text(' ',
+                                color: ColorsUtil.primaryColorDark)),
+                        Divider(
+                          height: 15,
+                          color: ColorsUtil.secondaryColorDark,
+                        ),
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Number of Hikes',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Row(children: [
+                                  Text('1 ',
+                                      style: TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  Text('hikes',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ]),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
+
+                // Milestone has dummy writing
+                Container(
+                  height: 350,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Milestones',
                             style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
-                                color: ColorsUtil.textColorDark)),
-                      ])
-                    ],
-                  ),
-                ],
-              ),
-            ]),
-          ),
-        ])));
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsUtil.primaryColorDark)),
+                        const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 0)),
+                        const Divider(
+                          height: 2,
+                          color: ColorsUtil.secondaryColorDark,
+                        ),
+                        const Padding(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 0)),
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * .7,
+                                    child: const Text(
+                                        'There are no Milestones yet',
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.normal,
+                                            color:
+                                                ColorsUtil.primaryColorDark))),
+                                const Row(children: [
+                                  Text(' ',
+                                      style: TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  Text(' ',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ])
+                              ],
+                            ),
+                          ],
+                        ),
+                      ]),
+                ),
+              ])),
+        ));
+  }
+
+  Future<void> _handleRefresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    AuthController(navigationService).refreshUserDetails().then((value) {
+      setState(() {
+        user = value;
+      });
+    });
+    setState(() {
+      followingCount = user!.following_count!;
+
+      profileImageID = user!.image_id!;
+      displayUrl = '';
+    });
+
+    getImageUrl(profileImageID).then((String result) {
+      setState(() {
+        displayUrl = result;
+      });
+    });
+    debugPrint('Ok, Image URL: $displayUrl');
   }
 
   Future<void> _handleLogout() async {

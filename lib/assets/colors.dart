@@ -19,6 +19,7 @@ class ColorsUtil {
 }
 
 ThemeData darkThemeData = ThemeData(
+  fontFamily: 'Montserrat',
   /* dark theme settings */
   brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
@@ -39,6 +40,7 @@ ThemeData darkThemeData = ThemeData(
   useMaterial3: true,
 );
 ThemeData lightThemeData = ThemeData(
+  fontFamily: 'Montserrat',
   brightness: Brightness.light,
   /* light theme settings */
   colorScheme: ColorScheme.fromSeed(

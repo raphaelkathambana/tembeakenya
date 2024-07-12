@@ -16,8 +16,8 @@ class CommunityView extends StatefulWidget {
 }
 
 class _CommunityViewState extends State<CommunityView> {
-  late List<User> users;
-  late List<dynamic> groups;
+  List<User> users = [];
+  List<dynamic> groups = [];
   // int _currentIndex = 0;
   @override
   void initState() {
@@ -37,14 +37,28 @@ class _CommunityViewState extends State<CommunityView> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> tabs = [
-      PeopleView(
-        currentUser: widget.user,
-        users: users,
-      ),
-      GroupView(
-        user: widget.user,
-        groups: groups,
-      )
+      users.isNotEmpty
+          ? PeopleView(
+              currentUser: widget.user,
+              users: users,
+            )
+          : Container(
+            alignment: Alignment.center,
+            width: 20,
+            height: 20,
+            child: const CircularProgressIndicator(),
+          ),
+      groups.isNotEmpty
+          ? GroupView(
+              user: widget.user,
+              groups: groups,
+            )
+          : Container(
+            alignment: Alignment.center,
+            width: 20,
+            height: 20,
+            child: const CircularProgressIndicator(),
+          )
     ];
     return DefaultTabController(
         length: tabs.length,

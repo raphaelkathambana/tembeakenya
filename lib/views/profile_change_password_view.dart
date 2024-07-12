@@ -117,7 +117,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           enableSuggestions: false,
                           autocorrect: false,
                           onChanged: (value) {
-                            // user?.username = value;
                             currentPassword = value;
                           },
                         ),
@@ -225,11 +224,15 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 content: Text('Passwords do not match')));
                         return;
                       }
+                      // try{
                       AuthController(navigationService).updatePassword(
                           oldPassword,
                           newPassword,
                           newPasswordConfirm,
                           context);
+                      // } catch (e){
+
+                      // }
 
                       int count = 0;
                       Navigator.of(context).popUntil((_) => count++ >= 2);

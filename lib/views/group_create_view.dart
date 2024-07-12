@@ -218,7 +218,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                   CommunityController()
                       .createGroup(groupName, description, guideId!, context);
                 },
-                child: const Text('Update'),
+                child: const Text('Create Group'),
               ))
         ])));
   }

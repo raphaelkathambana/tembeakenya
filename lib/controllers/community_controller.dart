@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_a_user.dart';
-import 'package:tembeakenya/repository/get_following.dart';
+// import 'package:tembeakenya/repository/get_following.dart';
 import 'package:tembeakenya/repository/get_groups.dart';
 import 'package:tembeakenya/repository/get_users.dart';
 
@@ -36,22 +38,28 @@ class CommunityController {
     }
   }
 
-  Future<void> followUser(int id) async {
+  Future<void> followUser(int id, BuildContext context) async {
     try {
       var response = await apiCall.client.post('${url}api/users/$id/follow');
       if (response.statusCode == 200) {
         debugPrint('Successfully Followed');
+        if (!context.mounted) return;        
+        await context.watch<AuthController>().refreshUserDetails();
+        await onRefresh();
       }
     } on DioException catch (e) {
       debugPrint('Error: ${e.message}');
     }
   }
 
-  Future<void> unFollowUser(int id) async {
+  Future<void> unFollowUser(int id, BuildContext context) async {
     try {
       var response = await apiCall.client.post('${url}api/users/$id/unfollow');
       if (response.statusCode == 200) {
         debugPrint('Successfully Unfollowed');
+        if (!context.mounted) return;
+        await context.watch<AuthController>().refreshUserDetails();
+        await onRefresh();
       }
     } on DioException catch (e) {
       debugPrint('Error: ${e.message}');
@@ -86,14 +94,14 @@ class CommunityController {
 
   Future<void> onRefresh() async {
     await Future.delayed(const Duration(seconds: 1));
-    // return getCommunityData();
+    await getCommunityData();
   }
 
   getFollowing() async {
     try {
-      var response = await apiCall.client.get('${url}api/users/following');
+      var response = await apiCall.client.get('${url}api/following');
       if (response.statusCode == 200) {
-        return getFollowingData(response.data);
+        return getUsersFromData(response.data);
       }
     } on DioException catch (e) {
       debugPrint('Error: ${e.message}');

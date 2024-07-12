@@ -12,33 +12,8 @@ import 'package:tembeakenya/views/group_event_view.dart';
 // import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
+import 'package:tembeakenya/dummy_db_2.dart';
 
-// ******************* DUMMY DATABASE ******************* //
-// import 'package:tembeakenya/dummy_db.dart';
-
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-//      | UserID | GoupID | RoleID |
-//      | ------ | ------ | ------ |
-//      | 1      | 1      | 1      |
-//      | 1      | 2      | 2      |
-//      | 2      | 2      | 1      |
-
-// ****************************************************** //
 class GroupDetailView extends StatefulWidget {
   final user;
   final group;
@@ -49,32 +24,215 @@ class GroupDetailView extends StatefulWidget {
 }
 
 class _CommunityViewState extends State<GroupDetailView> {
-  late String displayUrl;
   late NavigationService navigationService;
-  String profileImageID = "defaultProfilePic";
+  
+  late String displayUrl;
+  late String profileImageID;
 
   late String theGroupName;
-  // late bool theMember;
   late String theDescription;
 
-  late int uID;
-
-  // TODO: Temporary
-  // ***** ROLE *****  //
   late int roleID;
   late bool roleSwitch;
+
+  late int loadNum;
+  late List<int> theHikeID;
+
+  // String hikeName = 'Karura...? More like KAZUMA!!!';
+  // String hikeDescription =
+  //     'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
+  // String hikeLocation = 'Karura Forest';
+  // String hikeDate = 'July 7, 2024';
+
+  @override
+  void initState() {
+    theHikeID = [1,2,3];
+    loadNum = hikeID.length;
+
+    var group = widget.group;
+    theGroupName = group['name'];
+    theDescription = group['description'];
+
+
+    User user = widget.user;
+    roleID = user.role_id!;
+    roleSwitch = canEdit(roleID);
+
+    displayUrl = '';
+    profileImageID = widget.group['image_id'];
+    getImageUrl(profileImageID).then((String result) {
+      setState(() {
+        displayUrl = result;
+      });
+    });
+
+    navigationService = NavigationService(router);
+    super.initState();
+  }
+
+  // TEMPORARY ROLE SWITCH BUTTON
+  roleButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          roleSwitch = !roleSwitch;
+          roleID = roleSwitch ? 2 : 1;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+          minimumSize: const Size(150, 30),
+          foregroundColor: ColorsUtil.textColorDark,
+          backgroundColor: roleSwitch
+              ? ColorsUtil.secondaryColorDark
+              : ColorsUtil.accentColorDark),
+      child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
+    );
+  }
   // ***************** //
 
-  String hikeName = 'Karura...? More like KAZUMA!!!';
-  String hikeDescription =
-      'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  String hikeLocation = 'Katura Forest';
-  String hikeDate = 'July 7, 2024';
+  sideBar(int theRole) {
+    if (theRole == 1) {
+      return Drawer(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ListTile(
+            leading: const Icon(Icons.people_outline),
+            title: const Text('Members'),
+            onTap: () {
+              debugPrint(getGroupMembers().toString());
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GroupMemberView(
+                            user: widget.user,
+                          )));
+            },
+          ),
+          ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Leave Group'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text('Leave Group'),
+                          content: const Text('Are you sure?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        ));
+              }),
+        ]),
+      );
+    } else {
+      return Drawer(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ListTile(
+            leading: const Icon(Icons.people_outline),
+            title: const Text('Members'),
+            onTap: () {
+              debugPrint(getGroupMembers().toString());
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GroupMemberView(
+                            user: widget.user,
+                          )));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.edit_note),
+            title: const Text('Edit Group'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupEditView(group: widget.group))),
+          ),
+          ListTile(
+            leading: const Icon(Icons.read_more),
+            title: const Text('Membership Request'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupJoinView(
+                          user: widget.user,
+                        ))),
+          ),
+          ListTile(
+            leading: const Icon(Icons.event),
+            title: const Text('Create a Hike Event'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const GroupCreateHikeView())),
+          ),
+          ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Delete Group'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text('Delete'),
+                          content: const Text(
+                              'Would you like to send a request to delete group to admins?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Send Request'),
+                            ),
+                          ],
+                        ));
+              }),
+        ]),
+      );
+    }
+  }
 
-  eventCard() {
+  noEventCard() {
+    return Container(
+      width: MediaQuery.sizeOf(context).width,
+      margin: const EdgeInsets.all(7),
+      padding: const EdgeInsets.all(10),
+      child: const Text(
+        'There are no upcoming events...',
+        style: TextStyle(color: ColorsUtil.primaryColorDark, fontSize: 16),
+      ),
+    );
+  }
+
+  eventIDs(int eventID) {
+    // theHikeID is hikeID from Group-Hike table
+    for (int i = 0; i < loadNum; i++) {
+      // if hikeID from Event table equals hikeID from Group-Hike table
+      if (hikeID[i] == theHikeID[eventID]) {
+        return eventCard(i);
+      }
+    }
+  }
+
+  eventCard(int eventID) {
+    // Load the hike detail
     return TextButton(
       onPressed: () {
-        // TODO: Add to route
         Navigator.push(
             context,
             MaterialPageRoute(
@@ -93,229 +251,65 @@ class _CommunityViewState extends State<GroupDetailView> {
           color: ColorsUtil.descriptionColorDark,
         ),
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                hikeName,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.primaryColorDark,
-                ),
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              hikeName[eventID],
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: ColorsUtil.primaryColorDark,
               ),
-              const Divider(
-                height: 6,
-                color: ColorsUtil.accentColorDark,
+            ),
+            const Divider(
+              height: 6,
+              color: ColorsUtil.accentColorDark,
+            ),
+            Text(
+              hikeDescription[eventID],
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.normal,
+                color: ColorsUtil.primaryColorDark,
               ),
-              Text(
-                hikeDescription,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.textColorDark,
-                ),
+            ),
+            Text(
+              'Location: ${hikeLocation[eventID]}',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+                color: ColorsUtil.textColorDark,
               ),
-              Text(
-                'Location: $hikeLocation',
+            ),
+            Text('Date: ${hikeDate[eventID]}',
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.normal,
-                  color: ColorsUtil.primaryColorDark,
-                ),
+                  color: ColorsUtil.textColorDark,
+                )),
+            Text('Hike Fee: Ksh ${hikeFee[eventID]}',
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.textColorDark,
+                )),
+            const Text(
+              'Click for more detail',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: ColorsUtil.primaryColorDark,
               ),
-              Text('Date: $hikeDate',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: ColorsUtil.primaryColorDark,
-                  )),
-              const Text(
-                'Click for more detail',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.secondaryColorDark,
-                ),
-              ),
-            ]),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   @override
-  void initState() {
-    // TODO: Temporary
-    // ***** ROLE *****  //
-    User user = widget.user;
-    roleID = user.roleNo!;
-    roleSwitch = canEdit(roleID);
-    // ***************** //
-
-    getImageUrl(profileImageID).then((String result) {
-      setState(() {
-        displayUrl = result;
-      });
-    });
-
-    navigationService = NavigationService(router);
-    displayUrl = '';
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    // ****************************************************** //
-    var group = widget.group;
-    theGroupName = group['name'];
-    // theMember = ;
-    theDescription = group['description'];
-    // ****************************************************** //
-
-    // user = widget.currentUser;
-    debugPrint('Ok, Image URL: $displayUrl');
-
-    // TODO: TEMPORARY ROLE SWITCH BUTTON
-    roleButton() {
-      return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            roleSwitch = !roleSwitch;
-            roleID = roleSwitch ? 2 : 1;
-          });
-        },
-        style: ElevatedButton.styleFrom(
-            minimumSize: const Size(150, 30),
-            foregroundColor: ColorsUtil.textColorDark,
-            backgroundColor: roleSwitch
-                ? ColorsUtil.secondaryColorDark
-                : ColorsUtil.accentColorDark),
-        child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
-      );
-    }
-
-    sideBar(int theRole) {
-      if (theRole == 1) {
-        return Drawer(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: const Text('Members'),
-              // TODO: Add to route
-              onTap: () {
-                debugPrint(getGroupMembers().toString());
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GroupMemberView(
-                              user: widget.user,
-                            )));
-              },
-            ),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Leave Group'),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('Leave Group'),
-                            content: const Text('Are you sure?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Yes'),
-                              ),
-                            ],
-                          ));
-                }),
-          ]),
-        );
-      } else if (theRole == 2) {
-        return Drawer(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: const Text('Members'),
-              // TODO: Add to route
-              onTap: () {
-                debugPrint(getGroupMembers().toString());
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GroupMemberView(
-                              user: widget.user,
-                            )));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_note),
-              title: const Text('Edit Group'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => GroupEditView(userID: uID))),
-            ),
-            ListTile(
-              leading: const Icon(Icons.read_more),
-              title: const Text('Membership Request'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => GroupJoinView(
-                            user: widget.user,
-                          ))),
-            ),
-            ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text('Create a Hike Event'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupCreateHikeView())),
-            ),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Delete Group'),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('Delete'),
-                            content: const Text(
-                                'Would you like to send a request to delete group to admins?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Send Request'),
-                              ),
-                            ],
-                          ));
-                }),
-          ]),
-        );
-      }
-    }
-
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -480,7 +474,6 @@ class _CommunityViewState extends State<GroupDetailView> {
           ),
 
           // Events
-
           Container(
             margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
             padding:
@@ -503,10 +496,16 @@ class _CommunityViewState extends State<GroupDetailView> {
                 height: 6,
                 color: ColorsUtil.accentColorDark,
               ),
-              eventCard(),
+              // TODO: Have an eventID in the group table
+              if (loadNum == 0)
+                noEventCard()
+              else if (theHikeID.isEmpty) // if they don't have any hikeID from hike-group
+                noEventCard()
+              else
+                for (int i = 0; i < theHikeID.length; i++) eventIDs(i),
             ]),
           ),
-          // TEMPORARY ROLE SWITCH BUTTON
+
           roleButton(),
         ])));
   }

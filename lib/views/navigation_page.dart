@@ -106,7 +106,7 @@ class _NavigationViewState extends State<NavigationView> {
             snap: true,
             initialChildSize: 50 / height,
             minChildSize: 50 / height,
-            maxChildSize: 250 / (height * .9),
+            maxChildSize: 250 / (height * .8),
             builder: (context, scrollController) {
               return Container(
                 width: width,
@@ -138,10 +138,9 @@ class _NavigationViewState extends State<NavigationView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              // TODO: DISTANCE
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                width: width * .3,
+                                width: width * .4,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -155,7 +154,7 @@ class _NavigationViewState extends State<NavigationView> {
                               //  TIMER
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                width: width * .3,
+                                width: width * .4,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -176,10 +175,9 @@ class _NavigationViewState extends State<NavigationView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              // TODO: STEPS
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                width: width * .3,
+                                width: width * .4,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -190,10 +188,9 @@ class _NavigationViewState extends State<NavigationView> {
                                   ],
                                 ),
                               ),
-                              // TODO: SPEED
                               Container(
                                 padding: const EdgeInsets.all(10),
-                                width: width * .3,
+                                width: width * .4,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -210,11 +207,11 @@ class _NavigationViewState extends State<NavigationView> {
                             height: 1,
                             color: ColorsUtil.descriptionColorDark,
                           ),
-                          //  BUTTON
+                          // BUTTON
                           Container(
                             // color: ColorsUtil.cardColorDark,
                             padding: const EdgeInsets.all(10),
-                            width: width * .6,
+                            width: 450,
                             child: Column(
                               children: [
                                 if (lineText[0] == '00:00:00')
@@ -256,13 +253,13 @@ class _NavigationViewState extends State<NavigationView> {
                                               },
                                               style: ElevatedButton.styleFrom(
                                                   fixedSize:
-                                                      const Size(100, 40)),
+                                                      const Size(110, 40)),
                                               child: const Text('Resume'),
                                             ),
                                             ElevatedButton(
                                               style: ElevatedButton.styleFrom(
                                                   fixedSize:
-                                                      const Size(100, 40)),
+                                                      const Size(110, 40)),
                                               onPressed: () async {
                                                 await write(
                                                     '00:00:00\n00:00:00\n00:00:00');
@@ -280,10 +277,6 @@ class _NavigationViewState extends State<NavigationView> {
                               ],
                             ),
                           ),
-                          // Container(
-                          //   height: 0.5,
-                          //   color: ColorsUtil.secondaryColorDark,
-                          // ),
                         ],
                       ),
                     ),

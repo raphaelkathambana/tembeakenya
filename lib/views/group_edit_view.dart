@@ -5,35 +5,13 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-import 'package:tembeakenya/dummy_db.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-//      | UserID | GoupID | RoleID |
-//      | ------ | ------ | ------ |
-//      | 1      | 1      | 1      |
-//      | 1      | 2      | 2      |
-//      | 2      | 2      | 1      |
-
-// ****************************************************** //
 
 class GroupEditView extends StatefulWidget {
-  final int userID;
-  const GroupEditView({super.key, required this.userID});
+
+  final group;
+  const GroupEditView({super.key, required this.group});
 
   @override
   State<GroupEditView> createState() => _GroupEditViewState();
@@ -43,31 +21,30 @@ class _GroupEditViewState extends State<GroupEditView> {
   Uint8List? pickedImage;
   late String displayUrl;
 
-  late int uID;
-
   late final TextEditingController _groupName;
   late final TextEditingController _description;
 
+  late int theGroupID;
+  
+  String imageId = '';
   String theGroupName = '';
   String theDescription = '';
+  
   String profileImageID = '';
 
   @override
   void initState() {
-    // user = widget.currentUser;
-    // navigationService = NavigationService(router);
-    // profileImageID = "${user!.image_id}";
-    profileImageID = "defaultGroupPic";
+    _groupName = TextEditingController(text: widget.group['name']);
+    _description = TextEditingController(text: widget.group['description']);
+
     displayUrl = '';
+    profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
 
-    int uID = widget.userID;
-    _groupName = TextEditingController(text: groupName[uID]);
-    _description = TextEditingController(text: description[uID]);
     super.initState();
   }
 
@@ -87,10 +64,10 @@ class _GroupEditViewState extends State<GroupEditView> {
 
   @override
   Widget build(BuildContext context) {
-    int uID = widget.userID;
 
-    theGroupName = groupName[uID];
-    theDescription = description[uID];
+    theGroupID = widget.group['id'];
+    theGroupName = widget.group['name'];
+    theDescription = widget.group['description'];
 
     return Scaffold(
       appBar: AppBar(
@@ -196,8 +173,8 @@ class _GroupEditViewState extends State<GroupEditView> {
                     hintText: "Edit Group Name",
                   ),
                   onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
+                    // group?.groupName = value;
+                    theGroupName = value;
                   },
                 ),
               ),
@@ -231,8 +208,8 @@ class _GroupEditViewState extends State<GroupEditView> {
                     hintText: "Write down a description",
                   ),
                   onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
+                    // group?.description = value;
+                    theDescription = value;
                   },
                 ),
               ),
@@ -250,37 +227,29 @@ class _GroupEditViewState extends State<GroupEditView> {
                 ),
               ),
               onPressed: () async {
-                //   if (pickedImage != null) {
-                //     await uploadPic(
-                //             pickedImage!,
-                //             _username.text.isNotEmpty
-                //                 ? _username.text
-                //                 : user!.username)
-                //         .then((value) => imageId = value);
-                //   }
-                //   final firstname = _firstname.text.isNotEmpty
-                //       ? _firstname.text
-                //       : user!.firstName;
-                //   final lastname = _lastname.text.isNotEmpty
-                //       ? _lastname.text
-                //       : user!.lastName;
-                //   final username = _username.text.isNotEmpty
-                //       ? _username.text
-                //       : user!.username;
-                //   final email =
-                //       _email.text.isNotEmpty ? _email.text : user!.email;
-                //   final profileImageId =
-                //       imageId.isNotEmpty ? imageId : user!.image_id.toString();
-                //   if (!context.mounted) return;
-                //   AuthController(navigationService).updateProfileInformation(
-                //       username!,
-                //       email!,
-                //       firstname!,
-                //       lastname!,
-                //       profileImageId,
-                //       context);
-                // int count = 0;
-                // Navigator.of(context).popUntil((_) => count++ >= 2);
+                  if (pickedImage != null) {
+                    await uploadPic(pickedImage!, theGroupID.toString())
+                        .then((value) => imageId = value);
+                  }
+                  // final groupName = _groupName.text.isNotEmpty
+                  //     ? _groupName.text
+                  //     : group!.groupName;
+                  // final description = _description.text.isNotEmpty
+                  //     ? _description.text
+                  //     : group!.description;
+                  // final profileImageId =
+                  //     imageId.isNotEmpty ? imageId : group!.image_id.toString();
+                  
+                  
+                  if (!context.mounted) return;
+                  // AuthController(navigationService).updateProfileInformation(
+                  //     groupName!,
+                  //     description!,
+                  //     profileImageId,
+                  //     context);
+
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
               },
               child: const Text('Update'),
             ))

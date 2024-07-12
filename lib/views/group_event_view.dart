@@ -1,10 +1,12 @@
 // group_event_view
 
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/get_following.dart';
+import 'package:tembeakenya/views/group_event_signup.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
-// import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 
@@ -20,112 +22,153 @@ class GroupEventView extends StatefulWidget {
 }
 
 class _GroupEventViewState extends State<GroupEventView> {
-  late String displayUrl;
-  late int uID;
-  User? selectedUser;
+  late NavigationService navigationService;
 
-  int loadNum = fullName.length;
+  List<User> users = [];
+
+  User? selectedUser;
 
   String theGroupName = '';
   String theDescription = '';
+
   String profileImageID = '';
+
+  int loadNum = 0;
+  late bool initStateAgain;
+  late List<String> displayUrl;
+  late List<bool?> isAttendee;
+  late List<bool> attendingLoaded;
+  bool loaded = false;
 
   String hikeName = 'Karura...? More like KAZUMA!!!';
   String hikeDescription =
       'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  String hikeLocation = 'Katura Forest';
+  String hikeLocation = 'Karura Forest';
   String hikeDate = 'July 7, 2024';
 
+  // The participator's page will have the same logic as the friends
+  // But instead of filtering "friends" from all group, you filter
+  // "attendees" from group hikers
+
+  userAttendee(int num) {
+    if (isAttendee[num] == true) {
+      return userCard(num);
+    } else {
+      return const SizedBox();
+    }
+  }
+
   userCard(int num) {
-    return TextButton(
-        onPressed: () async {
-          await CommunityController().getAUsersDetails(num + 1).then((user) {
-            // setState(() {
-            selectedUser = user;
-            // });
-          });
-          // TODO: Add to route
-          if (!mounted) return;
-          Navigator.push(
+    if (isAttendee[num] == true) {
+      return TextButton(
+          onPressed: () async {
+            await CommunityController().getAUsersDetails(num + 1).then(
+              (user) {
+                setState(() {
+                  selectedUser = user;
+                });
+              },
+            );
+
+            if (!mounted) return;
+
+            Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(
-                      selectedUser: selectedUser!, currentUser: widget.user)));
-        },
-        style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
-        child: Container(
-          margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-          decoration: BoxDecoration(
-            color: ColorsUtil.cardColorDark,
-            borderRadius: const BorderRadius.all(Radius.circular(25)),
-            border: Border.all(color: ColorsUtil.secondaryColorDark),
-          ),
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  if (displayUrl.isEmpty)
-                    const CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Colors.transparent,
-                        child: CircleAvatar(
+                builder: (context) => PeopleDetailView(
+                  selectedUser: selectedUser!,
+                  currentUser: widget.user,
+                ),
+              ),
+            );
+          },
+          style: const ButtonStyle(
+              overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+          child: Container(
+            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+            decoration: BoxDecoration(
+              color: ColorsUtil.cardColorDark,
+              borderRadius: const BorderRadius.all(Radius.circular(25)),
+              border: Border.all(color: ColorsUtil.secondaryColorDark),
+            ),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      if (displayUrl[num].isEmpty)
+                        const CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.transparent,
+                          child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
                             child: CircleAvatar(
                               radius: 35,
                               child: CircularProgressIndicator(),
-                            )))
-                  else
-                    CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Colors.transparent,
-                        child: CircleAvatar(
+                            ),
+                          ),
+                        )
+                      else
+                        CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.transparent,
+                          child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
                             child: CircleAvatar(
                               radius: 35,
-                              backgroundImage: NetworkImage(displayUrl),
-                            ))),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * .35,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.textColorDark)),
+                              backgroundImage: NetworkImage(displayUrl[num]),
+                            ),
+                          ),
                         ),
-                        Text('@${username[num]}',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal,
-                                color: ColorsUtil.accentColorDark)),
-                      ],
-                    ),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width - 230,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width,
+                              child: Text(
+                                users[num].fullName,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.textColorDark),
+                              ),
+                            ),
+                            Text(
+                              '@${users[num].username}',
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                  color: ColorsUtil.accentColorDark),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ]),
-              ],
-            ),
-          ]),
-        ));
+                ],
+              ),
+            ]),
+          ));
+    }
   }
 
   @override
   void initState() {
-    profileImageID = "defaultProfilePic";
-    displayUrl = '';
-    getImageUrl(profileImageID).then((String result) {
+    super.initState();
+    navigationService = NavigationService(router);
+    initStateAgain = false;
+
+    // TODO: Create a function that gets the list of all group members
+    CommunityController().getCommunityData().then((list) {
       setState(() {
-        displayUrl = result;
+        users = list;
       });
     });
-    super.initState();
   }
 
   @override
@@ -135,12 +178,42 @@ class _GroupEventViewState extends State<GroupEventView> {
 
   @override
   Widget build(BuildContext context) {
+    if (users.isNotEmpty) {
+      if (!initStateAgain) {
+        loadNum = users.length;
+        displayUrl = List<String>.filled(loadNum, '');
+        isAttendee = List<bool?>.filled(loadNum, false);
+        attendingLoaded = List<bool>.filled(loadNum, false);
+
+        for (int i = 0; i < loadNum; i++) {
+          profileImageID = users[i].image_id!;
+          getImageUrl(profileImageID).then((String result) {
+            setState(() {
+              displayUrl[i] = result;
+            });
+          });
+        }
+        initStateAgain = true;
+      }
+    }
+
+    for (int i = 0; i < loadNum; i++) {
+      if (attendingLoaded[i] == false) {
+        // TODO: Create a function that filters out attendees from all group members
+        getFriend(i + 1).then((value) => {
+              if (isAttendee[i] = value)
+                {loaded = attendingLoaded.every((element) => element = true)}
+            });
+        attendingLoaded[i] = true;
+      }
+    }
+
     double width = MediaQuery.sizeOf(context).width;
 
-    int uID = widget.user.id;
+    int gID = 1;
 
-    theGroupName = groupName[uID];
-    theDescription = description[uID];
+    theGroupName = groupName[gID];
+    theDescription = description[gID];
 
     return Scaffold(
       appBar: AppBar(
@@ -169,6 +242,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
+                      width: width * .5,
                       margin: const EdgeInsets.all(10),
                       child: Text(
                         hikeName,
@@ -191,7 +265,12 @@ class _GroupEventViewState extends State<GroupEventView> {
                       height: 45,
                       width: 100,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupEventSignUp(user: widget.user)));
+                        },
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
@@ -240,7 +319,7 @@ class _GroupEventViewState extends State<GroupEventView> {
           DraggableScrollableSheet(
             initialChildSize: .5,
             minChildSize: .5,
-            maxChildSize: .7,
+            maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
                 // height: 0.25,
@@ -259,6 +338,16 @@ class _GroupEventViewState extends State<GroupEventView> {
                   controller: scrollController,
                   children: [
                     Container(
+                      alignment: Alignment.topCenter,
+                      margin: const EdgeInsets.only(top: 15),
+                      height: 5,
+                      child: const Icon(
+                        Icons.maximize_rounded,
+                        color: Color.fromARGB(112, 99, 126, 32),
+                        size: 60,
+                      ),
+                    ),
+                    Container(
                       // width: width,
                       margin: const EdgeInsets.all(25),
                       child: const Text(
@@ -275,7 +364,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                       height: 15,
                       color: ColorsUtil.accentColorDark,
                     ),
-                    for (int i = 0; i < loadNum; i++) userCard(i),
+                    for (int i = 0; i < loadNum; i++) userAttendee(i),
                   ],
                 ),
               );
@@ -286,71 +375,3 @@ class _GroupEventViewState extends State<GroupEventView> {
     );
   }
 }
-
-              // Container(
-              //       height: MediaQuery.of(context).size.height * .25,
-              //       width: MediaQuery.of(context).size.width,
-              //       decoration: const BoxDecoration(
-              //         color: ColorsUtil.secondaryColorDark,
-              //         borderRadius:
-              //             BorderRadius.vertical(top: Radius.circular(30)),
-              //       ),
-              //       child: Column(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //         // mainAxisSize: MainAxisSize.min,
-              //         children: <Widget>[
-              //           const Text('Modal BottomSheet'),
-              //           ElevatedButton(
-              //             child: const Text('Close BottomSheet'),
-              //             onPressed: () => Navigator.pop(context),
-              //           ),
-              //         ],
-              //       ),
-              //     );
-            
-          // Container(
-          //   width: MediaQuery.sizeOf(context).width,
-          //   child: SingleChildScrollView(
-          //     child: Column(
-          //       children: [
-          //         Image(
-          //           image: NetworkImage(displayUrl),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-
-          // ),
-          // ElevatedButton(
-          //   onPressed: () {
-          //     showModalBottomSheet<void>(
-          //       context: context,
-          //       builder: (BuildContext context) {
-          //         return
-          //          Container(
-          //           height: MediaQuery.of(context).size.height * .25,
-          //           width: MediaQuery.of(context).size.width,
-          //           // padding: EdgeInsets.all(35),
-          //           decoration: const BoxDecoration(
-          //             color: ColorsUtil.secondaryColorDark,
-          //             borderRadius:
-          //                 BorderRadius.vertical(top: Radius.circular(30)),
-          //           ),
-          //           child: Column(
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             // mainAxisSize: MainAxisSize.min,
-          //             children: <Widget>[
-          //               const Text('Modal BottomSheet'),
-          //               ElevatedButton(
-          //                 child: const Text('Close BottomSheet'),
-          //                 onPressed: () => Navigator.pop(context),
-          //               ),
-          //             ],
-          //           ),
-          //         );
-          //       },
-          //     );
-          //   },
-          //   child: const Text('showBelow'),
-          // ),
-        
