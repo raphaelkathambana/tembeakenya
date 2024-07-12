@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
-import 'package:tembeakenya/views/nav.dart';
 // import 'package:tembeakenya/constants/constants.dart';
 
 class MapView extends StatefulWidget {
@@ -14,13 +12,16 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.system);
+  var isLight =
+      _MapViewState.themeNotifier.value == ThemeMode.light ? true : false;
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(-1.3115263, 36.8153588),
     zoom: 11.0,
   );
   MapboxMapController? mapController;
   CameraPosition _position = _kInitialPosition;
-  var isLight = true;
   bool _compassEnabled = true;
   bool _myLocationEnabled = true;
   bool _mapExpanded = true;
