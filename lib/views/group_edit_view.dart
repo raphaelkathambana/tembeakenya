@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
@@ -173,7 +174,7 @@ class _GroupEditViewState extends State<GroupEditView> {
                     hintText: "Edit Group Name",
                   ),
                   onChanged: (value) {
-                    // group?.groupName = value;
+                    widget.group['name'] = value;
                     theGroupName = value;
                   },
                 ),
@@ -209,6 +210,7 @@ class _GroupEditViewState extends State<GroupEditView> {
                   ),
                   onChanged: (value) {
                     // group?.description = value;
+                    widget.group['description'] = value;
                     theDescription = value;
                   },
                 ),

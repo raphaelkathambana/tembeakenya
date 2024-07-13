@@ -5,8 +5,8 @@ import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_following.dart';
+import 'package:tembeakenya/views/group_event_participants_view.dart';
 import 'package:tembeakenya/views/group_event_signup.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 
@@ -75,7 +75,7 @@ class _GroupEventViewState extends State<GroupEventView> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PeopleDetailView(
+                builder: (context) => ParticipantDetailView(
                   selectedUser: selectedUser!,
                   currentUser: widget.user,
                 ),
@@ -317,8 +317,8 @@ class _GroupEventViewState extends State<GroupEventView> {
           // *********************************************************** //
 
           DraggableScrollableSheet(
-            initialChildSize: .5,
-            minChildSize: .5,
+            initialChildSize: 90/width,
+            minChildSize: 90/width,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(
