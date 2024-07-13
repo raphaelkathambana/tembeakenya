@@ -34,7 +34,6 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   final TextEditingController _search = TextEditingController();
   String search = '';
-  User? selectedUser;
 
   // ****************************************************** //
   searchCard(String search, int num) {

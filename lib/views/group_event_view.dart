@@ -65,89 +65,88 @@ class _GroupEventViewState extends State<GroupEventView> {
 
           if (!mounted) return;
 
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ParticipantDetailView(
-                  selectedUser: selectedUser!,
-                  currentUser: widget.user,
-                ),
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ParticipantDetailView(
+                selectedUser: selectedUser!,
+                currentUser: widget.user,
               ),
-            );
-          },
-          style: const ButtonStyle(
-              overlayColor: MaterialStatePropertyAll(Colors.transparent)),
-          child: Container(
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-            decoration: BoxDecoration(
-              color: ColorsUtil.cardColorDark,
-              borderRadius: const BorderRadius.all(Radius.circular(25)),
-              border: Border.all(color: ColorsUtil.secondaryColorDark),
             ),
-            child: Column(children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      if (displayUrl[num].isEmpty)
-                        const CircleAvatar(
-                          radius: 45,
-                          backgroundColor: Colors.transparent,
+          );
+        },
+        style: const ButtonStyle(
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+        child: Container(
+          margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+          decoration: BoxDecoration(
+            color: ColorsUtil.cardColorDark,
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            border: Border.all(color: ColorsUtil.secondaryColorDark),
+          ),
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    if (displayUrl[num].isEmpty)
+                      const CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.transparent,
+                        child: CircleAvatar(
+                          radius: 37,
+                          backgroundColor: ColorsUtil.accentColorDark,
                           child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        )
-                      else
-                        CircleAvatar(
-                          radius: 45,
-                          backgroundColor: Colors.transparent,
-                          child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              backgroundImage: NetworkImage(displayUrl[num]),
-                            ),
+                            radius: 35,
+                            child: CircularProgressIndicator(),
                           ),
                         ),
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width - 230,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width,
-                              child: Text(
-                                users[num].fullName,
-                                style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.textColorDark),
-                              ),
-                            ),
-                            Text(
-                              '@${users[num].username}',
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.accentColorDark),
-                            ),
-                          ],
+                      )
+                    else
+                      CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.transparent,
+                        child: CircleAvatar(
+                          radius: 37,
+                          backgroundColor: ColorsUtil.accentColorDark,
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: NetworkImage(displayUrl[num]),
+                          ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ]),
-          ));
-    }
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 230,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width,
+                            child: Text(
+                              users[num].fullName,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.textColorDark),
+                            ),
+                          ),
+                          Text(
+                            '@${users[num].username}',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorDark),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ]),
+        ));
   }
 
   @override
@@ -312,8 +311,8 @@ class _GroupEventViewState extends State<GroupEventView> {
           // *********************************************************** //
 
           DraggableScrollableSheet(
-            initialChildSize: 90/width,
-            minChildSize: 90/width,
+            initialChildSize: 90 / width,
+            minChildSize: 90 / width,
             maxChildSize: 1,
             builder: (context, scrollController) {
               return Container(

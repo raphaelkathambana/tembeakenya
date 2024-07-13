@@ -118,7 +118,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                         ),
                         SizedBox(
                           child: TextField(
-                            controller: _groupHikeName,
+                            controller: _hikeName,
                             decoration: const InputDecoration(
                               hintText: "Give the Event a Name",
                             ),
@@ -336,7 +336,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                             TextButton(
                               onPressed: () {
                                 //save the details of the group hike
-                                final groupHikeName = _groupHikeName.text;
+                                final groupHikeName = _hikeName.text;
                                 final description = _description.text;
                                 final hikeDate = _date.text;
 
