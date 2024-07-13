@@ -1,17 +1,18 @@
 import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 // import 'package:tembeakenya/dummy_db.dart';
 
-
 class GroupEditView extends StatefulWidget {
-
   final group;
-  const GroupEditView({super.key, required this.group});
+  final user;
+  const GroupEditView({super.key, required this.group, required this.user});
 
   @override
   State<GroupEditView> createState() => _GroupEditViewState();
@@ -25,18 +26,18 @@ class _GroupEditViewState extends State<GroupEditView> {
   late final TextEditingController _description;
 
   late int theGroupID;
-  
+
   String imageId = '';
   String theGroupName = '';
   String theDescription = '';
-  
+
   String profileImageID = '';
 
   @override
   void initState() {
     _groupName = TextEditingController(text: widget.group['name']);
     _description = TextEditingController(text: widget.group['description']);
-
+    debugPrint(widget.user.id.toString());
     displayUrl = '';
     profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
@@ -64,7 +65,6 @@ class _GroupEditViewState extends State<GroupEditView> {
 
   @override
   Widget build(BuildContext context) {
-
     theGroupID = widget.group['id'];
     theGroupName = widget.group['name'];
     theDescription = widget.group['description'];
@@ -227,29 +227,27 @@ class _GroupEditViewState extends State<GroupEditView> {
                 ),
               ),
               onPressed: () async {
-                  if (pickedImage != null) {
-                    await uploadPic(pickedImage!, theGroupID.toString())
-                        .then((value) => imageId = value);
-                  }
-                  // final groupName = _groupName.text.isNotEmpty
-                  //     ? _groupName.text
-                  //     : group!.groupName;
-                  // final description = _description.text.isNotEmpty
-                  //     ? _description.text
-                  //     : group!.description;
-                  // final profileImageId =
-                  //     imageId.isNotEmpty ? imageId : group!.image_id.toString();
-                  
-                  
-                  if (!context.mounted) return;
-                  // AuthController(navigationService).updateProfileInformation(
-                  //     groupName!,
-                  //     description!,
-                  //     profileImageId,
-                  //     context);
+                if (pickedImage != null) {
+                  await uploadPic(pickedImage!, theGroupID.toString())
+                      .then((value) => imageId = value);
+                }
+                final groupName = _groupName.text.isNotEmpty
+                    ? _groupName.text
+                    : widget.group['name'];
+                final description = _description.text.isNotEmpty
+                    ? _description.text
+                    : widget.group['description'];
+                final profileImageId =
+                    imageId.isNotEmpty ? imageId : widget.group['image_id'];
 
-                  int count = 0;
-                  Navigator.of(context).popUntil((_) => count++ >= 2);
+                if (!context.mounted) return;
+                CommunityController().updateGroupDetails(
+                    widget.group['id'],
+                    widget.user.id,
+                    groupName,
+                    description,
+                    profileImageId,
+                    context);
               },
               child: const Text('Update'),
             ))

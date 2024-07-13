@@ -1,5 +1,5 @@
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/repository/get_groups.dart';
 
 var data = [
   {
@@ -146,11 +146,11 @@ bool isGroupMember(User user) {
 }
 
 // check if user has requested to join a group
-bool hasRequestedToJoinGroup(User user) {
+Future<bool> hasRequestedToJoinGroup(User user, int groupId) async {
   // var user = getUsersFromDb()[userId];
-  Map<String, User> data = getRequestData();
-  for (var request in data.values) {
-    if (user.id == request.id) {
+  Map<String, User> data = await CommunityController().getJoinRequests(groupId);
+  for (var request in data.entries) {
+    if (user.id == request.value.id) {
       return true;
     }
   }

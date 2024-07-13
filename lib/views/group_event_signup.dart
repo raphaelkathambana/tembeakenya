@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 
 class GroupEventSignUp extends StatefulWidget {
   final user;
-  const GroupEventSignUp({super.key, required this.user});
+  final groupId;
+  const GroupEventSignUp(
+      {super.key, required this.user, required this.groupId});
 
   @override
   State<GroupEventSignUp> createState() => _GroupEventSignUpState();
@@ -158,15 +161,15 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                       child: Row(
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            padding: const EdgeInsets.only(top: 0),
-                            child: const Text('+254', style: TextStyle(fontSize: 15.5),)
-                          ),
-
+                              margin: const EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(top: 0),
+                              child: const Text(
+                                '+254',
+                                style: TextStyle(fontSize: 15.5),
+                              )),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
-                              
                               controller: _phone,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
@@ -175,7 +178,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                                 // user?.username = value;
                                 // theUsername = value;
                               },
-                            
+
                               // ),
                             ),
                           ),
@@ -284,15 +287,15 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                       child: Row(
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            padding: const EdgeInsets.only(top: 0),
-                            child: const Text('+254', style: TextStyle(fontSize: 15.5),)
-                          ),
-
+                              margin: const EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(top: 0),
+                              child: const Text(
+                                '+254',
+                                style: TextStyle(fontSize: 15.5),
+                              )),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
-                              
                               controller: _phone,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
@@ -340,7 +343,60 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                // Navigator.of(context).pop();
+                                //save the details
+                                final name = _fullName.text;
+                                final phone = _phone.text;
+                                var emergencyContact = '';
+                                CommunityController().signUpForGroupHike(
+                                    widget.groupId,
+                                    widget.user.id,
+                                    name,
+                                    phone,
+                                    widget.user.email,
+                                    emergencyContact,
+                                    context);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                          title: const Text('Payment'),
+                                          content: const Text(
+                                              'You will be redirected to the payment page'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                // Navigator.of(context).pop();
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) =>
+                                                        AlertDialog(
+                                                          title: const Text(
+                                                              'Payment'),
+                                                          content: const Text(
+                                                              'Payment successful'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                              child: const Text(
+                                                                  'Close'),
+                                                            ),
+                                                          ],
+                                                        ));
+                                              },
+                                              child: const Text('Proceed'),
+                                            ),
+                                          ],
+                                        ));
                               },
                               child: const Text('Proceed'),
                             ),

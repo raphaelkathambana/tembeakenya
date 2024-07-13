@@ -3,17 +3,19 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 
-import 'package:tembeakenya/dummy_db.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
 class GroupMemberView extends StatefulWidget {
   final user;
-  const GroupMemberView({super.key, required this.user});
+  final members;
+  const GroupMemberView({super.key, required this.user, required this.members});
 
   @override
   State<GroupMemberView> createState() => _GroupMemberViewState();
@@ -30,11 +32,12 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   final TextEditingController _search = TextEditingController();
   String search = '';
+  User? selectedUser;
 
   // ****************************************************** //
   searchCard(String search, int num) {
     if (search != '') {
-      if (fullName[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.members[num].toLowerCase().contains(search.toLowerCase())) {
         return userCard(num);
       }
       return const SizedBox();
@@ -44,11 +47,18 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   }
 
   userCard(int num) {
+    int selectedUserId = widget.members[num].id;
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          final selectedUser = CommunityController().getAUsersDetails(num);
-          navigationService.navigateToPeopleDetailsView(context, widget.user);
+        onPressed: () async {
+          await CommunityController().getAUsersDetails(selectedUserId).then(
+            (user) {
+              setState(() {
+                selectedUser = user;
+              });
+            },
+          );
+          // navigationService.navigateToPeopleDetailsView(context, widget.user);
+          if (!mounted) return;
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -102,13 +112,13 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
+                          child: Text(widget.members[num].fullName,
                               style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        Text('@${username[num]}',
+                        Text('@${widget.members[num].username}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -135,7 +145,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   void initState() {
     displayUrl = '';
     navigationService = NavigationService(router);
-    loadNum = fullName.length;
+    loadNum = widget.members.length;
 
     getImageUrl(profileImageID).then((String result) {
       setState(() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_group_members.dart';
 import 'package:tembeakenya/repository/get_users.dart';
@@ -9,15 +10,18 @@ import 'package:tembeakenya/repository/get_users.dart';
 import 'package:tembeakenya/views/group_create_hike_view.dart';
 import 'package:tembeakenya/views/group_edit_view.dart';
 import 'package:tembeakenya/views/group_event_view.dart';
-// import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
-import 'package:tembeakenya/dummy_db_2.dart';
 
 class GroupDetailView extends StatefulWidget {
   final user;
   final group;
-  const GroupDetailView({super.key, required this.user, required this.group});
+  final details;
+  const GroupDetailView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.details});
 
   @override
   State<GroupDetailView> createState() => _CommunityViewState();
@@ -25,7 +29,6 @@ class GroupDetailView extends StatefulWidget {
 
 class _CommunityViewState extends State<GroupDetailView> {
   late NavigationService navigationService;
-  
   late String displayUrl;
   late String profileImageID;
 
@@ -34,25 +37,20 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   late int roleID;
   late bool roleSwitch;
+  late bool requested;
 
   late int loadNum;
   late List<int> theHikeID;
-
-  // String hikeName = 'Karura...? More like KAZUMA!!!';
-  // String hikeDescription =
-  //     'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  // String hikeLocation = 'Karura Forest';
-  // String hikeDate = 'July 7, 2024';
+  late Map<String, dynamic>? groupDetails;
 
   @override
   void initState() {
-    theHikeID = [1,2,3];
-    loadNum = hikeID.length;
+    // theHikeID = [1, 2, 3];
+    loadNum = widget.details.length;
 
     var group = widget.group;
     theGroupName = group['name'];
     theDescription = group['description'];
-
 
     User user = widget.user;
     roleID = user.role_id!;
@@ -67,6 +65,13 @@ class _CommunityViewState extends State<GroupDetailView> {
     });
 
     navigationService = NavigationService(router);
+    groupDetails = widget.details;
+
+    hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
+      setState(() {
+        requested = value;
+      });
+    });
     super.initState();
   }
 
@@ -98,11 +103,12 @@ class _CommunityViewState extends State<GroupDetailView> {
             leading: const Icon(Icons.people_outline),
             title: const Text('Members'),
             onTap: () {
-              debugPrint(getGroupMembers().toString());
+              // debugPrint(getGroupMembers().toString());
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => GroupMemberView(
+                            members: widget.details['members'],
                             user: widget.user,
                           )));
             },
@@ -141,11 +147,12 @@ class _CommunityViewState extends State<GroupDetailView> {
             leading: const Icon(Icons.people_outline),
             title: const Text('Members'),
             onTap: () {
-              debugPrint(getGroupMembers().toString());
+              // debugPrint(getGroupMembers().toString());
               Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) => GroupMemberView(
+                            members: widget.details['members'],
                             user: widget.user,
                           )));
             },
@@ -156,17 +163,28 @@ class _CommunityViewState extends State<GroupDetailView> {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => GroupEditView(group: widget.group))),
+                    builder: (context) => GroupEditView(
+                          group: widget.group,
+                          user: widget.user,
+                        ))),
           ),
           ListTile(
             leading: const Icon(Icons.read_more),
             title: const Text('Membership Request'),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => GroupJoinView(
-                          user: widget.user,
-                        ))),
+            onTap: () async {
+              await CommunityController()
+                  .getJoinRequests(widget.group['id'])
+                  .then((value) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupJoinView(
+                              user: widget.user,
+                              group: widget.group,
+                              requests: value,
+                            )));
+              });
+            },
           ),
           ListTile(
             leading: const Icon(Icons.event),
@@ -174,7 +192,10 @@ class _CommunityViewState extends State<GroupDetailView> {
             onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const GroupCreateHikeView())),
+                    builder: (context) => GroupCreateHikeView(
+                          user: widget.user,
+                          group: widget.group,
+                        ))),
           ),
           ListTile(
               leading: const Icon(Icons.logout),
@@ -219,24 +240,40 @@ class _CommunityViewState extends State<GroupDetailView> {
     );
   }
 
-  eventIDs(int eventID) {
-    // theHikeID is hikeID from Group-Hike table
-    for (int i = 0; i < loadNum; i++) {
-      // if hikeID from Event table equals hikeID from Group-Hike table
-      if (hikeID[i] == theHikeID[eventID]) {
-        return eventCard(i);
-      }
-    }
-  }
+  // eventIDs(int eventID) {
+  //   // theHikeID is hikeID from Group-Hike table
+  //   for (int i = 0; i < loadNum; i++) {
+  //     // if hikeID from Event table equals hikeID from Group-Hike table
+  //     if (hikeID[i] == theHikeID[eventID]) {
+  //       return eventCard(i);
+  //     }
+  //   }
+  // }
 
   eventCard(int eventID) {
-    // Load the hike detail
+    var selectedEvent;
+    debugPrint('group: ${widget.group.toString()}');
+    var selectedHikeID = widget.details['events'][eventID]['id'];
+
     return TextButton(
-      onPressed: () {
+      onPressed: () async {
+        // Load the hike detail
+        await CommunityController()
+            .getGroupHikesDetails(selectedHikeID)
+            .then((value) {
+          setState(() {
+            selectedEvent = value;
+          });
+        });
+        debugPrint('member 1: ${selectedEvent['attendees'][1]}');
+        if (!mounted) return;
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => GroupEventView(user: widget.user)));
+                builder: (context) => GroupEventView(
+                      user: widget.user,
+                      details: selectedEvent,
+                    )));
       },
       style: const ButtonStyle(
           overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -255,7 +292,7 @@ class _CommunityViewState extends State<GroupDetailView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              hikeName[eventID],
+              groupDetails?['events']?[eventID]['name'],
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -267,40 +304,20 @@ class _CommunityViewState extends State<GroupDetailView> {
               color: ColorsUtil.accentColorDark,
             ),
             Text(
-              hikeDescription[eventID],
+              groupDetails?['events']?[eventID]['description'],
               style: const TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.normal,
                 color: ColorsUtil.primaryColorDark,
               ),
             ),
-            Text(
-              'Location: ${hikeLocation[eventID]}',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.normal,
-                color: ColorsUtil.textColorDark,
-              ),
-            ),
-            Text('Date: ${hikeDate[eventID]}',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.textColorDark,
-                )),
-            Text('Hike Fee: Ksh ${hikeFee[eventID]}',
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.textColorDark,
-                )),
             const Text(
-              'Click for more detail',
+              'Click for more details',
               style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-                color: ColorsUtil.primaryColorDark,
-              ),
+                  fontSize: 14,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.primaryColorDark,
+                  fontStyle: FontStyle.italic),
             ),
           ],
         ),
@@ -409,11 +426,10 @@ class _CommunityViewState extends State<GroupDetailView> {
                                 style: ElevatedButton.styleFrom(
                                     minimumSize: const Size(150, 30),
                                     foregroundColor: ColorsUtil.textColorDark,
-                                    backgroundColor:
-                                        hasRequestedToJoinGroup(widget.user)
-                                            ? ColorsUtil.accentColorDark
-                                            : ColorsUtil.secondaryColorDark),
-                                child: hasRequestedToJoinGroup(widget.user)
+                                    backgroundColor: requested
+                                        ? ColorsUtil.accentColorDark
+                                        : ColorsUtil.secondaryColorDark),
+                                child: requested
                                     ? const Text('Pending...')
                                     : const Text('Request to Join'),
                               )
@@ -499,10 +515,12 @@ class _CommunityViewState extends State<GroupDetailView> {
               // TODO: Have an eventID in the group table
               if (loadNum == 0)
                 noEventCard()
-              else if (theHikeID.isEmpty) // if they don't have any hikeID from hike-group
+              else if (widget.details['events']
+                  .isEmpty) // if they don't have any hikeID from hike-group
                 noEventCard()
               else
-                for (int i = 0; i < theHikeID.length; i++) eventIDs(i),
+                for (int i = 0; i < widget.details['events'].length; i++)
+                  eventCard(i),
             ]),
           ),
 

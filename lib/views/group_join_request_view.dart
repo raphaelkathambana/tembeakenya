@@ -3,17 +3,24 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 
-import 'package:tembeakenya/dummy_db.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
 class GroupJoinView extends StatefulWidget {
   final user;
-  const GroupJoinView({super.key, required this.user});
+  final group;
+  final Map<String, User> requests;
+  const GroupJoinView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.requests});
 
   @override
   State<GroupJoinView> createState() => _GroupJoinViewState();
@@ -24,7 +31,7 @@ class _GroupJoinViewState extends State<GroupJoinView> {
 
   late String displayUrl;
   late String? dropdownValue;
-  List<String> listUser = <String>['All', 'Friend'];
+  // List<String> listUser = <String>['All', 'Friend'];
   late NavigationService navigationService;
   // User? user;
 
@@ -44,7 +51,7 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                   builder: (context) => PeopleDetailView(
                         selectedUser: selectedUser,
                         currentUser: widget.user,
-                  )));
+                      )));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -91,35 +98,39 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
+                          child: Text(
+                              widget.requests.entries
+                                  .elementAt(num)
+                                  .value
+                                  .fullName,
                               style: const TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        
                       ],
                     ),
                   ),
                 ]),
-                  Row(children: [
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: ColorsUtil.accentColorDark,
+                          size: 35,
+                          semanticLabel:
+                              'Text to announce in accessibility modes',
+                        )),
                     IconButton(
                       onPressed: () {},
-                      icon: 
-                      const Icon(
-                        Icons.check_circle_outline,
-                        color: ColorsUtil.accentColorDark,
-                        size: 35,
-                        semanticLabel: 'Text to announce in accessibility modes',
-                      )
-                    ),
-                    IconButton(
-                      onPressed: () {}, 
                       icon: const Icon(
                         Icons.cancel_outlined,
                         color: ColorsUtil.secondaryColorDark,
                         size: 35,
-                        semanticLabel: 'Text to announce in accessibility modes',
+                        semanticLabel:
+                            'Text to announce in accessibility modes',
                       ),
                     )
                   ],
@@ -137,10 +148,10 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   }
 
   @override
-  void initState() { 
+  void initState() {
     displayUrl = '';
     navigationService = NavigationService(router);
-    loadNum = fullName.length;
+    loadNum = widget.requests.length;
 
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -153,45 +164,78 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: ColorsUtil.backgroundColorDark,
-            title: const Text(
-              'Requests Page',
-              style: TextStyle(color: ColorsUtil.textColorDark),
-            )),
-        body: SingleChildScrollView(
-        child: Column(children: [
-      const Divider(
-        height: 2,
-        color: ColorsUtil.secondaryColorDark,
-        indent: 12,
-        endIndent: 12,
-      ),
-      
-      Container(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-          ),
-          child: Column(
-            children: [
-              for (int i = 0; i < loadNum; i++) 
-                  userCard(i)
-            ],
+      appBar: AppBar(
+          backgroundColor: ColorsUtil.backgroundColorDark,
+          title: const Text(
+            'Requests Page',
+            style: TextStyle(color: ColorsUtil.textColorDark),
           )),
-    ])),
-        // body: const Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        //         Text('GroupJoinView: Page Incomplete',
-        //             style: TextStyle(
-        //                 fontSize: 15,
-        //                 fontWeight: FontWeight.normal,
-        //                 color: ColorsUtil.primaryColorDark))
-        //       ]),
-        //     ]),
-            
-            );
+      body: SingleChildScrollView(
+          child: Column(children: [
+        const Divider(
+          height: 2,
+          color: ColorsUtil.secondaryColorDark,
+          indent: 12,
+          endIndent: 12,
+        ),
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: Column(
+              // children: [for (int i = 0; i < loadNum; i++) userCard(i)],
+              children: [
+                if (loadNum ==
+                    0) // if they don't have any hikeID from hike-group
+                  noRequestsCard()
+                else
+                  for (int i = 0; i < loadNum; i++) userCard(i),
+              ],
+            )),
+      ])),
+      // body: const Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      //         Text('GroupJoinView: Page Incomplete',
+      //             style: TextStyle(
+      //                 fontSize: 15,
+      //                 fontWeight: FontWeight.normal,
+      //                 color: ColorsUtil.primaryColorDark))
+      //       ]),
+      //     ]),
+    );
+  }
+
+  noRequestsCard() {
+    return Column(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(children: [
+            SizedBox(
+              width: MediaQuery.sizeOf(context).width * .35,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    child: const Center(
+                      child: Text('No requests',
+                          style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              color: ColorsUtil.textColorDark)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ],
+      ),
+    ]);
   }
 }

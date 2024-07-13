@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_group_members.dart';
 import 'package:tembeakenya/repository/get_users.dart';
@@ -85,18 +86,29 @@ class _GroupViewState extends State<GroupView> {
 
   groupCard(int num) {
     return TextButton(
-        onPressed: () {
+        onPressed: () async {
           user = widget.user;
-
+          var selectedGroup = widget.groups[num];
+          var groupDetails;
           debugPrint(widget.groups.toString());
           debugPrint('GROUP DETAIL: ');
           debugPrint(widget.groups[num].toString());
-
+          await CommunityController().getGroupDetails(num + 1).then(
+            (group) {
+              setState(() {
+                groupDetails = group;
+              });
+            },
+          );
+          if (!mounted) return;
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      GroupDetailView(user: user, group: widget.groups[num])));
+                  builder: (context) => GroupDetailView(
+                        user: user,
+                        group: selectedGroup,
+                        details: groupDetails,
+                      )));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -273,12 +285,10 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
         body: RefreshIndicator(
       onRefresh: _handleRefresh,
-      child: 
-      SingleChildScrollView(
+      child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
             roleButton(),

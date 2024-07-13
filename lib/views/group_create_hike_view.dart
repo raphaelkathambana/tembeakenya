@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 
 import 'package:tembeakenya/dummy_db.dart';
+import 'package:tembeakenya/model/user.dart';
 
 // ****************************************************** //
 
 class GroupCreateHikeView extends StatefulWidget {
-  // final int userID;
-  const GroupCreateHikeView({super.key});
+  final User user;
+  final group;
+  const GroupCreateHikeView(
+      {super.key, required this.user, required this.group});
 
   @override
   State<GroupCreateHikeView> createState() => _GroupCreateHikeViewState();
 }
 
 class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
-  late final TextEditingController _hikeName;
+  late final TextEditingController _groupHikeName;
   late final TextEditingController _description;
   late final TextEditingController _date;
 
@@ -32,14 +36,14 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
     dropdownValue = null;
 
     _date = TextEditingController();
-    _hikeName = TextEditingController();
+    _groupHikeName = TextEditingController();
     _description = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _hikeName.dispose();
+    _groupHikeName.dispose();
     _description.dispose();
     super.dispose();
   }
@@ -98,7 +102,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                         const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Group Name',
+                            Text('Event Name',
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -111,9 +115,9 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                         ),
                         SizedBox(
                           child: TextField(
-                            controller: _hikeName,
+                            controller: _groupHikeName,
                             decoration: const InputDecoration(
-                              hintText: "Give the Hike a name",
+                              hintText: "Give the Event a Name",
                             ),
                             onChanged: (value) {
                               // user?.username = value;
@@ -150,7 +154,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                           child: TextField(
                             controller: _description,
                             decoration: const InputDecoration(
-                              hintText: "Write down a description",
+                              hintText: "Give the Event a Description",
                             ),
                             onChanged: (value) {
                               // user?.username = value;
@@ -201,7 +205,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                   child: TextField(
                     controller: _date,
                     decoration: const InputDecoration(
-                      labelText: 'Date',
+                      labelText: 'Select Date',
                       prefixIcon: Icon(Icons.calendar_today),
                       enabledBorder: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -252,44 +256,24 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                             ),
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                //save the details of the group hike
+                                final groupHikeName = _groupHikeName.text;
+                                final description = _description.text;
+                                final hikeDate = _date.text;
+
+                                CommunityController().createGroupHike(
+                                    groupHikeName,
+                                    description,
+                                    dropdownValue!,
+                                    hikeDate,
+                                    widget.group['id'],
+                                    widget.user.id!,
+                                    context);
                               },
                               child: const Text('Proceed'),
                             ),
                           ],
                         ));
-
-                //   if (pickedImage != null) {
-                //     await uploadPic(
-                //             pickedImage!,
-                //             _username.text.isNotEmpty
-                //                 ? _username.text
-                //                 : user!.username)
-                //         .then((value) => imageId = value);
-                //   }
-                //   final firstname = _firstname.text.isNotEmpty
-                //       ? _firstname.text
-                //       : user!.firstName;
-                //   final lastname = _lastname.text.isNotEmpty
-                //       ? _lastname.text
-                //       : user!.lastName;
-                //   final username = _username.text.isNotEmpty
-                //       ? _username.text
-                //       : user!.username;
-                //   final email =
-                //       _email.text.isNotEmpty ? _email.text : user!.email;
-                //   final profileImageId =
-                //       imageId.isNotEmpty ? imageId : user!.image_id.toString();
-                //   if (!context.mounted) return;
-                //   AuthController(navigationService).updateProfileInformation(
-                //       username!,
-                //       email!,
-                //       firstname!,
-                //       lastname!,
-                //       profileImageId,
-                //       context);
-                // int count = 0;
-                // Navigator.of(context).popUntil((_) => count++ >= 2);
               },
               child: const Text('Create'),
             ))
