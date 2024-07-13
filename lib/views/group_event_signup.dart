@@ -342,7 +342,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     builder: (context) => AlertDialog(
                           title: const Text('Save'),
                           content: const Text(
-                              'Once you save, you can not delete an Hike Event'),
+                              'Proceed to pay?'),
                           actions: [
                             TextButton(
                               onPressed: () {
