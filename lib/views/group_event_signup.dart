@@ -162,18 +162,21 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     //     ),
                     SizedBox(
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            padding: const EdgeInsets.only(top: 0),
-                            child: const Text('+254', style: TextStyle(fontSize: 15.5),)
-                          ),
-
+                              margin: const EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(top: 13.5),
+                              child: const Text(
+                                '+254',
+                                style: TextStyle(fontSize: 15.5),
+                              )),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
-                              
+                              keyboardType: TextInputType.number,
                               controller: _phone,
+                              maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
@@ -181,7 +184,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                                 // user?.username = value;
                                 // theUsername = value;
                               },
-                            
+
                               // ),
                             ),
                           ),
@@ -288,18 +291,21 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     //     ),
                     SizedBox(
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            margin: const EdgeInsets.only(right: 10),
-                            padding: const EdgeInsets.only(top: 0),
-                            child: const Text('+254', style: TextStyle(fontSize: 15.5),)
-                          ),
-
+                              margin: const EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(top: 14),
+                              child: const Text(
+                                '+254',
+                                style: TextStyle(fontSize: 15.5),
+                              )),
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
-                              
                               controller: _otherPhone,
+                              keyboardType: TextInputType.number,
+                              maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
