@@ -295,8 +295,6 @@ class _PeopleViewState extends State<PeopleView> {
     isFriend = List<bool?>.filled(loadNum, false);
     followsLoaded = List<bool>.filled(loadNum, false);
 
-    int c = 0;
-
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
       getImageUrl(profileImageID).then((String result) {

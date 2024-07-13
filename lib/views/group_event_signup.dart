@@ -24,6 +24,8 @@ class GroupEventSignUp extends StatefulWidget {
 class _GroupEventSignUpState extends State<GroupEventSignUp> {
   late final TextEditingController _fullName;
   late final TextEditingController _phone;
+  late final TextEditingController _otherFullName;
+  late final TextEditingController _otherPhone;
 
   late String? dropdownValue;
 
@@ -34,6 +36,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   void initState() {
     _fullName = TextEditingController();
     _phone = TextEditingController();
+    _otherFullName = TextEditingController();
+    _otherPhone = TextEditingController();
     super.initState();
   }
 
@@ -41,6 +45,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   void dispose() {
     _fullName.dispose();
     _phone.dispose();
+    _otherFullName.dispose();
+    _otherPhone.dispose();
     super.dispose();
   }
 
@@ -237,7 +243,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                         ),
                         SizedBox(
                           child: TextField(
-                            controller: _fullName,
+                            controller: _otherFullName,
                             decoration: const InputDecoration(
                               hintText: "Please write the full name",
                             ),
@@ -293,7 +299,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
                               
-                              controller: _phone,
+                              controller: _otherPhone,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
