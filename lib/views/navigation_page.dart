@@ -76,7 +76,7 @@ class _NavigationViewState extends State<NavigationView> {
           'Navigation Page',
           style: TextStyle(
             color: ColorsUtil.primaryColorLight,
-            fontSize: 35,
+            fontSize: 33,
             fontWeight: FontWeight.bold,
           ),
         ),
