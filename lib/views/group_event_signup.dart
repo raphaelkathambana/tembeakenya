@@ -27,6 +27,8 @@ class GroupEventSignUp extends StatefulWidget {
 class _GroupEventSignUpState extends State<GroupEventSignUp> {
   late final TextEditingController _fullName;
   late final TextEditingController _phone;
+  late final TextEditingController _otherFullName;
+  late final TextEditingController _otherPhone;
 
   late String? dropdownValue;
 
@@ -37,6 +39,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   void initState() {
     _fullName = TextEditingController();
     _phone = TextEditingController();
+    _otherFullName = TextEditingController();
+    _otherPhone = TextEditingController();
     super.initState();
   }
 
@@ -44,6 +48,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   void dispose() {
     _fullName.dispose();
     _phone.dispose();
+    _otherFullName.dispose();
+    _otherPhone.dispose();
     super.dispose();
   }
 
@@ -159,10 +165,11 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     //     ),
                     SizedBox(
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                               margin: const EdgeInsets.only(right: 10),
-                              padding: const EdgeInsets.only(top: 0),
+                              padding: const EdgeInsets.only(top: 13.5),
                               child: const Text(
                                 '+254',
                                 style: TextStyle(fontSize: 15.5),
@@ -171,6 +178,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
                               controller: _phone,
+                              maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
@@ -240,7 +248,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                         ),
                         SizedBox(
                           child: TextField(
-                            controller: _fullName,
+                            controller: _otherFullName,
                             decoration: const InputDecoration(
                               hintText: "Please write the full name",
                             ),
@@ -285,10 +293,11 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     //     ),
                     SizedBox(
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                               margin: const EdgeInsets.only(right: 10),
-                              padding: const EdgeInsets.only(top: 0),
+                              padding: const EdgeInsets.only(top: 14),
                               child: const Text(
                                 '+254',
                                 style: TextStyle(fontSize: 15.5),
@@ -332,8 +341,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                     context: context,
                     builder: (context) => AlertDialog(
                           title: const Text('Save'),
-                          content: const Text(
-                              'Once you save, you can not delete an Hike Event'),
+                          content: const Text('Proceed to pay?'),
                           actions: [
                             TextButton(
                               onPressed: () {

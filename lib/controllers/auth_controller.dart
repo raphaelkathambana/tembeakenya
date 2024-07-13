@@ -450,14 +450,16 @@ class AuthController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         debugPrint('Password updated successfully');
+        setUser = await refreshUserDetails();
+        notifyListeners();
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password has been Updated'),
           ),
         );
-        setUser = await refreshUserDetails();
-        notifyListeners();
+        int count = 0;
+        Navigator.of(context).popUntil((_) => count++ >= 2);
       }
     } on DioException catch (e) {
       if (!context.mounted) return;

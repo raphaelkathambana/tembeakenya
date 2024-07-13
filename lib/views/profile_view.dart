@@ -152,18 +152,16 @@ class _ProfileViewState extends State<ProfileView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(
-                                child: Text(user!.fullName,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        // fontWeight: FontWeight.bold,
-                                        color: ColorsUtil.textColorDark)),
-                              ),
+                              Text(user!.fullName,
+                                  style: const TextStyle(
+                                      fontSize: 15,
+                                      // fontWeight: FontWeight.bold,
+                                      color: ColorsUtil.textColorDark)),
                               Text('@${user!.username.toString()}',
                                   style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.normal,
-                                      color: ColorsUtil.accentColorDark)),
+                                      color: ColorsUtil.primaryColorDark)),
                             ],
                           ),
                         ),
@@ -179,8 +177,7 @@ class _ProfileViewState extends State<ProfileView> {
                 ),
 
                 Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 10),
                   // padding: const EdgeInsets.only(
                   //     left: 20, right: 20,),
                   decoration: BoxDecoration(
@@ -237,7 +234,6 @@ class _ProfileViewState extends State<ProfileView> {
                                 color: ColorsUtil.accentColorLight,
                               ),
                             ),
-                          
                           ],
                         ),
                       ),
@@ -247,31 +243,20 @@ class _ProfileViewState extends State<ProfileView> {
 
                 // Email
                 Container(
-                    margin: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 20),
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 10, bottom: 10),
-                    decoration: BoxDecoration(
-                        color: ColorsUtil.descriptionColorDark,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Email',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorsUtil.primaryColorDark)),
-                            ],
-                          ),
-                          Text(user!.email.toString(),
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  color: ColorsUtil.textColorDark)),
-                        ])),
+                  width: MediaQuery.sizeOf(context).width,
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 20, top: 10, bottom: 10),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text(
+                    user!.email.toString(),
+                    style: const TextStyle(
+                        fontSize: 15, color: ColorsUtil.textColorDark),
+                  ),
+                ),
 
                 // Statistic has dummy writing
                 Container(

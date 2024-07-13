@@ -20,7 +20,8 @@ class GroupCreateHikeView extends StatefulWidget {
 }
 
 class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
-  late final TextEditingController _groupHikeName;
+  late final TextEditingController _hikeName;
+  late final TextEditingController _hikeFee;
   late final TextEditingController _description;
   late final TextEditingController _date;
 
@@ -36,14 +37,16 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
     dropdownValue = null;
 
     _date = TextEditingController();
-    _groupHikeName = TextEditingController();
+    _hikeName = TextEditingController();
+    _hikeFee = TextEditingController();
     _description = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _groupHikeName.dispose();
+    _hikeName.dispose();
+    _hikeFee.dispose();
     _description.dispose();
     super.dispose();
   }
@@ -154,7 +157,83 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                           child: TextField(
                             controller: _description,
                             decoration: const InputDecoration(
-                              hintText: "Give the Event a Description",
+                              hintText: "Give the Hike a Description",
+                            ),
+                            onChanged: (value) {
+                              // user?.username = value;
+                              // theUsername = value;
+                            },
+                          ),
+                        ),
+                      ])),
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Hike Fee',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark)),
+                            Icon(
+                              Icons.edit,
+                              color: ColorsUtil.primaryColorDark,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            controller: _hikeFee,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: "KSH.",
+                            ),
+                            onChanged: (value) {
+                              // user?.username = value;
+                              // theUsername = value;
+                            },
+                          ),
+                        ),
+                      ])),
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Hike Fee',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark)),
+                            Icon(
+                              Icons.edit,
+                              color: ColorsUtil.primaryColorDark,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            controller: _hikeFee,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              hintText: "KSH.",
                             ),
                             onChanged: (value) {
                               // user?.username = value;

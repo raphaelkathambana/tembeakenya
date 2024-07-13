@@ -230,12 +230,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           newPassword,
                           newPasswordConfirm,
                           context);
-                      // } catch (e){
-
-                      // }
-
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     },
                     child: const Text('Update'),
                   ))

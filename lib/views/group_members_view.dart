@@ -27,6 +27,8 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   late String displayUrl;
   late NavigationService navigationService;
 
+  User? selectedUser;
+
   String profileImageID = "defaultProfilePic";
   late int loadNum;
 
