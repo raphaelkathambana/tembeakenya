@@ -10,7 +10,7 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 class PeopleView extends StatefulWidget {
   final dynamic currentUser;
-  final users;
+  final dynamic users;
   const PeopleView({super.key, this.currentUser, required this.users});
 
   @override
@@ -24,6 +24,7 @@ class _PeopleViewState extends State<PeopleView> {
   List<String> listUser = <String>['All', 'Follows'];
 
   User? selectedUser;
+  List<User> theUsers = [];
 
   String profileImageID = '';
 
@@ -38,7 +39,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   searchCard(String search, int num, bool friend) {
     if (search != '') {
-      if (widget.users[num].fullName
+      if (theUsers[num].fullName
           .toLowerCase()
           .contains(search.toLowerCase())) {
         return userFriend(num, friend);
@@ -50,7 +51,7 @@ class _PeopleViewState extends State<PeopleView> {
   }
 
   userFriend(int num, bool friend) {
-    if (widget.users[num].id == widget.currentUser.id){
+    if (theUsers[num].id == widget.currentUser.id){
       return const SizedBox();
     }
     if (friend == true) {
@@ -187,7 +188,7 @@ class _PeopleViewState extends State<PeopleView> {
                                 SizedBox(
                                   width: MediaQuery.sizeOf(context).width,
                                   child: Text(
-                                    widget.users[num].fullName,
+                                    theUsers[num].fullName,
                                     style: const TextStyle(
                                         fontSize: 15,
                                         fontWeight: FontWeight.bold,
@@ -195,7 +196,7 @@ class _PeopleViewState extends State<PeopleView> {
                                   ),
                                 ),
                                 Text(
-                                  '@${widget.users[num].username}',
+                                  '@${theUsers[num].username}',
                                   style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.normal,
@@ -204,7 +205,6 @@ class _PeopleViewState extends State<PeopleView> {
                               ],
                             ),
                           ),
-                          // TODO
                           isFriend[num]!
                               ? Container(
                                   margin: const EdgeInsets.only(right: 3.5),
@@ -274,22 +274,27 @@ class _PeopleViewState extends State<PeopleView> {
     String profileImageID = '';
     followsLoaded = List<bool>.filled(loadNum, false);
 
-    setState(() {
-      widget.users;
-    });
 
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.users[i].image_id!;
+      profileImageID = theUsers[i].image_id!;
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
         });
       });
     }
+
+    CommunityController().getCommunityData().then((list) {
+        setState(() {
+          theUsers = list;
+        });
+      });
   }
 
   @override
   void initState() {
+    theUsers = widget.users;
+
     navigationService = NavigationService(router);
     dropdownValue = listUser.first;
     loadNum = widget.users.length;
@@ -298,7 +303,7 @@ class _PeopleViewState extends State<PeopleView> {
     followsLoaded = List<bool>.filled(loadNum, false);
 
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.users[i].image_id!;
+      profileImageID = theUsers[i].image_id!;
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;

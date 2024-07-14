@@ -24,8 +24,18 @@ class _CommunityViewState extends State<CommunityView> {
   @override
   void initState() {
     super.initState();
+    CommunityController().getCommunityGroups().then((value) {
+        setState(() {
+          groups = value;
+        });
+      });
+      CommunityController().getCommunityData().then((list) {
+        setState(() {
+          users = list;
+        });
+      });
 
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 30), (timer) {
       CommunityController().getCommunityGroups().then((value) {
         setState(() {
           groups = value;

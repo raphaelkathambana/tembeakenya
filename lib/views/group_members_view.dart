@@ -14,8 +14,13 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 class GroupMemberView extends StatefulWidget {
   final user;
+  final group;
   final members;
-  const GroupMemberView({super.key, required this.user, required this.members});
+  const GroupMemberView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.members});
 
   @override
   State<GroupMemberView> createState() => _GroupMemberViewState();
@@ -38,7 +43,9 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   // ****************************************************** //
   searchCard(String search, int num) {
     if (search != '') {
-      if (widget.members[num].fullName.toLowerCase().contains(search.toLowerCase())) {
+      if (widget.members[num].fullName
+          .toLowerCase()
+          .contains(search.toLowerCase())) {
         return userCard(num);
       }
       return const SizedBox();
@@ -48,6 +55,9 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   }
 
   userCard(int num) {
+    // widget.members[num].id == widget.group['group_id']
+    debugPrint('widget.members[num].id = ${widget.members[num].id}');
+    debugPrint('widget.group[\'group_id\'] = ${widget.group['guide_id']}');
     int selectedUserId = widget.members[num].id;
     return TextButton(
         onPressed: () async {
@@ -124,12 +134,12 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.primaryColorDark)),
-                        if (widget.members[num].role_id != 1)
-                        const Text('Guide',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: ColorsUtil.accentColorDark)),
+                        if (widget.members[num].id == widget.group['guide_id'])
+                          const Text('Guide',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.accentColorDark)),
                       ],
                     ),
                   ),
@@ -150,7 +160,6 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   @override
   void initState() {
-    
     displayUrl = '';
     navigationService = NavigationService(router);
     loadNum = widget.members.length;
@@ -165,7 +174,6 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   @override
   Widget build(BuildContext context) {
- 
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorsUtil.backgroundColorDark,

@@ -59,6 +59,14 @@ class _CommunityViewState extends State<GroupDetailView> {
 
     String profileImageID = '';
 
+    CommunityController().getGroupDetails(widget.group['id']).then(
+      (group) {
+        setState(() {
+          groupDetails = group;
+        });
+      },
+    );
+
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.group['image_id'];
       getImageUrl(profileImageID).then((String result) {
@@ -80,8 +88,14 @@ class _CommunityViewState extends State<GroupDetailView> {
     theDescription = group['description'];
 
     User user = widget.user;
-    roleID = user.role_id!;
-    roleSwitch = canEdit(roleID);
+
+    if (group['guide_id'] == user.id){
+      roleID = user.role_id!;
+      roleSwitch = canEdit(roleID);
+    } else {
+      roleID = 1;
+      roleSwitch = canEdit(roleID);
+    }
 
     displayUrl = '';
     profileImageID = widget.group['image_id'];
@@ -94,7 +108,7 @@ class _CommunityViewState extends State<GroupDetailView> {
     navigationService = NavigationService(router);
     groupDetails = widget.details;
 
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 30), (timer) {
       CommunityController().getGroupDetails(widget.group['id']).then(
         (group) {
           setState(() {
@@ -127,7 +141,7 @@ class _CommunityViewState extends State<GroupDetailView> {
           backgroundColor: roleSwitch
               ? ColorsUtil.secondaryColorDark
               : ColorsUtil.accentColorDark),
-      child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
+      child: roleSwitch ? const Text('debug button: Group\'s Guide') : const Text('debug button: Hiker'),
     );
   }
   // ***************** //
@@ -146,6 +160,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   MaterialPageRoute(
                       builder: (context) => GroupMemberView(
                             members: widget.details['members'],
+                            group: widget.group,
                             user: widget.user,
                           )));
             },
@@ -190,6 +205,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                   MaterialPageRoute(
                       builder: (context) => GroupMemberView(
                             members: widget.details['members'],
+                            group: widget.group,
                             user: widget.user,
                           )));
             },
@@ -365,185 +381,206 @@ class _CommunityViewState extends State<GroupDetailView> {
         body: RefreshIndicator(
           onRefresh: _handleRefresh,
           child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(),
               child: Column(children: [
-            // Group Name
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              padding: const EdgeInsets.only(right: 3.5),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-                color: ColorsUtil.cardColorDark,
-              ),
-              child: Column(children: [
-                const Divider(
-                  height: 2,
-                  color: ColorsUtil.secondaryColorDark,
-                  indent: 12,
-                  endIndent: 12,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                // Group Name
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  padding: const EdgeInsets.only(right: 3.5),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: ColorsUtil.cardColorDark,
+                  ),
+                  child: Column(children: [
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
+                    ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        if (displayUrl.isEmpty)
-                          const CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.transparent,
-                              child: CircleAvatar(
-                                  radius: 42,
-                                  backgroundColor: ColorsUtil.accentColorDark,
+                        Row(
+                          children: [
+                            if (displayUrl.isEmpty)
+                              const CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.transparent,
                                   child: CircleAvatar(
-                                    radius: 40,
-                                    child: CircularProgressIndicator(),
-                                  )))
-                        else
-                          IconButton(
-                            icon: CircleAvatar(
-                                radius: 42,
-                                backgroundColor: ColorsUtil.accentColorDark,
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: NetworkImage(displayUrl),
-                                )),
-                            onPressed: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => Container(
-                                        padding: const EdgeInsets.all(15),
-                                        child: CircleAvatar(
-                                            radius:
-                                                MediaQuery.sizeOf(context).width,
-                                            backgroundColor:
-                                                ColorsUtil.accentColorDark,
+                                      radius: 42,
+                                      backgroundColor:
+                                          ColorsUtil.accentColorDark,
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        child: CircularProgressIndicator(),
+                                      )))
+                            else
+                              IconButton(
+                                icon: CircleAvatar(
+                                    radius: 42,
+                                    backgroundColor: ColorsUtil.accentColorDark,
+                                    child: CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage: NetworkImage(displayUrl),
+                                    )),
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => Container(
+                                            padding: const EdgeInsets.all(15),
                                             child: CircleAvatar(
-                                              radius: MediaQuery.sizeOf(context)
-                                                      .width *
-                                                  .45,
-                                              backgroundImage:
-                                                  NetworkImage(displayUrl),
-                                            )),
-                                      ));
-                            },
-                          ),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width * .6,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width * .35,
-                                child: Text(theGroupName,
-                                    style: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: ColorsUtil.textColorDark)),
+                                                radius:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                backgroundColor:
+                                                    ColorsUtil.accentColorDark,
+                                                child: CircleAvatar(
+                                                  radius:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          .45,
+                                                  backgroundImage:
+                                                      NetworkImage(displayUrl),
+                                                )),
+                                          ));
+                                },
                               ),
-                              if (isGroupMember(widget.user))
-                                const Text('Member',
-                                    style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal,
-                                        color: ColorsUtil.accentColorDark)),
-                              if (!isGroupMember(widget.user))
-                                ElevatedButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      // todo add the request functionality
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                      minimumSize: const Size(150, 30),
-                                      foregroundColor: ColorsUtil.textColorDark,
-                                      backgroundColor: requested
-                                          ? ColorsUtil.accentColorDark
-                                          : ColorsUtil.secondaryColorDark),
-                                  child: requested
-                                      ? const Text('Pending...')
-                                      : const Text('Request to Join'),
-                                )
-                            ],
-                          ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * .6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * .35,
+                                    child: Text(theGroupName,
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsUtil.textColorDark)),
+                                  ),
+                                  if (isGroupMember(widget.user))
+                                    if (widget.user.id == widget.group['guide_id'])
+                                    const Text('Guide',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsUtil.accentColorDark))
+                                    else 
+                                    const Text('Member',
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsUtil.accentColorDark)),
+                                  if (!isGroupMember(widget.user))
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          // todo add the request functionality
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: const Size(150, 30),
+                                          foregroundColor:
+                                              ColorsUtil.textColorDark,
+                                          backgroundColor: requested
+                                              ? ColorsUtil.accentColorDark
+                                              : ColorsUtil.secondaryColorDark),
+                                      child: requested
+                                          ? const Text('Pending...')
+                                          : const Text('Request to Join'),
+                                    )
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                  ],
-                ),
-                const Divider(
-                  height: 2,
-                  color: ColorsUtil.secondaryColorDark,
-                  indent: 12,
-                  endIndent: 12,
-                ),
-              ]),
-            ),
-          
-            // Description
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              padding: const EdgeInsets.all(0),
-              decoration: BoxDecoration(
-                  border: Border.all(color: ColorsUtil.secondaryColorDark),
-                  color: ColorsUtil.descriptionColorDark,
-                  borderRadius: BorderRadius.circular(10)),
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Container(
-                    width: MediaQuery.sizeOf(context).width,
-                    // height: 100,
-                    margin: const EdgeInsets.all(7),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      border: Border.all(color: ColorsUtil.backgroundColorDark),
-                      color: ColorsUtil.descriptionColorDark,
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
                     ),
-                    child: Text(theDescription,
-                        style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.normal,
-                            color: ColorsUtil.primaryColorDark))),
-              ]),
-            ),
-          
-            // Events
-            Container(
-              margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-              padding:
-                  const EdgeInsets.only(top: 15, bottom: 15, left: 5, right: 5),
-              decoration: BoxDecoration(
-                  border: Border.all(color: ColorsUtil.secondaryColorDark),
-                  color: const Color.fromARGB(150, 49, 59, 21),
-                  borderRadius: BorderRadius.circular(10)),
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                  child: Text('Upcoming Events',
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: ColorsUtil.textColorDark)),
+                  ]),
                 ),
-                const Divider(
-                  height: 6,
-                  color: ColorsUtil.accentColorDark,
+
+                // Description
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  padding: const EdgeInsets.all(0),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: ColorsUtil.secondaryColorDark),
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            // height: 100,
+                            margin: const EdgeInsets.all(7),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                  color: ColorsUtil.backgroundColorDark),
+                              color: ColorsUtil.descriptionColorDark,
+                            ),
+                            child: Text(theDescription,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                    color: ColorsUtil.primaryColorDark))),
+                      ]),
                 ),
-                // TODO: Have an eventID in the group table
-                if (loadNum == 0)
-                  noEventCard()
-                else if (widget.details['events']
-                    .isEmpty) // if they don't have any hikeID from hike-group
-                  noEventCard()
-                else
-                  for (int i = 0; i < widget.details['events'].length; i++)
-                    eventCard(i),
-              ]),
-            ),
-          
-            roleButton(),
-          ])),
+
+                // Events
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  padding: const EdgeInsets.only(
+                      top: 15, bottom: 15, left: 5, right: 5),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: ColorsUtil.secondaryColorDark),
+                      color: const Color.fromARGB(150, 49, 59, 21),
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Padding(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                          child: Text('Upcoming Events',
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.textColorDark)),
+                        ),
+                        const Divider(
+                          height: 6,
+                          color: ColorsUtil.accentColorDark,
+                        ),
+                        // TODO: Have an eventID in the group table
+                        if (loadNum == 0)
+                          noEventCard()
+                        else if (widget.details['events']
+                            .isEmpty) // if they don't have any hikeID from hike-group
+                          noEventCard()
+                        else
+                          for (int i = 0;
+                              i < widget.details['events'].length;
+                              i++)
+                            eventCard(i),
+                      ]),
+                ),
+
+                roleButton(),
+              ])),
         ));
   }
 }

@@ -25,6 +25,9 @@ class _GroupViewState extends State<GroupView> {
   late int roleID;
   late bool roleSwitch;
 
+  late dynamic theGroups;
+
+
   // TEMPORARY ROLE SWITCH BUTTON
   roleButton() {
     return ElevatedButton(
@@ -61,7 +64,7 @@ class _GroupViewState extends State<GroupView> {
 
   searchCard(String search, int num, bool isMember) {
     if (search != '') {
-      if (widget.groups[num]['name']
+      if (theGroups[num]['name']
           .toLowerCase()
           .contains(search.toLowerCase())) {
         return groupMember(num, isMember);
@@ -88,11 +91,11 @@ class _GroupViewState extends State<GroupView> {
     return TextButton(
         onPressed: () async {
           user = widget.user;
-          var selectedGroup = widget.groups[num];
+          var selectedGroup = theGroups[num];
           var groupDetails;
-          debugPrint(widget.groups.toString());
+          debugPrint(theGroups.toString());
           debugPrint('GROUP DETAIL: ');
-          debugPrint(widget.groups[num].toString());
+          debugPrint(theGroups[num].toString());
           await CommunityController().getGroupDetails(num + 1).then(
             (group) {
               setState(() {
@@ -155,7 +158,7 @@ class _GroupViewState extends State<GroupView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width,
-                          child: Text((widget.groups[num]['name']),
+                          child: Text((theGroups[num]['name']),
                               style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -189,7 +192,7 @@ class _GroupViewState extends State<GroupView> {
                   border: Border.all(color: ColorsUtil.backgroundColorDark),
                   color: ColorsUtil.descriptionColorDark,
                 ),
-                child: Text((widget.groups[num]['description']),
+                child: Text((theGroups[num]['description']),
                     style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.normal,
@@ -248,8 +251,14 @@ class _GroupViewState extends State<GroupView> {
 
     String profileImageID = '';
 
+    CommunityController().getCommunityGroups().then((value) {
+        setState(() {
+          theGroups = value;
+        });
+      });
+
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.groups[i]['image_id'].toString();
+      profileImageID = theGroups[i]['image_id'].toString();
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
@@ -261,14 +270,15 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   void initState() {
+    theGroups = widget.groups;
     navigationService = NavigationService(router);
 
     dropdownValue = groupFilter.first;
-    loadNum = widget.groups.length;
+    loadNum = theGroups.length;
     displayUrl = List<String>.filled(loadNum, '');
 
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.groups[i]['image_id']!;
+      profileImageID = theGroups[i]['image_id']!;
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
