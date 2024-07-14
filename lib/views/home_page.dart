@@ -99,7 +99,7 @@ class _HomeViewState extends State<HomeView> {
               )
             else
               Container(
-                height: 205,
+                height: 200,
                 width: MediaQuery.sizeOf(context).width * .9,
                 margin: const EdgeInsets.all(7),
                 padding: const EdgeInsets.all(10),
@@ -177,7 +177,6 @@ class _HomeViewState extends State<HomeView> {
     String profileImageID = '';
 
     for (int i = 0; i < loadNum; i++) {
-      // profileImageID = widget.groups[i]['image_id'].toString();
       profileImageID = locationImage[i];
       getImageUrl(profileImageID).then((String result) {
         setState(() {
@@ -192,7 +191,6 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     navigationService = NavigationService(router);
 
-    // dropdownValue = groupFilter.first;
     loadNum = location.length;
     displayUrl = List<String>.filled(loadNum, '');
 

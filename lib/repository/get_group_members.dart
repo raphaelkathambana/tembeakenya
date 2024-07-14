@@ -156,13 +156,3 @@ Future<bool> hasRequestedToJoinGroup(User user, int groupId) async {
   }
   return false;
 }
-// bool getFriends(int num) {
-//   var user = getUsersFromDb()[num];
-//   List<User> friends = getFriendDetails();
-//   for (var friend in friends) {
-//     if (friend.id == user.id) {
-//       return true;
-//     }
-//   }
-//   return false;
-// }

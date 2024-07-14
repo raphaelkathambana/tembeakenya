@@ -100,7 +100,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
       });
     });
 
-    getFriend(widget.selectedUser.id!).then((value) => {
+    getFollowingFriend(widget.selectedUser.id!).then((value) => {
           setState(() {
             isFriend = value;
           })

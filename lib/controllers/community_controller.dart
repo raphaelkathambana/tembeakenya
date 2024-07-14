@@ -108,6 +108,17 @@ class CommunityController {
     }
   }
 
+  getFollowers() async {
+    try {
+      var response = await apiCall.client.get('${url}api/followers');
+      if (response.statusCode == 200) {
+        return getUsersFromData(response.data);
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+    }
+  }
+
   Future<void> createGroup(String name, String description, int guideId,
       BuildContext context) async {
     String token = await getCsrfToken();

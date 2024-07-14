@@ -194,23 +194,7 @@ class _GroupEventViewState extends State<GroupEventView> {
       }
     }
 
-    // for (int i = 0; i < loadNum; i++) {
-    //   if (attendingLoaded[i] == false) {
-    //     // TODO: Create a function that filters out attendees from all group members
-    //     getFriend(i + 1).then((value) => {
-    //           if (isAttendee[i] = value)
-    //             {loaded = attendingLoaded.every((element) => element = true)}
-    //         });
-    //     attendingLoaded[i] = true;
-    //   }
-    // }
-
     double width = MediaQuery.sizeOf(context).width;
-
-    // int gID = 1;
-
-    // theGroupName = widget.details['group']['name'];
-    // theDescription = widget.details['group']['description'];
 
     return Scaffold(
       appBar: AppBar(

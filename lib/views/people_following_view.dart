@@ -13,19 +13,21 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ****************************************************** //
 
-class ProfileFollowingView extends StatefulWidget {
+class PeopleFollowingView extends StatefulWidget {
   final dynamic currentUser;
+  final dynamic selectedUser;
   final users;
-  const ProfileFollowingView(
+  const PeopleFollowingView(
       {super.key,
       required this.currentUser,
+      required this.selectedUser,
       required this.users});
 
   @override
-  State<ProfileFollowingView> createState() => _ProfileFollowingViewState();
+  State<PeopleFollowingView> createState() => _PeopleFollowingViewState();
 }
 
-class _ProfileFollowingViewState extends State<ProfileFollowingView> {
+class _PeopleFollowingViewState extends State<PeopleFollowingView> {
   // ****************************************************** //
 
   late NavigationService navigationService;

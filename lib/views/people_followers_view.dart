@@ -1,27 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_following.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
-// import 'package:tembeakenya/dummy_db.dart';
 
-class PeopleView extends StatefulWidget {
+// ******************* DUMMY DATABASE ******************* //
+
+// import 'package:tembeakenya/dummy_db.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
+
+// ****************************************************** //
+
+class PeopleFollowersView extends StatefulWidget {
   final dynamic currentUser;
+  final dynamic selectedUser;
   final users;
-  const PeopleView({super.key, this.currentUser, required this.users});
+  const PeopleFollowersView(
+      
+      {super.key, required this.currentUser, required this.selectedUser, required this.users});
 
   @override
-  State<PeopleView> createState() => _PeopleViewState();
+  State<PeopleFollowersView> createState() => _PeopleFollowersViewState();
 }
 
-class _PeopleViewState extends State<PeopleView> {
+class _PeopleFollowersViewState extends State<PeopleFollowersView> {
+  // ****************************************************** //
+
   late NavigationService navigationService;
 
-  late String? dropdownValue;
-  List<String> listUser = <String>['All', 'Follows'];
+  User? users;
 
   User? selectedUser;
 
@@ -33,34 +42,33 @@ class _PeopleViewState extends State<PeopleView> {
   late int loadNum;
   late List<String> displayUrl;
   late List<bool?> isFriend;
+  late List<bool?> otherFriend;
   late List<bool> followsLoaded;
   bool loaded = false;
 
-  searchCard(String search, int num, bool friend) {
+  // ****************************************************** //
+  searchCard(String search, int num) {
+    debugPrint('IS IT TRUE????: ${otherFriend[num]}');
     if (search != '') {
       if (widget.users[num].fullName
           .toLowerCase()
           .contains(search.toLowerCase())) {
-        return userFriend(num, friend);
+        return userCard(num);
       }
       return const SizedBox();
     } else {
-      return userFriend(num, friend);
+      return userFriend(num);
     }
   }
 
-  userFriend(int num, bool friend) {
-    if (widget.users[num].id == widget.currentUser.id){
+  userFriend(int num) {
+    if (widget.users[num].id == widget.currentUser.id) {
       return const SizedBox();
     }
-    if (friend == true) {
-      if (isFriend[num] == true) {
-        return userCard(num);
-      } else {
-        return const SizedBox();
-      }
-    } else {
+    if (otherFriend[num] == true) {
       return userCard(num);
+    } else {
+      return const SizedBox();
     }
   }
 
@@ -204,7 +212,6 @@ class _PeopleViewState extends State<PeopleView> {
                               ],
                             ),
                           ),
-                          // TODO
                           isFriend[num]!
                               ? Container(
                                   margin: const EdgeInsets.only(right: 3.5),
@@ -268,15 +275,40 @@ class _PeopleViewState extends State<PeopleView> {
     );
   }
 
+  // ****************************************************** //
   Future<void> _handleRefresh() async {
     await Future.delayed(const Duration(seconds: 2));
 
     String profileImageID = '';
     followsLoaded = List<bool>.filled(loadNum, false);
 
-    setState(() {
-      widget.users;
-    });
+    for (int i = 0; i < loadNum; i++) {
+      if (followsLoaded[i] == false) {
+        getFollowingFriend(i + 1).then((value) => {
+              setState(() {
+                if (isFriend[i] = value) {
+                  loaded =
+                      !isFriend.any((element) => element = element == null);
+                }
+              })
+            });
+        followsLoaded[i] = true;
+      }
+    }
+
+    for (int i = 0; i < loadNum; i++) {
+      if (followsLoaded[i] == false) {
+        getFollowingFriend(i + 1).then((value) => {
+              setState(() {
+                if (otherFriend[i] = value) {
+                  loaded =
+                      !otherFriend.any((element) => element = element == null);
+                }
+              })
+            });
+        followsLoaded[i] = true;
+      }
+    }
 
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
@@ -291,11 +323,13 @@ class _PeopleViewState extends State<PeopleView> {
   @override
   void initState() {
     navigationService = NavigationService(router);
-    dropdownValue = listUser.first;
+
     loadNum = widget.users.length;
     displayUrl = List<String>.filled(loadNum, '');
     isFriend = List<bool?>.filled(loadNum, false);
+    otherFriend = List<bool?>.filled(loadNum, false);
     followsLoaded = List<bool>.filled(loadNum, false);
+
 
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
@@ -312,116 +346,86 @@ class _PeopleViewState extends State<PeopleView> {
   Widget build(BuildContext context) {
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
+        getFollowersFriend(i + 1).then((value) => {
+              setState(() {
+                otherFriend[i] = value;
+              })
+            });
         getFollowingFriend(i + 1).then(
           (value) => {
-            if (isFriend[i] = value) {
-              loaded = followsLoaded.every((element) => element = true),
-            }
+            if (isFriend[i] = value)
+              {
+                loaded = followsLoaded.every((element) => element = true),
+              }
           },
         );
         followsLoaded[i] = true;
         Future.delayed(const Duration(seconds: 3), () {
-          loaded = followsLoaded.every((element) => element = true);
+          setState(() {
+            loaded = followsLoaded.every((element) => element = true);
+          });
         });
       }
     }
 
-    debugPrint('LOADED: $loaded');
+    debugPrint('IS IT LOADED????: $loadNum');
 
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _handleRefresh,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-              Container(
-                width: MediaQuery.sizeOf(context).width * .90,
-                margin: const EdgeInsets.only(top: 20, bottom: 25),
-                height: 50,
-                padding: const EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  color: ColorsUtil.cardColorDark,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _search,
-                        enableSuggestions: true,
-                        autocorrect: true,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          icon: Icon(Icons.search),
-                          hintText: 'Search',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            search = _search.text;
-                          });
-                        },
-                      ),
+      appBar: AppBar(
+          backgroundColor: ColorsUtil.backgroundColorDark,
+          title: const Text(
+            'Followers',
+            style: TextStyle(color: ColorsUtil.textColorDark),
+          )),
+      body: SingleChildScrollView(
+          child: Column(children: [
+        const Divider(
+          height: 2,
+          color: ColorsUtil.secondaryColorDark,
+          indent: 12,
+          endIndent: 12,
+        ),
+        Container(
+            width: MediaQuery.sizeOf(context).width * .90,
+            margin: const EdgeInsets.only(top: 20, bottom: 25),
+            height: 50,
+            padding: const EdgeInsets.only(left: 10),
+            decoration: BoxDecoration(
+              color: ColorsUtil.cardColorDark,
+              borderRadius: BorderRadius.circular(25.0),
+            ),
+            child: Row(
+              children: [
+                // Search
+                Expanded(
+                  child: TextField(
+                    controller: _search,
+                    enableSuggestions: true,
+                    autocorrect: true,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      icon: Icon(Icons.search),
+                      hintText: 'Search',
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      margin:
-                          const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 0.80),
-                      ),
-                      child: DropdownButton<String>(
-                        value: dropdownValue,
-                        style: const TextStyle(fontSize: 14),
-                        underline: Container(height: 2),
-                        onChanged: (value) {
-                          setState(() {
-                            dropdownValue = value!;
-                          });
-                        },
-                        items: listUser
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
+                    onChanged: (value) {
+                      setState(() {
+                        search = _search.text;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
-                child: Column(
-                  children: [
-                    for (int i = 0; i < loadNum; i++)
-                      if (dropdownValue ==
-                          listUser.last) // If dropdown indicates "Friends"
-                        searchCard(search, i, true)
-                      else if (dropdownValue ==
-                          listUser.first) // If dropdown indicates "All"
-                        searchCard(search, i, false)
-                  ],
-                ),
-              ),
-            ],
+              ],
+            )),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 3),
+          decoration: const BoxDecoration(
+            color: Colors.transparent,
+          ),
+          child: Column(
+            children: [for (int i = 0; i < loadNum; i++) searchCard(search, i)],
           ),
         ),
-      ),
+      ])),
     );
   }
 }

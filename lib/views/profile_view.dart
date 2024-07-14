@@ -58,7 +58,6 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    // _handleRefresh();
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -155,7 +154,6 @@ class _ProfileViewState extends State<ProfileView> {
                               Text(user!.fullName,
                                   style: const TextStyle(
                                       fontSize: 15,
-                                      // fontWeight: FontWeight.bold,
                                       color: ColorsUtil.textColorDark)),
                               Text('@${user!.username.toString()}',
                                   style: const TextStyle(
@@ -178,8 +176,6 @@ class _ProfileViewState extends State<ProfileView> {
 
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  // padding: const EdgeInsets.only(
-                  //     left: 20, right: 20,),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
@@ -191,7 +187,6 @@ class _ProfileViewState extends State<ProfileView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      // users.isNotEmpty ?
                                       ProfileFollowersView(
                                         currentUser: widget.currentUser,
                                         users: users,
@@ -199,9 +194,18 @@ class _ProfileViewState extends State<ProfileView> {
                         },
                         child: Column(
                           children: [
+                            if (user!.followers_count == 1)
+                            Text(
+                              '${user!.followers_count} Follower',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorLight,
+                              ),
+                            )
+                            else 
                             Text(
                               '${user!.followers_count} Followers',
-                              //  textAlign
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.normal,
