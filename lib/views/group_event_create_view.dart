@@ -156,46 +156,9 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                         SizedBox(
                           child: TextField(
                             controller: _description,
+                            maxLines: null,
                             decoration: const InputDecoration(
                               hintText: "Give the Hike a Description",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
-                        ),
-                      ])),
-              Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: ColorsUtil.descriptionColorDark,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Hike Fee',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.primaryColorDark)),
-                            Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          child: TextField(
-                            controller: _hikeFee,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: "KSH.",
                             ),
                             onChanged: (value) {
                               // user?.username = value;
@@ -325,7 +288,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                     builder: (context) => AlertDialog(
                           title: const Text('Save'),
                           content: const Text(
-                              'Once you save, you can not delete an Hike Event'),
+                              'Once you save, you can not delete a hike event'),
                           actions: [
                             TextButton(
                               onPressed: () {
@@ -341,13 +304,17 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                                 final hikeDate = _date.text;
 
                                 CommunityController().createGroupHike(
-                                    groupHikeName,
-                                    description,
-                                    dropdownValue!,
-                                    hikeDate,
-                                    widget.group['id'],
-                                    widget.user.id!,
-                                    context);
+                                  groupHikeName,
+                                  description,
+                                  dropdownValue!,
+                                  hikeDate,
+                                  widget.group['id'],
+                                  widget.user.id!,
+                                  context,
+                                );
+
+                                int count = 0;
+                                Navigator.of(context).popUntil((_) => count++ >= 2);
                               },
                               child: const Text('Proceed'),
                             ),

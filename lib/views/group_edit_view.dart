@@ -204,11 +204,11 @@ class _GroupEditViewState extends State<GroupEditView> {
               SizedBox(
                 child: TextField(
                   controller: _description,
+                  maxLines: null,
                   decoration: const InputDecoration(
                     hintText: "Write down a description",
                   ),
                   onChanged: (value) {
-                    // group?.description = value;
                     widget.group['description'] = value;
                     theDescription = value;
                   },
@@ -249,6 +249,7 @@ class _GroupEditViewState extends State<GroupEditView> {
                     description,
                     profileImageId,
                     context);
+                
               },
               child: const Text('Update'),
             ))

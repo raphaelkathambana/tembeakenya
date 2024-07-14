@@ -185,6 +185,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     SizedBox(
                       child: TextField(
                         controller: _description,
+                        maxLength: null,
                         decoration: const InputDecoration(
                           hintText: "Write down a description",
                         ),

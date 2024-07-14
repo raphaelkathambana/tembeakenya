@@ -38,7 +38,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   // ****************************************************** //
   searchCard(String search, int num) {
     if (search != '') {
-      if (widget.members[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.members[num].fullName.toLowerCase().contains(search.toLowerCase())) {
         return userCard(num);
       }
       return const SizedBox();
@@ -123,6 +123,12 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
+                                color: ColorsUtil.primaryColorDark)),
+                        if (widget.members[num].role_id != 1)
+                        const Text('Guide',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
                                 color: ColorsUtil.accentColorDark)),
                       ],
                     ),
@@ -144,6 +150,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   @override
   void initState() {
+    
     displayUrl = '';
     navigationService = NavigationService(router);
     loadNum = widget.members.length;
@@ -158,6 +165,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
 
   @override
   Widget build(BuildContext context) {
+ 
     return Scaffold(
       appBar: AppBar(
           backgroundColor: ColorsUtil.backgroundColorDark,

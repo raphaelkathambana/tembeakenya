@@ -124,7 +124,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
                             child: Text(
-                              users[num].fullName,
+                              users.entries.elementAt(num).key.fullName,
                               style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -132,12 +132,18 @@ class _GroupEventViewState extends State<GroupEventView> {
                             ),
                           ),
                           Text(
-                            '@${users[num].username}',
+                            '@${users.entries.elementAt(num).key.username}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.accentColorDark),
                           ),
+                          if (users.entries.elementAt(num).key.role_id != 1)
+                        const Text('Guide',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsUtil.accentColorDark)),
                         ],
                       ),
                     ),

@@ -51,6 +51,9 @@ class _PeopleViewState extends State<PeopleView> {
   }
 
   userFriend(int num, bool friend) {
+    if (widget.users[num].id == widget.currentUser.id){
+      return const SizedBox();
+    }
     if (friend == true) {
       if (isFriend[num] == true) {
         return userCard(num);

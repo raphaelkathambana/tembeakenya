@@ -219,7 +219,7 @@ class CommunityController {
         // return to group view
         if (!context.mounted) return;
         int count = 0;
-        context.pop((_) => count++ >= 3);
+        Navigator.of(context).popUntil((_) => count++ >= 2);
         // navigationService.navigateTo(
         //   '',
         //   arguments: response.data,

@@ -1,4 +1,6 @@
 // import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
@@ -22,14 +24,17 @@ class _CommunityViewState extends State<CommunityView> {
   @override
   void initState() {
     super.initState();
-    CommunityController().getCommunityGroups().then((value) {
-      setState(() {
-        groups = value;
+
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      CommunityController().getCommunityGroups().then((value) {
+        setState(() {
+          groups = value;
+        });
       });
-    });
-    CommunityController().getCommunityData().then((list) {
-      setState(() {
-        users = list;
+      CommunityController().getCommunityData().then((list) {
+        setState(() {
+          users = list;
+        });
       });
     });
   }
@@ -43,22 +48,22 @@ class _CommunityViewState extends State<CommunityView> {
               users: users,
             )
           : Container(
-            alignment: Alignment.center,
-            width: 20,
-            height: 20,
-            child: const CircularProgressIndicator(),
-          ),
+              alignment: Alignment.center,
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            ),
       groups.isNotEmpty
           ? GroupView(
               user: widget.user,
               groups: groups,
             )
           : Container(
-            alignment: Alignment.center,
-            width: 20,
-            height: 20,
-            child: const CircularProgressIndicator(),
-          )
+              alignment: Alignment.center,
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            )
     ];
     return DefaultTabController(
         length: tabs.length,

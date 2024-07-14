@@ -71,16 +71,11 @@ class _NavigationViewState extends State<NavigationView> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Navigation Page',
-          style: TextStyle(
-            color: ColorsUtil.primaryColorLight,
-            fontSize: 33,
-            fontWeight: FontWeight.bold,
+          title: const Text(
+            'Navigation Page',
+            style: TextStyle(color: ColorsUtil.textColorDark),
           ),
         ),
-      ),
       body: Stack(
         children: [
           Container(
