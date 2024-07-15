@@ -272,15 +272,15 @@ class _ProfileViewState extends State<ProfileView> {
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
-                  child: const Column(
+                  child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Statistics',
+                        const Text('Statistics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: ColorsUtil.primaryColorDark)),
-                        Divider(
+                        const Divider(
                           height: 15,
                           color: ColorsUtil.secondaryColorDark,
                         ),
@@ -289,18 +289,52 @@ class _ProfileViewState extends State<ProfileView> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Number of Hikes',
+                                const Text('Number of Hikes',
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.normal,
                                         color: ColorsUtil.primaryColorDark)),
                                 Row(children: [
-                                  Text('1 ',
-                                      style: TextStyle(
+                                  Text(user!.no_of_hikes.toString(),
+                                      style: const TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: ColorsUtil.textColorDark)),
-                                  Text('hikes',
+                                  const Text(' Hikes',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ]),
+                                const Text('Number of Steps Taken',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Row(children: [
+                                  Text(user!.no_of_steps_taken.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  const Text(' Steps',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ]),
+                                const Text('Total Distance Walked',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Row(children: [
+                                  Text(user!.total_distance_walked.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  const Text(' m',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,

@@ -377,19 +377,19 @@ class _CommunityViewState extends State<PeopleDetailView> {
                           children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                              children: [                                
                                 const Text('Number of Hikes',
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.normal,
                                         color: ColorsUtil.primaryColorDark)),
                                 Row(children: [
-                                  Text('$theHikes ',
+                                  Text(user!.no_of_hikes.toString(),
                                       style: const TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: ColorsUtil.textColorDark)),
-                                  const Text('hikes',
+                                  const Text(' Hikes',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,
@@ -401,12 +401,12 @@ class _CommunityViewState extends State<PeopleDetailView> {
                                         fontWeight: FontWeight.normal,
                                         color: ColorsUtil.primaryColorDark)),
                                 Row(children: [
-                                  Text('$theStepsTaken ',
+                                  Text(user!.no_of_steps_taken.toString(),
                                       style: const TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: ColorsUtil.textColorDark)),
-                                  const Text('hikes',
+                                  const Text(' Steps',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,
@@ -418,12 +418,12 @@ class _CommunityViewState extends State<PeopleDetailView> {
                                         fontWeight: FontWeight.normal,
                                         color: ColorsUtil.primaryColorDark)),
                                 Row(children: [
-                                  Text('$theDistanceWalked ',
+                                  Text(user!.total_distance_walked.toString(),
                                       style: const TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: ColorsUtil.textColorDark)),
-                                  const Text('hikes',
+                                  const Text(' m',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,

@@ -13,9 +13,9 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 // ****************************************************** //
 
 class GroupMemberView extends StatefulWidget {
-  final user;
-  final group;
-  final members;
+  final dynamic user;
+  final dynamic group;
+  final dynamic members;
   const GroupMemberView(
       {super.key,
       required this.user,

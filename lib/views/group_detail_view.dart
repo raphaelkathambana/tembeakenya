@@ -16,9 +16,9 @@ import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
 
 class GroupDetailView extends StatefulWidget {
-  final user;
-  final group;
-  final details;
+  final dynamic user;
+  final dynamic group;
+  final dynamic details;
   const GroupDetailView(
       {super.key,
       required this.user,
@@ -53,10 +53,6 @@ class _CommunityViewState extends State<GroupDetailView> {
     theGroupName = group['name'];
     theDescription = group['description'];
 
-    User user = widget.user;
-    roleID = user.role_id!;
-    roleSwitch = canEdit(roleID);
-
     String profileImageID = '';
 
     CommunityController().getGroupDetails(widget.group['id']).then(
@@ -75,12 +71,27 @@ class _CommunityViewState extends State<GroupDetailView> {
         });
       });
     }
+
+    groupDetails = widget.details;
+
+    CommunityController().getGroupDetails(widget.group['id']).then(
+      (group) {
+        setState(() {
+          groupDetails = group;
+        });
+      },
+    );
+
+    hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
+      setState(() {
+        requested = value;
+      });
+    });
   }
 
   @override
   void initState() {
     requested = false;
-    // theHikeID = [1, 2, 3];
     loadNum = widget.details.length;
 
     var group = widget.group;
@@ -89,7 +100,7 @@ class _CommunityViewState extends State<GroupDetailView> {
 
     User user = widget.user;
 
-    if (group['guide_id'] == user.id){
+    if (group['guide_id'] == user.id) {
       roleID = user.role_id!;
       roleSwitch = canEdit(roleID);
     } else {
@@ -141,7 +152,9 @@ class _CommunityViewState extends State<GroupDetailView> {
           backgroundColor: roleSwitch
               ? ColorsUtil.secondaryColorDark
               : ColorsUtil.accentColorDark),
-      child: roleSwitch ? const Text('debug button: Group\'s Guide') : const Text('debug button: Hiker'),
+      child: roleSwitch
+          ? const Text('debug button: Group\'s Guide')
+          : const Text('debug button: Hiker'),
     );
   }
   // ***************** //
@@ -315,6 +328,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             MaterialPageRoute(
                 builder: (context) => GroupEventView(
                       user: widget.user,
+                      group: widget.group,
                       details: selectedEvent,
                     )));
       },
@@ -462,18 +476,21 @@ class _CommunityViewState extends State<GroupDetailView> {
                                             color: ColorsUtil.textColorDark)),
                                   ),
                                   if (isGroupMember(widget.user))
-                                    if (widget.user.id == widget.group['guide_id'])
-                                    const Text('Guide',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: ColorsUtil.accentColorDark))
-                                    else 
-                                    const Text('Member',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: ColorsUtil.accentColorDark)),
+                                    if (widget.user.id ==
+                                        widget.group['guide_id'])
+                                      const Text('Guide',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorsUtil.accentColorDark))
+                                    else
+                                      const Text('Member',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorsUtil.accentColorDark)),
                                   if (!isGroupMember(widget.user))
                                     ElevatedButton(
                                       onPressed: () {
@@ -540,44 +557,46 @@ class _CommunityViewState extends State<GroupDetailView> {
                 ),
 
                 // Events
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-                  padding: const EdgeInsets.only(
-                      top: 15, bottom: 15, left: 5, right: 5),
-                  decoration: BoxDecoration(
-                      border: Border.all(color: ColorsUtil.secondaryColorDark),
-                      color: const Color.fromARGB(150, 49, 59, 21),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                          child: Text('Upcoming Events',
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.textColorDark)),
-                        ),
-                        const Divider(
-                          height: 6,
-                          color: ColorsUtil.accentColorDark,
-                        ),
-                        // TODO: Have an eventID in the group table
-                        if (loadNum == 0)
-                          noEventCard()
-                        else if (widget.details['events']
-                            .isEmpty) // if they don't have any hikeID from hike-group
-                          noEventCard()
-                        else
-                          for (int i = 0;
-                              i < widget.details['events'].length;
-                              i++)
-                            eventCard(i),
-                      ]),
-                ),
+                if (isGroupMember(widget.user))
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 15),
+                    padding: const EdgeInsets.only(
+                        top: 15, bottom: 15, left: 5, right: 5),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: ColorsUtil.secondaryColorDark),
+                        color: const Color.fromARGB(150, 49, 59, 21),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: Text('Upcoming Events',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.textColorDark)),
+                          ),
+                          const Divider(
+                            height: 6,
+                            color: ColorsUtil.accentColorDark,
+                          ),
+                          // TODO: Have an eventID in the group table
+                          if (loadNum == 0)
+                            noEventCard()
+                          else if (widget.details['events']
+                              .isEmpty) // if they don't have any hikeID from hike-group
+                            noEventCard()
+                          else
+                            for (int i = 0;
+                                i < widget.details['events'].length;
+                                i++)
+                              eventCard(i),
+                        ]),
+                  ),
 
                 roleButton(),
               ])),
