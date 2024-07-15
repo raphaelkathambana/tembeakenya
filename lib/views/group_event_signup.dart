@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:tembeakenya/mpesa/models/mpesa.dart';
+import 'package:tembeakenya/mpesa/models/mpesaResponse.dart';
+import 'package:tembeakenya/mpesa/flutter_mpesa_stk.dart';
+
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/controllers/community_controller.dart';
 
 class GroupEventSignUp extends StatefulWidget {
-  final user;
-  final groupId;
+  final dynamic user;
+  final dynamic groupId;
   const GroupEventSignUp(
       {super.key, required this.user, required this.groupId});
 
@@ -305,7 +307,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
-                              controller: _phone,
+                              controller: _otherPhone,
+                              maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
@@ -351,60 +354,63 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             ),
                             TextButton(
                               onPressed: () {
-                                // Navigator.of(context).pop();
-                                //save the details
-                                final name = _fullName.text;
-                                final phone = _phone.text;
-                                var emergencyContact = '';
-                                CommunityController().signUpForGroupHike(
-                                    widget.groupId,
-                                    widget.user.id,
-                                    name,
-                                    phone,
-                                    widget.user.email,
-                                    emergencyContact,
-                                    context);
-                                showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                          title: const Text('Payment'),
-                                          content: const Text(
-                                              'You will be redirected to the payment page'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: const Text('Cancel'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                // Navigator.of(context).pop();
-                                                showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        AlertDialog(
-                                                          title: const Text(
-                                                              'Payment'),
-                                                          content: const Text(
-                                                              'Payment successful'),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                              child: const Text(
-                                                                  'Close'),
-                                                            ),
-                                                          ],
-                                                        ));
-                                              },
-                                              child: const Text('Proceed'),
-                                            ),
-                                          ],
-                                        ));
+                                processSTK();
+
+                                // // Navigator.of(context).pop();
+                                // //save the details
+                                // final name = _fullName.text;
+                                // final phone = _phone.text;
+                                // var emergencyContact = '';
+                                // CommunityController().signUpForGroupHike(
+                                //   widget.groupId,
+                                //   widget.user.id,
+                                //   name,
+                                //   phone,
+                                //   widget.user.email,
+                                //   emergencyContact,
+                                //   context,
+                                // );
+                                // showDialog(
+                                //     context: context,
+                                //     builder: (context) => AlertDialog(
+                                //           title: const Text('Payment'),
+                                //           content: const Text(
+                                //               'You will be redirected to the payment page'),
+                                //           actions: [
+                                //             TextButton(
+                                //               onPressed: () {
+                                //                 Navigator.of(context).pop();
+                                //               },
+                                //               child: const Text('Cancel'),
+                                //             ),
+                                //             TextButton(
+                                //               onPressed: () {
+                                //                 // Navigator.of(context).pop();
+                                //                 showDialog(
+                                //                     context: context,
+                                //                     builder: (context) =>
+                                //                         AlertDialog(
+                                //                           title: const Text(
+                                //                               'Payment'),
+                                //                           content: const Text(
+                                //                               'Payment successful'),
+                                //                           actions: [
+                                //                             TextButton(
+                                //                               onPressed: () {
+                                //                                 Navigator.of(
+                                //                                         context)
+                                //                                     .pop();
+                                //                               },
+                                //                               child: const Text(
+                                //                                   'Close'),
+                                //                             ),
+                                //                           ],
+                                //                         ));
+                                //               },
+                                //               child: const Text('Proceed'),
+                                //             ),
+                                //           ],
+                                //         ));
                               },
                               child: const Text('Proceed'),
                             ),
@@ -415,5 +421,26 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
             ))
       ])),
     );
+  }
+
+  processSTK() async {
+    MpesaResponse response = await FlutterMpesaSTK(
+            "cVWDS1b9rGjEaJpiDV4Mf1Fp4XDi8bz60vHfaEcl2moeBEm1",
+            "ZlbqQAUFbAf7Hlak96VbQw9r6UFIBTqCO9xyGR97ZU0B68Mx1eQQyuSkAhcbmQRh",
+            "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
+            "174379",
+            "https://94f9-41-90-65-205.ngrok-free.app/api/secret-url/callback",
+            "default Message")
+        .stkPush(Mpesa(1, "254${_phone.value.text}"));
+    if (response.status) {
+      notify("successful stk push. please enter pin");
+    } else {
+      notify("failed. please try again");
+    }
+  }
+
+  void notify(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 }
