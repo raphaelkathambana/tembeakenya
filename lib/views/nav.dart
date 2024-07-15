@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:tembeakenya/assets/colors.dart';
+import 'package:tembeakenya/constants/constants.dart';
 // import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/location_stuff.dart';
 import 'package:tembeakenya/main.dart';
+import 'package:tembeakenya/model/map_data.dart';
 import 'package:tembeakenya/repository/mapbox_requests.dart';
 
 class NavigationPage extends StatefulWidget {
@@ -29,6 +33,7 @@ class NavigationPage extends StatefulWidget {
 }
 
 class _NavigationPageState extends State<NavigationPage> {
+  MapboxMapController? mapController;
   LatLng currentLocation = getCurrentLatLngFromSharedPrefs();
   late CameraPosition _initialCameraPosition;
   Timer? searchOnStoppedTyping;
@@ -37,6 +42,7 @@ class _NavigationPageState extends State<NavigationPage> {
   bool isEmptyResponse = true;
   bool hasResponded = false;
   bool isResponseForDestination = false;
+  CameraPosition _position = _kInitialPosition;
 
   String noRequest = 'Please enter an address, a place or a location to search';
   String noResponse = 'No results found for the search';
@@ -44,6 +50,9 @@ class _NavigationPageState extends State<NavigationPage> {
   List responses = [];
   TextEditingController sourceController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
+  late List<MapData> landmarks;
+  bool _isMoving = false;
+
   // Define setters to be used by children widgets
   set responsesState(List responses) {
     setState(() {
@@ -71,6 +80,19 @@ class _NavigationPageState extends State<NavigationPage> {
     });
   }
 
+  _onStyleLoadedCallback() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Text("Style loaded :)"),
+      backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+      duration: const Duration(seconds: 1),
+    ));
+    _addLandmarkMarkers();
+  }
+
+  static const CameraPosition _kInitialPosition = CameraPosition(
+    target: LatLng(-1.3115263, 36.8153588),
+    zoom: 11.0,
+  );
   @override
   void initState() {
     super.initState();
@@ -79,6 +101,101 @@ class _NavigationPageState extends State<NavigationPage> {
       target: currentLocation,
       zoom: 14.0,
     );
+  }
+
+  // _testingStuff() {
+  //   MapboxMap().
+  // }
+  void _addLandmarkMarkers() {
+    for (var landmark in landmarks) {
+      mapController!.addSymbol(SymbolOptions(
+        geometry: LatLng(landmark.latitude, landmark.longitude),
+        iconImage: 'marker-15',
+        iconSize: 1.5,
+      ));
+    }
+  }
+
+  void _startNavigation(Map<String, dynamic> route) {
+    List<LatLng> routeCoordinates = (route['geometry']['coordinates'] as List)
+        .map((coord) => LatLng(coord[1], coord[0]))
+        .toList();
+
+    mapController!.addLine(LineOptions(
+      geometry: routeCoordinates,
+      lineColor: "#ff0000",
+      lineWidth: 5.0,
+    ));
+
+    Geolocator.getPositionStream().listen((Position position) {
+      // Update user's location on the map
+      mapController!
+          .updateMyLocationTrackingMode(MyLocationTrackingMode.Tracking);
+
+      // Implement turn-by-turn navigation logic here
+    });
+  }
+
+  void _onLandmarkTapped(MapData landmark) async {
+    final userLocation = await Geolocator.getCurrentPosition();
+
+    final response = await APICall().client.get(
+      '${url}api/hikes/${landmark.id}/route',
+      data: {
+        'latitude': userLocation.latitude.toString(),
+        'longitude': userLocation.longitude.toString(),
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final route = json.decode(response.data)['route'];
+      _startNavigation(route);
+    } else {
+      // Handle error
+    }
+  }
+
+  void _startInstantNavigation() async {
+    final userLocation = await Geolocator.getCurrentPosition();
+
+    // Create a mock destination or let user select
+    final destination =
+        LatLng(userLocation.latitude + 0.01, userLocation.longitude + 0.01);
+
+    try {
+      final response = await APICall().client.get(
+          'https://api.mapbox.com/directions/v5/mapbox/walking/${userLocation.longitude},${userLocation.latitude};${destination.longitude},${destination.latitude}?annotations=distance%2Cduration&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${dotenv.env['MAPBOX_ACCESS_TOKEN']}');
+
+      if (response.statusCode == 200) {
+        final route = json.decode(response.data)['routes'][0];
+        _startNavigation(route);
+      }
+    } on DioException catch (e) {
+      debugPrint('Error occurred while starting the navigation');
+      debugPrint(e.message);
+    }
+  }
+
+  void _onMapChanged() {
+    setState(() {
+      _extractMapInfo();
+    });
+  }
+
+  void _extractMapInfo() {
+    final position = mapController!.cameraPosition;
+    if (position != null) _position = position;
+    _isMoving = mapController!.isCameraMoving;
+  }
+
+  void _onMapCreated(MapboxMapController controller) {
+    mapController = controller;
+    mapController!.addListener(_onMapChanged);
+    _extractMapInfo();
+
+    // mapController!.getTelemetryEnabled().then((isEnabled) => setState(() {
+    //       _telemetryEnabled = isEnabled;
+    //     }));
   }
 
   @override
@@ -90,22 +207,12 @@ class _NavigationPageState extends State<NavigationPage> {
           MapboxMap(
             initialCameraPosition: _initialCameraPosition,
             accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
-            styleString: currentStyle,
-            onMapCreated: (controller) async {
-              // Set the initial camera position
-              controller.animateCamera(CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: currentLocation,
-                  zoom: 14.0,
-                ),
-              ));
-            },
+            styleString: MapboxStyles.DARK,
+            onMapCreated: _onMapCreated,
             onMapClick: (point, latLng) {
               // Handle map click
             },
-            onStyleLoadedCallback: () {
-              // Handle style loaded
-            },
+            onStyleLoadedCallback: _onStyleLoadedCallback,
             myLocationEnabled: true,
             myLocationRenderMode: MyLocationRenderMode.GPS,
             trackCameraPosition: true,
@@ -229,6 +336,10 @@ class _NavigationPageState extends State<NavigationPage> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _startInstantNavigation,
+        child: const Icon(Icons.assistant_navigation),
+      ),
     );
   }
 
@@ -264,9 +375,9 @@ class _NavigationPageState extends State<NavigationPage> {
       // Get the response of reverse geocoding and do 2 things:
       // 1. Store encoded response in shared preferences
       // 2. Set the text editing controller to the address
-      var response = await getParsedReverseGeocoding(currentLocation);
-      prefs.setString('source', json.encode(response));
-      widget.textEditingController.text = response['place'];
+      // var response = await getParsedReverseGeocoding(currentLocation);
+      // prefs.setString('source', json.encode(response));
+      // widget.textEditingController.text = response['place'];
     }
   }
 
@@ -328,42 +439,42 @@ class _NavigationPageState extends State<NavigationPage> {
   Future<List> getParsedResponseForQuery(String value) async {
     List parsedResponses = [];
 
-    // If empty query send blank response
-    String query = getValidatedQueryFromQuery(value);
-    if (query == '') return parsedResponses;
+    //   // If empty query send blank response
+    //   String query = getValidatedQueryFromQuery(value);
+    //   if (query == '') return parsedResponses;
 
-    // Else search and then send response
-    var response =
-        json.decode(await getSearchResultsFromQueryUsingMapbox(query));
+    //   // Else search and then send response
+    //   var response =
+    //       json.decode(await getSearchResultsFromQueryUsingMapbox(query));
 
-    List features = response['features'];
-    for (var feature in features) {
-      Map response = {
-        'name': feature['text'],
-        'address': feature['place_name'].split('${feature['text']}, ')[1],
-        'place': feature['place_name'],
-        'location': LatLng(feature['center'][1], feature['center'][0])
-      };
-      parsedResponses.add(response);
-    }
+    //   List features = response['features'];
+    //   for (var feature in features) {
+    //     Map response = {
+    //       'name': feature['text'],
+    //       'address': feature['place_name'].split('${feature['text']}, ')[1],
+    //       'place': feature['place_name'],
+    //       'location': LatLng(feature['center'][1], feature['center'][0])
+    //     };
+    //     parsedResponses.add(response);
+    //   }
     return parsedResponses;
   }
 
 // ----------------------------- Mapbox Reverse Geocoding -----------------------------
-  Future<Map> getParsedReverseGeocoding(LatLng latLng) async {
-    var response =
-        json.decode(await getReverseGeocodingGivenLatLngUsingMapbox(latLng));
-    Map feature = response['features'][0];
-    Map revGeocode = {
-      'name': feature['text'],
-      'address': feature['place_name'].split('${feature['text']}, ')[1],
-      'place': feature['place_name'],
-      'location': latLng
-    };
-    return revGeocode;
-  }
+  // Future<Map> getParsedReverseGeocoding(LatLng latLng) async {
+//     var response =
+//         json.decode(await getReverseGeocodingGivenLatLngUsingMapbox(latLng));
+//     Map feature = response['features'][0];
+//     Map revGeocode = {
+//       'name': feature['text'],
+//       'address': feature['place_name'].split('${feature['text']}, ')[1],
+//       'place': feature['place_name'],
+//       'location': latLng
+//     };
+//     return revGeocode;
+//   }
 
-  String getValidatedQueryFromQuery(String value) {
-    return '';
-  }
+//   String getValidatedQueryFromQuery(String value) {
+  // return '';
+  // }
 }
