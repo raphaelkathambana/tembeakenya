@@ -32,7 +32,6 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
 
   late NavigationService navigationService;
 
-  User? users;
 
   User? selectedUser;
 
@@ -62,7 +61,7 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
   }
 
   userFriend(int num) {
-    if (widget.users[num].id == widget.currentUser.id) {
+    if (widget.users[num].id == widget.selectedUser.id) {
       return const SizedBox();
     }
       if (isFriend[num] == true) {
@@ -75,7 +74,7 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
 
   userCard(int num) {
       return TextButton(
-        onPressed: () {
+        onPressed: () async {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -306,10 +305,9 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
 
     loadNum = widget.users.length;
     displayUrl = List<String>.filled(loadNum, '');
-    isFriend = List<bool?>.filled(loadNum, null);
+    isFriend = List<bool?>.filled(loadNum, false);
     followsLoaded = List<bool>.filled(loadNum, false);
 
-    // users = List<User?>.filled(loadNum, null);
 
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
@@ -328,6 +326,7 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
 
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
+        // TODO: Make a function getFollowing for other users
         getFollowingFriend(i + 1).then((value) => {
               setState(() {
                 if (isFriend[i] = value) {
@@ -338,7 +337,6 @@ class _PeopleFollowingViewState extends State<PeopleFollowingView> {
         followsLoaded[i] = true;
       }
     }
-    debugPrint('IS IT LOADED????: $loadNum');
 
     return Scaffold(
       appBar: AppBar(

@@ -15,7 +15,7 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 class ProfileFollowingView extends StatefulWidget {
   final dynamic currentUser;
-  final users;
+  final dynamic users;
   const ProfileFollowingView(
       {super.key,
       required this.currentUser,
@@ -73,7 +73,16 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
 
   userCard(int num) {
       return TextButton(
-        onPressed: () {
+        onPressed: () async {
+          await CommunityController().getAUsersDetails(num + 1).then(
+          (user) {
+            setState(() {
+              selectedUser = user;
+            });
+          },
+        );
+
+        if (!mounted) return;
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -301,6 +310,7 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
   @override
   void initState() {
     navigationService = NavigationService(router);
+    
 
     loadNum = widget.users.length;
     displayUrl = List<String>.filled(loadNum, '');

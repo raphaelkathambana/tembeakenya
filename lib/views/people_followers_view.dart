@@ -346,11 +346,13 @@ class _PeopleFollowersViewState extends State<PeopleFollowersView> {
   Widget build(BuildContext context) {
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
+        // TODO: Make a function getFollowers for other users
         getFollowersFriend(i + 1).then((value) => {
               setState(() {
                 otherFriend[i] = value;
               })
             });
+        // TODO: Make a function getFollowing for other users
         getFollowingFriend(i + 1).then(
           (value) => {
             if (isFriend[i] = value)
