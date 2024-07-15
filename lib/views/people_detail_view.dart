@@ -5,8 +5,8 @@ import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_following.dart';
-import 'package:tembeakenya/views/people_followers_view.dart';
-import 'package:tembeakenya/views/people_following_view.dart';
+// import 'package:tembeakenya/views/people_followers_view.dart';
+// import 'package:tembeakenya/views/people_following_view.dart';
 
 class PeopleDetailView extends StatefulWidget {
   final dynamic currentUser;
@@ -40,13 +40,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
   void initState() {
     user = widget.selectedUser;
     profileImageID = user!.image_id!;
-
-    // profileImageID = widget.selectedUser.image_id!;
-
-    debugPrint("user: ${widget.selectedUser.fullName.toString()}");
-    debugPrint("user: ${widget.selectedUser.no_of_hikes.toString()}");
-    debugPrint("user: $profileImageID");
-    // debugPrint(getReviews().toString());
 
     CommunityController().getCommunityData().then((list) async {
       setState(() {
@@ -110,7 +103,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
   }
 
   @override
@@ -120,8 +112,6 @@ class _CommunityViewState extends State<PeopleDetailView> {
     theStepsTaken = user!.no_of_steps_taken!;
     theDistanceWalked = user!.total_distance_walked!;
     theHikes = user!.no_of_hikes!;
-
-    debugPrint('Ok, Image URL: $displayUrl');
 
     return Scaffold(
         appBar: AppBar(
@@ -287,15 +277,15 @@ class _CommunityViewState extends State<PeopleDetailView> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                // TODO: Page not fully functional
-                                  builder: (context) => PeopleFollowersView(
-                                        currentUser: widget.currentUser,
-                                        selectedUser: widget.selectedUser,
-                                        users: users,
-                                      )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       // TODO: Page not fully functional
+                          //         builder: (context) => PeopleFollowersView(
+                          //               currentUser: widget.currentUser,
+                          //               selectedUser: widget.selectedUser,
+                          //               users: users,
+                          //             )));
                         },
                         child: Column(
                           children: [
@@ -322,16 +312,16 @@ class _CommunityViewState extends State<PeopleDetailView> {
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                // TODO: Page not fully functional
-                                  builder: (context) =>
-                                      PeopleFollowingView(
-                                        currentUser: widget.currentUser,
-                                        selectedUser: widget.selectedUser,
-                                        users: users,
-                                      )));
+                          // Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //       // TODO: Page not fully functional
+                          //         builder: (context) =>
+                          //             PeopleFollowingView(
+                          //               currentUser: widget.currentUser,
+                          //               selectedUser: widget.selectedUser,
+                          //               users: users,
+                          //             )));
                         },
                         child: Column(
                           children: [

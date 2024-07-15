@@ -299,14 +299,21 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                             TextButton(
                               onPressed: () {
                                 //save the details of the group hike
+                                // TODO: location based on ID
+                                // TODO: When creating an event, guide should be automatically an attendee
+                                // TODO: Include hike fee
+                                
                                 final groupHikeName = _hikeName.text;
                                 final description = _description.text;
+                                // final hikeFee = _hikeFee.text;
+                                // final location = dropdownValue!;
+                                const location = '1';
                                 final hikeDate = _date.text;
 
                                 CommunityController().createGroupHike(
                                   groupHikeName,
                                   description,
-                                  dropdownValue!,
+                                  location,
                                   hikeDate,
                                   widget.group['id'],
                                   widget.user.id!,

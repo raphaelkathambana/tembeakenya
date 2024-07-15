@@ -48,7 +48,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
     // Uri androidURL = Uri.parse('https://wa.me/$thePhoneNumber?text');
     Uri whatsappURL = Uri.parse('whatsapp://send/?phone=$thisPhoneNum?&text');
     if (await canLaunchUrl(whatsappURL)) {
-      debugPrint(whatsappURL.toString());
       await launchUrl(whatsappURL);
     } else {
       const AlertDialog(
@@ -60,7 +59,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
   textSMS(thisPhoneNum) async {
     Uri smsURL = Uri.parse('sms:+$thisPhoneNum?');
     if (await canLaunchUrl(smsURL)) {
-      debugPrint(smsURL.toString());
       await launchUrl(smsURL);
     } else {
       const AlertDialog(
@@ -72,7 +70,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
   email(thisEmail) async {
     Uri emailURL = Uri.parse('mailto:+$thisEmail?');
     if (await canLaunchUrl(emailURL)) {
-      debugPrint(emailURL.toString());
       await launchUrl(emailURL);
     } else {
       const AlertDialog(
@@ -86,13 +83,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
     user = widget.selectedUser;
     profileImageID = user!.image_id!;
     dropdownValue = null;
-
-    // profileImageID = widget.selectedUser.image_id!;
-
-    debugPrint("user: ${widget.selectedUser.fullName.toString()}");
-    debugPrint("user: ${widget.selectedUser.no_of_hikes.toString()}");
-    debugPrint("user: $profileImageID");
-    // debugPrint(getReviews().toString());
 
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -120,7 +110,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
   }
 
   @override
@@ -134,8 +123,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
     otherFullName = 'no name';
     otherEmail = 'no email';
     otherPhoneNumber = '254719882834';
-
-    debugPrint('Ok, Image URL: $displayUrl');
 
     return Scaffold(
       appBar: AppBar(
@@ -289,7 +276,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                 ]),
               ),
 
-              // TODO: Phone number has dummy writing
               Container(
                 // height: 367,
                 margin:
@@ -433,7 +419,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                 ),
               ),
 
-              // TODO: Phone number has dummy writing
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

@@ -331,8 +331,6 @@ class _PeopleViewState extends State<PeopleView> {
       }
     }
 
-    debugPrint('LOADED: $loaded');
-
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _handleRefresh,

@@ -48,7 +48,6 @@ class _PeopleFollowersViewState extends State<PeopleFollowersView> {
 
   // ****************************************************** //
   searchCard(String search, int num) {
-    debugPrint('IS IT TRUE????: ${otherFriend[num]}');
     if (search != '') {
       if (widget.users[num].fullName
           .toLowerCase()
@@ -369,8 +368,6 @@ class _PeopleFollowersViewState extends State<PeopleFollowersView> {
         });
       }
     }
-
-    debugPrint('IS IT LOADED????: $loadNum');
 
     return Scaffold(
       appBar: AppBar(

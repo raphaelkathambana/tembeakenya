@@ -167,7 +167,6 @@ class _CommunityViewState extends State<GroupDetailView> {
             leading: const Icon(Icons.people_outline),
             title: const Text('Members'),
             onTap: () {
-              // debugPrint(getGroupMembers().toString());
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -212,7 +211,6 @@ class _CommunityViewState extends State<GroupDetailView> {
             leading: const Icon(Icons.people_outline),
             title: const Text('Members'),
             onTap: () {
-              // debugPrint(getGroupMembers().toString());
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -308,7 +306,6 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   eventCard(int eventID) {
     dynamic selectedEvent;
-    debugPrint('group: ${widget.group.toString()}');
     var selectedHikeID = widget.details['events'][eventID]['id'];
 
     return TextButton(
@@ -321,7 +318,6 @@ class _CommunityViewState extends State<GroupDetailView> {
             selectedEvent = value;
           });
         });
-        debugPrint('member 1: ${selectedEvent['attendees'][1]}');
         if (!mounted) return;
         Navigator.push(
             context,
@@ -495,7 +491,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
-                                          // todo add the request functionality
+                                          // TODO: add the request functionality
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -584,7 +580,6 @@ class _CommunityViewState extends State<GroupDetailView> {
                             height: 6,
                             color: ColorsUtil.accentColorDark,
                           ),
-                          // TODO: Have an eventID in the group table
                           if (loadNum == 0)
                             noEventCard()
                           else if (widget.details['events']

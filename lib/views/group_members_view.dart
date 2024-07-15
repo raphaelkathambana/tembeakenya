@@ -55,9 +55,6 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   }
 
   userCard(int num) {
-    // widget.members[num].id == widget.group['group_id']
-    debugPrint('widget.members[num].id = ${widget.members[num].id}');
-    debugPrint('widget.group[\'group_id\'] = ${widget.group['guide_id']}');
     int selectedUserId = widget.members[num].id;
     return TextButton(
         onPressed: () async {

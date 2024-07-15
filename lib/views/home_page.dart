@@ -46,10 +46,6 @@ class _HomeViewState extends State<HomeView> {
           // var selectedGroup = widget.groups[num];
           // var groupDetails;
 
-          // debugPrint(widget.groups.toString());
-          // debugPrint('GROUP DETAIL: ');
-          // debugPrint(widget.groups[num].toString());
-
           // await CommunityController().getGroupDetails(num + 1).then(
           //   (group) {
           //     setState(() {

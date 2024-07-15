@@ -37,7 +37,6 @@ class _GroupEditViewState extends State<GroupEditView> {
   void initState() {
     _groupName = TextEditingController(text: widget.group['name']);
     _description = TextEditingController(text: widget.group['description']);
-    debugPrint(widget.user.id.toString());
     displayUrl = '';
     profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {

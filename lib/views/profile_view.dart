@@ -51,7 +51,6 @@ class _ProfileViewState extends State<ProfileView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
 
     super.initState();
   }
@@ -432,7 +431,6 @@ class _ProfileViewState extends State<ProfileView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
   }
 
   Future<void> _handleLogout() async {

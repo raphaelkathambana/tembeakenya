@@ -346,7 +346,6 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
         followsLoaded[i] = true;
       }
     }
-    debugPrint('IS IT LOADED????: $loadNum');
 
     return Scaffold(
       appBar: AppBar(

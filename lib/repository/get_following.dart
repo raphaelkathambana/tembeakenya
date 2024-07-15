@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 
@@ -100,7 +99,6 @@ getFollowingFriend(int friendID) async {
   await CommunityController().getFollowing().then((values) {
     friends = values;
     for (var friend in friends) {
-      debugPrint(friend.id.toString());
       if (friendID == friend.id) {
         result = true;
         break;
@@ -119,7 +117,6 @@ getFollowersFriend(int friendID) async {
   await CommunityController().getFollowers().then((values) {
     friends = values;
     for (var friend in friends) {
-      debugPrint(friend.id.toString());
       if (friendID == friend.id) {
         result = true;
         break;

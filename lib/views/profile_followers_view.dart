@@ -46,7 +46,6 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
 
   // ****************************************************** //
   searchCard(String search, int num) {
-    debugPrint('IS IT TRUE????: ${otherFriend[num]}');
     if (search != '') {
       if (widget.users[num].fullName
           .toLowerCase()
@@ -365,8 +364,6 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
         });
       }
     }
-
-    debugPrint('IS IT LOADED????: $loadNum');
 
     return Scaffold(
       appBar: AppBar(

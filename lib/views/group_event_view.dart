@@ -13,9 +13,10 @@ import 'package:tembeakenya/assets/colors.dart';
 // import 'package:tembeakenya/dummy_db.dart';
 
 class GroupEventView extends StatefulWidget {
-  final user;
-  final details;
-  const GroupEventView({super.key, required this.user, required this.details});
+  final dynamic user;
+  final dynamic group;
+  final dynamic details;
+  const GroupEventView({super.key, required this.user, required this.group, required this.details});
 
   @override
   State<GroupEventView> createState() => _GroupEventViewState();
@@ -38,6 +39,7 @@ class _GroupEventViewState extends State<GroupEventView> {
   late List<String> displayUrl;
   // late List<bool?> isAttendee;
   late List<bool> attendingLoaded;
+  bool attending = false;
   bool loaded = false;
 
   // String hikeName = 'Karura...? More like KAZUMA!!!';
@@ -53,6 +55,9 @@ class _GroupEventViewState extends State<GroupEventView> {
   userCard(int num) {
     users = widget.details['attendees'];
     var selectedUserId = users.entries.elementAt(num).key.id;
+    if (widget.user.id == selectedUserId){
+      attending = true;
+    }
     return TextButton(
         onPressed: () async {
           await CommunityController().getAUsersDetails(selectedUserId!).then(
@@ -138,7 +143,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.accentColorDark),
                           ),
-                          if (users.entries.elementAt(num).key.role_id != 1)
+                          if (users.entries.elementAt(num).key.id == widget.group['guide_id'])
                         const Text('Guide',
                             style: TextStyle(
                                 fontSize: 14,
@@ -161,12 +166,9 @@ class _GroupEventViewState extends State<GroupEventView> {
     navigationService = NavigationService(router);
     initStateAgain = false;
 
-    // TODO: Create a function that gets the list of all group members
-    // CommunityController().getCommunityData().then((list) {
     setState(() {
       users = widget.details['attendees'];
     });
-    // });
   }
 
   @override
@@ -234,6 +236,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                         ),
                       ),
                     ),
+                    if(!attending)
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -289,6 +292,14 @@ class _GroupEventViewState extends State<GroupEventView> {
                 Text(
                   'Date: ${widget.details['groupHikeDetails'][6]}',
                   style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.primaryColorDark,
+                  ),
+                ),
+                const Text(
+                  'Hike Fee: ',
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                     color: ColorsUtil.primaryColorDark,

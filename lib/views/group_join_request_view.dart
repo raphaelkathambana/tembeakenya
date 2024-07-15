@@ -43,7 +43,6 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   userCard(int num) {
     return TextButton(
         onPressed: () {
-          // TODO: Add to route
           final selectedUser = CommunityController().getAUsersDetails(num);
           Navigator.push(
               context,

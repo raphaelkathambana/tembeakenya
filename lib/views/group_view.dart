@@ -92,10 +92,7 @@ class _GroupViewState extends State<GroupView> {
         onPressed: () async {
           user = widget.user;
           var selectedGroup = theGroups[num];
-          var groupDetails;
-          debugPrint(theGroups.toString());
-          debugPrint('GROUP DETAIL: ');
-          debugPrint(theGroups[num].toString());
+          dynamic groupDetails;
           await CommunityController().getGroupDetails(num + 1).then(
             (group) {
               setState(() {
