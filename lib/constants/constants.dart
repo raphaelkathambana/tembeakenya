@@ -8,6 +8,7 @@ import 'package:shared_prefs_cookie_store/shared_prefs_cookie_store.dart';
 import 'package:connectivity/connectivity.dart';
 
 String url = 'https://tembeakenyabackend.fly.dev/';
+// String url = 'http://10.0.187.107:8000/';
 String apiVersion1Uri = '/api/v1/';
 
 Future<String> getCsrfToken() async {
