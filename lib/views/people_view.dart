@@ -325,7 +325,7 @@ class _PeopleViewState extends State<PeopleView> {
           },
         );
         followsLoaded[i] = true;
-        Future.delayed(const Duration(seconds: 3), () {
+        Future.delayed(const Duration(seconds: 2), () {
           loaded = followsLoaded.every((element) => element = true);
         });
       }

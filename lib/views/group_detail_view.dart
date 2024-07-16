@@ -469,7 +469,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                                             fontWeight: FontWeight.bold,
                                             color: ColorsUtil.textColorDark)),
                                   ),
-                                  if (isGroupMember(widget.user))
+                                  if (isMember(widget.user, widget.details['members']))
                                     if (widget.user.id ==
                                         widget.group['guide_id'])
                                       const Text('Guide',
@@ -485,7 +485,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   ColorsUtil.accentColorDark)),
-                                  if (!isGroupMember(widget.user))
+                                  if (!isMember(widget.user, widget.details['members']))
                                     ElevatedButton(
                                       onPressed: () {
                                         setState(() {
@@ -551,7 +551,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 ),
 
                 // Events
-                if (isGroupMember(widget.user))
+                if (isMember(widget.user, widget.details['members']))
                   Container(
                     margin: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 15),
@@ -593,4 +593,8 @@ class _CommunityViewState extends State<GroupDetailView> {
               ])),
         ));
   }
+}
+
+isGroup(){
+
 }

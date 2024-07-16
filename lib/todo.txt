@@ -17,6 +17,7 @@
 
   TODO: Make Location page
 
+  TODO: After creating, automatically make guide an attendee
 
 / ************* DONE ************* /
 
@@ -24,7 +25,6 @@
   DONE: When paying, include money and phone number in "Proceed" pop up
   DONE: Include Hike Fee 
   DONE: Upcoming events updates when pull to refresh
-  DONE: After creating, automatically make guide an attendee
   DONE: When writing a form/creating event "Fill out all detail"
 
 

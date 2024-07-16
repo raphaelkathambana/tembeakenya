@@ -145,6 +145,24 @@ bool isGroupMember(User user) {
   return false;
 }
 
+bool isMember(user, members) {
+  for (var member in members) {
+    if (user.id == member.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool isMemberGroup(user, members, num) {
+  for (var member in members) {
+    if (user.id == member.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // check if user has requested to join a group
 Future<bool> hasRequestedToJoinGroup(User user, int groupId) async {
   // var user = getUsersFromDb()[userId];
