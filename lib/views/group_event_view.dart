@@ -1,5 +1,6 @@
 // group_event_view
 
+import 'package:intl/intl.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
@@ -290,16 +291,17 @@ class _GroupEventViewState extends State<GroupEventView> {
                   ),
                 ),
                 Text(
-                  'Date: ${widget.details['groupHikeDetails'][6]}',
+                  // DateFormat('HH:mm:ss').format
+                  'Date: ${DateFormat('yyyy-mm-dd').format(DateFormat('yyyy-mm-dd').parse(widget.details['groupHikeDetails'][6]))}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                     color: ColorsUtil.primaryColorDark,
                   ),
                 ),
-                const Text(
-                  'Hike Fee: ',
-                  style: TextStyle(
+                Text(
+                  'Hike Fee: ${widget.details['groupHikeDetails'][7]}',
+                  style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
                     color: ColorsUtil.primaryColorDark,

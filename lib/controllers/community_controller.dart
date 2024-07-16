@@ -403,10 +403,11 @@ class CommunityController {
   //   }
   // }
 
-  Future<void> createGroupHike(String name, String description, String hikeId,
+  Future<void> createGroupHike(String name, String description, double fee, String hikeId,
       String date, int groupID, int guideId, BuildContext context) async {
     debugPrint(name);
     debugPrint(description);
+    debugPrint(fee.toString());
     debugPrint(hikeId);
     debugPrint(date);
     debugPrint(groupID.toString());
@@ -417,6 +418,7 @@ class CommunityController {
           data: jsonEncode({
             'name': name,
             'description': description,
+            'hike_fee': fee,
             'hike_id': hikeId,
             'group_id': groupID,
             'hike_date': date,

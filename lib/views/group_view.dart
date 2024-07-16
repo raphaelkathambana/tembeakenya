@@ -162,11 +162,18 @@ class _GroupViewState extends State<GroupView> {
                                   color: ColorsUtil.textColorDark)),
                         ),
                         if (isGroupMember(widget.user))
+                          if (widget.user.id == theGroups[num]['guide_id'])
+                          const Text('Guide',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.primaryColorDark))
+                          else if (widget.user.id != theGroups[num]['guide_id'])
                           const Text('Member',
                               style: TextStyle(
                                   fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.accentColorDark)),
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.primaryColorDark)),
                       ],
                     ),
                   ),
@@ -298,7 +305,6 @@ class _GroupViewState extends State<GroupView> {
       child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
-            roleButton(),
             const Divider(
               height: 2,
               color: ColorsUtil.secondaryColorDark,
@@ -381,7 +387,9 @@ class _GroupViewState extends State<GroupView> {
                         searchCard(search, i, false)
                   ],
                 )),
+            roleButton(),
           ])),
+
     ));
   }
 }

@@ -305,7 +305,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                                 
                                 final groupHikeName = _hikeName.text;
                                 final description = _description.text;
-                                // final hikeFee = _hikeFee.text;
+                                final hikeFee = double.parse(_hikeFee.text);
                                 // final location = dropdownValue!;
                                 const location = '1';
                                 final hikeDate = _date.text;
@@ -313,6 +313,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                                 CommunityController().createGroupHike(
                                   groupHikeName,
                                   description,
+                                  hikeFee,
                                   location,
                                   hikeDate,
                                   widget.group['id'],

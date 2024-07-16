@@ -42,18 +42,12 @@ class _CommunityViewState extends State<GroupDetailView> {
   late bool requested;
 
   late int loadNum;
+  dynamic detailEvent;
   late List<int> theHikeID;
   late Map<String, dynamic>? groupDetails;
 
   Future<void> _handleRefresh() async {
     await Future.delayed(const Duration(seconds: 2));
-
-    loadNum = widget.details.length;
-    var group = widget.group;
-    theGroupName = group['name'];
-    theDescription = group['description'];
-
-    String profileImageID = '';
 
     CommunityController().getGroupDetails(widget.group['id']).then(
       (group) {
@@ -63,6 +57,17 @@ class _CommunityViewState extends State<GroupDetailView> {
       },
     );
 
+    
+    setState(() {      
+      loadNum = groupDetails!.length;
+      
+      detailEvent = groupDetails!['events'];
+      var group = widget.group;
+      theGroupName = group['name'];
+      theDescription = group['description'];
+    });
+
+    displayUrl = '';
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.group['image_id'];
       getImageUrl(profileImageID).then((String result) {
@@ -71,16 +76,6 @@ class _CommunityViewState extends State<GroupDetailView> {
         });
       });
     }
-
-    groupDetails = widget.details;
-
-    CommunityController().getGroupDetails(widget.group['id']).then(
-      (group) {
-        setState(() {
-          groupDetails = group;
-        });
-      },
-    );
 
     hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
       setState(() {
@@ -92,8 +87,11 @@ class _CommunityViewState extends State<GroupDetailView> {
   @override
   void initState() {
     requested = false;
-    loadNum = widget.details.length;
 
+    loadNum = widget.details.length;
+    // if(widget.details['events'] != null){
+      detailEvent = widget.details['events'];
+    // }
     var group = widget.group;
     theGroupName = group['name'];
     theDescription = group['description'];
@@ -306,7 +304,7 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   eventCard(int eventID) {
     dynamic selectedEvent;
-    var selectedHikeID = widget.details['events'][eventID]['id'];
+    var selectedHikeID = detailEvent![eventID]['id'];
 
     return TextButton(
       onPressed: () async {
@@ -582,17 +580,15 @@ class _CommunityViewState extends State<GroupDetailView> {
                           ),
                           if (loadNum == 0)
                             noEventCard()
-                          else if (widget.details['events']
-                              .isEmpty) // if they don't have any hikeID from hike-group
+                          else if (detailEvent.isEmpty) // if they don't have any hikeID from hike-group
                             noEventCard()
                           else
                             for (int i = 0;
-                                i < widget.details['events'].length;
+                                i < detailEvent.length;
                                 i++)
                               eventCard(i),
                         ]),
                   ),
-
                 roleButton(),
               ])),
         ));
