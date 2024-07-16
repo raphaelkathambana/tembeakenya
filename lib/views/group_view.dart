@@ -173,7 +173,7 @@ class _GroupViewState extends State<GroupView> {
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.primaryColorDark)),
+                                  color: ColorsUtil.primaryColorDark),),
                       ],
                     ),
                   ),
@@ -258,6 +258,8 @@ class _GroupViewState extends State<GroupView> {
     CommunityController().getCommunityGroups().then((value) {
         setState(() {
           theGroups = value;
+          loadNum = theGroups.length;
+          displayUrl = List<String>.filled(loadNum, '');
         });
       });
 

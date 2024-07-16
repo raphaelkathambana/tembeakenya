@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
-
-// ******************* DUMMY DATABASE ******************* //
-
-import 'package:tembeakenya/dummy_db.dart';
 import 'package:tembeakenya/model/user.dart';
-
-// ****************************************************** //
 
 class GroupCreateHikeView extends StatefulWidget {
   final User user;
@@ -61,288 +55,321 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
             style: TextStyle(color: ColorsUtil.textColorDark),
           )),
       body: SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Divider(
-          height: 25,
-          color: ColorsUtil.secondaryColorDark,
-          indent: 12,
-          endIndent: 12,
-        ),
-        const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Padding(
-              padding: EdgeInsets.only(left: 30, top: 30),
-              child: Text(
-                'Hike Details',
-                style: TextStyle(
-                  color: ColorsUtil.primaryColorLight,
-                ),
-              ))
-        ]),
-        Container(
-          width: MediaQuery.sizeOf(context).width,
-          margin: const EdgeInsets.all(7),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: ColorsUtil.accentColorDark),
-            color: ColorsUtil.cardColorDark.withOpacity(0.6),
-          ),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: ColorsUtil.descriptionColorDark,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Event Name',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.primaryColorDark)),
-                            Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
-                          ],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Divider(
+              height: 25,
+              color: ColorsUtil.secondaryColorDark,
+              indent: 12,
+              endIndent: 12,
+            ),
+            const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(left: 30, top: 30),
+                      child: Text(
+                        'Hike Details',
+                        style: TextStyle(
+                          color: ColorsUtil.primaryColorLight,
                         ),
-                        SizedBox(
-                          child: TextField(
-                            controller: _hikeName,
-                            decoration: const InputDecoration(
-                              hintText: "Give the Event a Name",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
-                        ),
-                      ])),
-              Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: ColorsUtil.descriptionColorDark,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Description',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.primaryColorDark)),
-                            Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          child: TextField(
-                            controller: _description,
-                            maxLines: null,
-                            decoration: const InputDecoration(
-                              hintText: "Give the Hike a Description",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
-                        ),
-                      ])),
-              Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: ColorsUtil.descriptionColorDark,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Hike Fee',
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: ColorsUtil.primaryColorDark)),
-                            Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          child: TextField(
-                            controller: _hikeFee,
-                            keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              hintText: "KSH.",
-                            ),
-                            onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
-                            },
-                          ),
-                        ),
-                      ])),
-              Container(
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
-                // width: 250,
-                height: 60,
-                decoration: BoxDecoration(
-                    color: ColorsUtil.descriptionColorDark,
-                    borderRadius: BorderRadius.circular(10)),
-                child: DropdownButton(
-                    value: dropdownValue,
-                    dropdownColor: ColorsUtil.descriptionColorDark,
-                    underline: Container(height: 2),
-                    onChanged: (value) {
-                      setState(() {
-                        dropdownValue = value!;
-                      });
-                    },
-                    items: locations.map<DropdownMenuItem>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    hint: const SizedBox(
-                      width: 195,
-                      child: Text('Select Location'),
-                    )),
+                      ))
+                ]),
+            Container(
+              width: MediaQuery.sizeOf(context).width,
+              margin: const EdgeInsets.all(7),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(color: ColorsUtil.accentColorDark),
+                color: ColorsUtil.cardColorDark.withOpacity(0.6),
               ),
-              Container(
-                  margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                  width: 250,
-                  height: 60,
-                  decoration: BoxDecoration(
-                      color: ColorsUtil.descriptionColorDark,
-                      borderRadius: BorderRadius.circular(10)),
-                  child: TextField(
-                    controller: _date,
-                    decoration: const InputDecoration(
-                      labelText: 'Select Date',
-                      prefixIcon: Icon(Icons.calendar_today),
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.now(),
-                        lastDate: DateTime(2100),
-                      );
-                      if (pickedDate != null) {
-                        setState(() {
-                          _date.text = pickedDate.toString().split(" ")[0];
-                        });
-                      }
-                    },
-                  )),
-            ],
-          ),
-        ),
-        Container(
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                textStyle: const TextStyle(fontSize: 16),
-                minimumSize: const Size(120, 50),
-                foregroundColor: ColorsUtil.textColorDark,
-                backgroundColor: ColorsUtil.secondaryColorDark,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(15)),
-                ),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: ColorsUtil.descriptionColorDark,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Event Name',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Icon(
+                                  Icons.edit,
+                                  color: ColorsUtil.primaryColorDark,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              child: TextField(
+                                controller: _hikeName,
+                                decoration: const InputDecoration(
+                                  hintText: "Give the Event a Name",
+                                ),
+                                onChanged: (value) {
+                                  // user?.username = value;
+                                  // theUsername = value;
+                                },
+                              ),
+                            ),
+                          ])),
+                  Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: ColorsUtil.descriptionColorDark,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Description',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Icon(
+                                  Icons.edit,
+                                  color: ColorsUtil.primaryColorDark,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              child: TextField(
+                                controller: _description,
+                                maxLines: null,
+                                decoration: const InputDecoration(
+                                  hintText: "Give the Hike a Description",
+                                ),
+                                onChanged: (value) {
+                                  // user?.username = value;
+                                  // theUsername = value;
+                                },
+                              ),
+                            ),
+                          ])),
+                  Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                          color: ColorsUtil.descriptionColorDark,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Hike Fee',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Icon(
+                                  Icons.edit,
+                                  color: ColorsUtil.primaryColorDark,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              child: TextField(
+                                controller: _hikeFee,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  hintText: "KSH.",
+                                ),
+                                onChanged: (value) {
+                                  // user?.username = value;
+                                  // theUsername = value;
+                                },
+                              ),
+                            ),
+                          ])),
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
+                    // width: 250,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        color: ColorsUtil.descriptionColorDark,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: DropdownButton(
+                        value: dropdownValue,
+                        dropdownColor: ColorsUtil.descriptionColorDark,
+                        underline: Container(height: 2),
+                        onChanged: (value) {
+                          setState(() {
+                            dropdownValue = value!;
+                          });
+                        },
+                        items: locations.map<DropdownMenuItem>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        hint: const SizedBox(
+                          width: 195,
+                          child: Text('Select Location'),
+                        )),
+                  ),
+                  Container(
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
+                      width: 250,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: ColorsUtil.descriptionColorDark,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: TextField(
+                        controller: _date,
+                        decoration: const InputDecoration(
+                          labelText: 'Select Date',
+                          prefixIcon: Icon(Icons.calendar_today),
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
+                        readOnly: true,
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime.now(),
+                            lastDate: DateTime(2100),
+                          );
+                          if (pickedDate != null) {
+                            setState(() {
+                              _date.text = pickedDate.toString().split(" ")[0];
+                            });
+                          }
+                        },
+                      )),
+                ],
               ),
-              onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Save'),
-                          content: const Text(
-                              'Once you save, you can not delete a hike event'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Back'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                //save the details of the group hike
-                                // TODO: location based on ID
-                                // TODO: When creating an event, guide should be automatically an attendee
-                                // TODO: Include hike fee
-                                
-                                final groupHikeName = _hikeName.text;
-                                final description = _description.text;
-                                final hikeFee = double.parse(_hikeFee.text);
-                                // final location = dropdownValue!;
-                                const location = '1';
-                                final hikeDate = _date.text;
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  textStyle: const TextStyle(fontSize: 16),
+                  minimumSize: const Size(120, 50),
+                  foregroundColor: ColorsUtil.textColorDark,
+                  backgroundColor: ColorsUtil.secondaryColorDark,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                  ),
+                ),
+                onPressed: () async {
+                  
+                  // TODO: location based on ID
+                  final groupHikeName = _hikeName.text;
+                  final description = _description.text;
+                  final hikeFee = double.parse(_hikeFee.text);
+                  final location = locationID(dropdownValue);
+                  // const location = '1';
+                  final hikeDate = _date.text;
 
-                                CommunityController().createGroupHike(
-                                  groupHikeName,
-                                  description,
-                                  hikeFee,
-                                  location,
-                                  hikeDate,
-                                  widget.group['id'],
-                                  widget.user.id!,
-                                  context,
-                                );
+                  if (groupHikeName.isEmpty ||
+                      description.isEmpty ||
+                      _hikeFee.text.isEmpty ||
+                      location == 0 ||
+                      hikeDate.isEmpty) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Incomplete'),
+                        content: const Text('Fill out all the details.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Okay'),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Save'),
+                        content: const Text(
+                            'Once you save, you can not delete a hike event'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Back'),
+                          ),
+                          TextButton(
+                            onPressed: () {
 
-                                int count = 0;
-                                Navigator.of(context).popUntil((_) => count++ >= 2);
-                              },
-                              child: const Text('Proceed'),
-                            ),
-                          ],
-                        ));
-              },
-              child: const Text('Create'),
-            ))
-      ])),
+                              CommunityController().createGroupHike(
+                                groupHikeName,
+                                description,
+                                hikeFee,
+                                location.toString(),
+                                hikeDate,
+                                widget.group['id'],
+                                widget.user.id!,
+                                context,
+                              );
+                              int count = 0;
+                              Navigator.of(context)
+                                  .popUntil((_) => count++ >= 3);
+                            },
+                            child: const Text('Proceed'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+                child: const Text('Create'),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
 
-/*
-  Create a Hike Event
-    - will have a dropdown of all hikes that exists (retrieved from db)
-    	- Name of the Hike (input)
-    	- group ID (automatic, retreaved from db)
-    	- location ID (from dropdown)
-    	- group admin ID (automatic, retreaved from db)
-    	- date (need a date picker)
-    	- save button
-*/
+int locationID(String? locationName){
+  for(int i = 0; i < locations.length; i++){
+    if (locations[i] == locationName){
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
+List<String> locations = [
+      'Hike 1', 
+      'Hike 2', 
+      'ullam', 
+      'et',
+      ];
+

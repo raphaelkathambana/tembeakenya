@@ -1,3 +1,43 @@
+
+/ ************* TODO ************* /
+
+  TODO: Extra config wit Raph (Map)
+
+
+  TODO: When not a member, have a functional Request/Pending Button
+  TODO: Have a Functioning Page with functional Accept/Reject Button
+
+  TODO: Table for Emergency contact name and number
+
+  TODO: Fix locationID situation 
+  TODO: Home Page - When clicking on a location, take to Navigation page with the details
+  TODO: Navigation Page - Raph is working on that one
+
+  TODO: Make it delete request work
+
+  TODO: Make Location page
+
+
+/ ************* DONE ************* /
+
+  DONE: Add new attendee
+  DONE: When paying, include money and phone number in "Proceed" pop up
+  DONE: Include Hike Fee 
+  DONE: Upcoming events updates when pull to refresh
+  DONE: After creating, automatically make guide an attendee
+  DONE: When writing a form/creating event "Fill out all detail"
+
+
+
+
+
+
+
+
+
+
+
+
 Home Page
 TODO: When clicking on a location, take to Navigation page with the details
 
@@ -21,19 +61,4 @@ Community Page
         TODO: Fix locationID situation 
       Delete Group
         TODO: Make it delete
-
-
-TODO: Extra config wit Raph
-
-TODO: When not a member, have a functional Request/Pending Button
-TODO: Have a Functioning Page with functional Accept/Reject Button
-TODO: Upcoming events updates when pull to refresh
-TODO: After creating, automatically make guide an attendee
-TODO: Fix locationID situation 
-TODO: Make it delete
-TODO: When paying, include phone number in "Proceed" pop up
-TODO: Home Page - When clicking on a location, take to Navigation page with the details
-TODO: Navigation Page - Raph is working on that one
-
-DONE: Include Hike Fee 
 

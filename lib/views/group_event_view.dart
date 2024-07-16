@@ -256,6 +256,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                               MaterialPageRoute(
                                   builder: (context) => GroupEventSignUp(
                                       user: widget.user,
+                                      details: widget.details['groupHikeDetails'],
                                       groupId: widget
                                           .details['groupHikeDetails'][2])));
                         },
@@ -300,6 +301,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                   ),
                 ),
                 Text(
+                  // TODO
                   'Hike Fee: ${widget.details['groupHikeDetails'][7]}',
                   style: const TextStyle(
                     fontSize: 15,

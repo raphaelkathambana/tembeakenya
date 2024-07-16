@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/mpesa/models/mpesa.dart';
 import 'package:tembeakenya/mpesa/models/mpesaResponse.dart';
 import 'package:tembeakenya/mpesa/flutter_mpesa_stk.dart';
@@ -8,8 +9,12 @@ import 'package:tembeakenya/assets/colors.dart';
 class GroupEventSignUp extends StatefulWidget {
   final dynamic user;
   final dynamic groupId;
+  final dynamic details;
   const GroupEventSignUp(
-      {super.key, required this.user, required this.groupId});
+      {super.key,
+      required this.user,
+      required this.groupId,
+      required this.details});
 
   @override
   State<GroupEventSignUp> createState() => _GroupEventSignUpState();
@@ -32,6 +37,11 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   late final TextEditingController _otherFullName;
   late final TextEditingController _otherPhone;
 
+  late final String fullName;
+  late final String phone;
+  late final String otherFullName;
+  late final String otherPhone;
+
   late String? dropdownValue;
 
   String theFullName = '';
@@ -39,7 +49,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
 
   @override
   void initState() {
-    _fullName = TextEditingController();
+    _fullName = TextEditingController(text: widget.user.fullName);
     _phone = TextEditingController();
     _otherFullName = TextEditingController();
     _otherPhone = TextEditingController();
@@ -114,21 +124,21 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: ColorsUtil.primaryColorDark)),
-                            Icon(
-                              Icons.edit,
-                              color: ColorsUtil.primaryColorDark,
-                            ),
+                            // Icon(
+                            //   Icons.edit,
+                            //   color: ColorsUtil.primaryColorDark,
+                            // ),
                           ],
                         ),
                         SizedBox(
                           child: TextField(
+                            enabled: false,
                             controller: _fullName,
                             decoration: const InputDecoration(
                               hintText: "Please write the full name",
                             ),
                             onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
+                              fullName = value;
                             },
                           ),
                         ),
@@ -180,13 +190,13 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
                               controller: _phone,
+                              keyboardType: TextInputType.number,
                               maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
                               onChanged: (value) {
-                                // user?.username = value;
-                                // theUsername = value;
+                                phone = "254$value";
                               },
 
                               // ),
@@ -255,8 +265,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                               hintText: "Please write the full name",
                             ),
                             onChanged: (value) {
-                              // user?.username = value;
-                              // theUsername = value;
+                              otherFullName = value;
                             },
                           ),
                         ),
@@ -285,14 +294,6 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                         ),
                       ],
                     ),
-                    // SizedBox(
-                    // child:
-                    // Row(
-                    //   children: [
-                    //     const SizedBox(
-                    // width: 35,
-                    //       child: Text('+254')
-                    //     ),
                     SizedBox(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,13 +309,13 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             width: MediaQuery.sizeOf(context).width - 135,
                             child: TextField(
                               controller: _otherPhone,
+                              keyboardType: TextInputType.number,
                               maxLength: 9,
                               decoration: const InputDecoration(
                                 hintText: "70345689",
                               ),
                               onChanged: (value) {
-                                // user?.username = value;
-                                // theUsername = value;
+                                otherPhone = "254$value";
                               },
                             ),
                           ),
@@ -340,82 +341,55 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                 ),
               ),
               onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Save'),
-                          content: const Text('Proceed to pay?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Back'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                processSTK();
+                
+                if (_fullName.text == '' ||
+                    _otherFullName.text == '' ||
+                    _phone.text.length != 9 ||
+                    _otherPhone.text.length != 9) {
+                debugPrint('ID: ${widget.details[0]}');
+                  debugPrint("fullName: ${_fullName.text}");
+                  debugPrint("phone: ${_phone.text.length}");
+                  debugPrint("otherFullName: ${_otherFullName.text}");
+                  debugPrint("otherPhone: ${_otherPhone.text.length}");
 
-                                // // Navigator.of(context).pop();
-                                // //save the details
-                                // final name = _fullName.text;
-                                // final phone = _phone.text;
-                                // var emergencyContact = '';
-                                // CommunityController().signUpForGroupHike(
-                                //   widget.groupId,
-                                //   widget.user.id,
-                                //   name,
-                                //   phone,
-                                //   widget.user.email,
-                                //   emergencyContact,
-                                //   context,
-                                // );
-                                // showDialog(
-                                //     context: context,
-                                //     builder: (context) => AlertDialog(
-                                //           title: const Text('Payment'),
-                                //           content: const Text(
-                                //               'You will be redirected to the payment page'),
-                                //           actions: [
-                                //             TextButton(
-                                //               onPressed: () {
-                                //                 Navigator.of(context).pop();
-                                //               },
-                                //               child: const Text('Cancel'),
-                                //             ),
-                                //             TextButton(
-                                //               onPressed: () {
-                                //                 // Navigator.of(context).pop();
-                                //                 showDialog(
-                                //                     context: context,
-                                //                     builder: (context) =>
-                                //                         AlertDialog(
-                                //                           title: const Text(
-                                //                               'Payment'),
-                                //                           content: const Text(
-                                //                               'Payment successful'),
-                                //                           actions: [
-                                //                             TextButton(
-                                //                               onPressed: () {
-                                //                                 Navigator.of(
-                                //                                         context)
-                                //                                     .pop();
-                                //                               },
-                                //                               child: const Text(
-                                //                                   'Close'),
-                                //                             ),
-                                //                           ],
-                                //                         ));
-                                //               },
-                                //               child: const Text('Proceed'),
-                                //             ),
-                                //           ],
-                                //         ));
-                              },
-                              child: const Text('Proceed'),
-                            ),
-                          ],
-                        ));
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text('Incomplete Form'),
+                            content: const Text('Fill out all the details!'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Back'),
+                              ),
+                            ],
+                          ));
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text('Proceed to pay?'),
+                            content: Text(
+                                'A prompt will be sent to pay Ksh${widget.details[7]} to +254${_phone.text}'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text('Back'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  processSTK();
+                                },
+                                child: const Text('Proceed'),
+                              ),
+                            ],
+                          ));
+                }
               },
               child: const Text('Pay to Sign Up'),
             ))
@@ -431,9 +405,37 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
             "174379",
             "https://94f9-41-90-65-205.ngrok-free.app/api/secret-url/callback",
             "default Message")
-        .stkPush(Mpesa(1, "254${_phone.value.text}"));
+        .stkPush(Mpesa(widget.details[7], "254${_phone.text}"));
     if (response.status) {
       notify("successful stk push. please enter pin");
+      showDialog(
+                                      context: context,
+                                      builder: (context) => AlertDialog(
+                                            title:
+                                                const Text('Confirm Payment'),
+                                            content: const Text(
+                                                'Click "Confirm" after paying!'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  CommunityController()
+                                                      .signUpForGroupHike(
+                                                          int.parse(widget.details[0].toString()),
+                                                          int.parse(widget.user.id!.toString()),
+                                                          _fullName.text,
+                                                          '254${_phone.text}',
+                                                          widget.user.email!,
+                                                          'emergencyContactName',
+                                                          context);
+                                                  int count = 0;
+                                                  Navigator.of(context)
+                                                      .popUntil(
+                                                          (_) => count++ >= 3);
+                                                },
+                                                child: const Text('Confirm'),
+                                              ),
+                                            ],
+                                          ));
     } else {
       notify("failed. please try again");
     }

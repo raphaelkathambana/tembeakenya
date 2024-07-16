@@ -317,7 +317,7 @@ class CommunityController {
       String name,
       String phoneNumber,
       String email,
-      String emergencyContact,
+      String emergencyContactName,
       BuildContext context) async {
     String token = await getCsrfToken();
     try {
@@ -328,7 +328,7 @@ class CommunityController {
             'name': name,
             'phone_number': phoneNumber,
             'email': email,
-            'emergency_contact': emergencyContact,
+            'emergency_contact': emergencyContactName,
           }),
           options: Options(headers: {
             'X-XSRF-TOKEN': token,

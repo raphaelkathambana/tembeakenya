@@ -209,15 +209,29 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                   ),
                 ),
                 onPressed: () async {
-                  // if (pickedImage != null) {
-                  //   await uploadPic(pickedImage!, _groupName.text)
-                  //       .then((value) => imageId = value);
-                  // }
                   final groupName = _groupName.text;
                   final description = _description.text;
                   final guideId = user!.id;
+                  if (groupName.isEmpty || description.isEmpty) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('Incomplete'),
+                              content: const Text('Fill out all the details.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Okay'),
+                                ),
+                              ],
+                            ));
+                  } 
+                  else {
                   CommunityController()
                       .createGroup(groupName, description, guideId!, context);
+                  }
                 },
                 child: const Text('Create Group'),
               ))
