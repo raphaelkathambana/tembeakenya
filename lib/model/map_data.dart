@@ -1,4 +1,4 @@
-import 'package:tembeakenya/constants/constants.dart';
+// import 'package:tembeakenya/constants/constants.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
 class MapData {
@@ -7,7 +7,6 @@ class MapData {
   final double latitude;
   final double longitude;
   final String description;
-  final String image;
   final List<LatLng> waypoints;
 
   MapData({
@@ -16,7 +15,6 @@ class MapData {
     required this.latitude,
     required this.longitude,
     required this.description,
-    required this.image,
     required this.waypoints,
   });
 
@@ -27,7 +25,6 @@ class MapData {
       latitude: double.parse(json['latitude'].toString()),
       longitude: double.parse(json['longitude'].toString()),
       description: json['description'],
-      image: json['image'],
       waypoints: (json['waypoints'] as List)
           .map((waypoint) => LatLng(
               double.parse(waypoint['latitude'].toString()),
@@ -43,7 +40,6 @@ class MapData {
       'latitude': latitude,
       'longitude': longitude,
       'description': description,
-      'image': image,
       'waypoints': waypoints
           .map((waypoint) =>
               {'latitude': waypoint.latitude, 'longitude': waypoint.longitude})
