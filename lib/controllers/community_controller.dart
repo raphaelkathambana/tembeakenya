@@ -200,6 +200,21 @@ class CommunityController {
     }
   }
 
+  // get hikes
+  Future<List<dynamic>> getHikes() async {
+    try {
+      var response = await apiCall.client.get('${url}api/hikes');
+      if (response.statusCode == 200) {
+        return getHikeData(response.data);
+      } else {
+        return [];
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+      return [];
+    }
+  }
+
   // update group details
   Future<void> updateGroupDetails(int groupId, int guideId, String name,
       String description, String imageId, BuildContext context) async {
@@ -281,7 +296,7 @@ class CommunityController {
       int groupId, int userId, BuildContext context) async {
     try {
       var response = await apiCall.client
-          .post('${url}api/groups/{$groupId}/approve-member/{$userId}');
+          .post('${url}api/groups/$groupId/approve-member/$userId');
       if (response.statusCode == 200) {
         debugPrint('Successfully Approved');
         if (!context.mounted) return;
@@ -298,7 +313,7 @@ class CommunityController {
       int groupId, int userId, BuildContext context) async {
     try {
       var response = await apiCall.client
-          .post('${url}api/groups/{$groupId}/reject-member/{$userId}');
+          .post('${url}api/groups/$groupId/reject-member/$userId');
       if (response.statusCode == 200) {
         debugPrint('Successfully Rejected');
         if (!context.mounted) return;
@@ -361,19 +376,19 @@ class CommunityController {
   //   }
   // }
 
-  // Future<void> leaveGroup(int id, BuildContext context) async {
-  //   try {
-  //     var response = await apiCall.client.post('${url}api/groups/$id/leave');
-  //     if (response.statusCode == 200) {
-  //       debugPrint('Successfully Left');
-  //       if (!context.mounted) return;
-  //       await context.watch<AuthController>().refreshUserDetails();
-  //       await onRefresh();
-  //     }
-  //   } on DioException catch (e) {
-  //     debugPrint('Error: ${e.message}');
-  //   }
-  // }
+  Future<void> leaveGroup(int id, BuildContext context) async {
+    try {
+      var response = await apiCall.client.post('${url}api/groups/$id/leave');
+      if (response.statusCode == 200) {
+        debugPrint('Successfully Left');
+        if (!context.mounted) return;
+        await context.watch<AuthController>().refreshUserDetails();
+        await onRefresh();
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+    }
+  }
 
   // Future<void> joinGroupHike(int id, BuildContext context) async {
   //   try {

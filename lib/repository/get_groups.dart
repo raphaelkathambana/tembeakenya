@@ -422,10 +422,26 @@ List<dynamic> getHikeDetails(data) {
     hikeInfo.add(data['hike']['name']);
     hikeInfo.add(data['hike']['map_data']);
     hikeInfo.add(data['hike']['distance']);
+    hikeInfo.add(data['hike']['description']);
     hikeInfo.add(data['hike']['estimated_duration']);
     hike.add(hikeInfo);
   }
   return hike;
+}
+
+List<dynamic> getHikeData(data) {
+  List<dynamic> hikes = [];
+  for (var hike in data) {
+    List<dynamic> hikeInfo = [];
+    hikeInfo.add(hike['id']);
+    hikeInfo.add(hike['name']);
+    hikeInfo.add(hike['map_data']);
+    hikeInfo.add(hike['distance']);
+    hikeInfo.add(hike['estimated_duration']);
+    hikes.add(hikeInfo);
+  }
+
+  return hikes;
 }
 
 List<dynamic> getgroupData(data) {
