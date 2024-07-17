@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
+import 'package:tembeakenya/assets/colors.dart';
 
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/location_stuff.dart';
@@ -52,6 +54,7 @@ class _NavigationViewState extends State<NavigationView> {
   double _distanceWalked = 0.0;
   StreamSubscription<Position>? _positionStream;
   Duration _duration = Duration.zero;
+  late List<Symbol> symbols;
 
   set responsesState(List responses) {
     setState(() {
@@ -129,16 +132,21 @@ class _NavigationViewState extends State<NavigationView> {
   }
 
   void _addLandmarkMarkers() {
+    Map<String, MapData> symbolLandmarkMap = {};
+
     for (var landmark in landmarks) {
       mapController!
           .addSymbol(SymbolOptions(
         geometry: LatLng(landmark.latitude, landmark.longitude),
-        iconImage: 'marker-15',
-        iconSize: 1.5,
+        iconImage: 'mountain-15',
       ))
           .then((symbol) {
-        mapController!.onSymbolTapped.add((symbol) {
-          _showLandmarkDetails(landmark);
+        symbolLandmarkMap[symbol.id] =
+            landmark; // Associate symbol with landmark
+        mapController!.onSymbolTapped.add((tappedSymbol) {
+          if (symbol.id == tappedSymbol.id) {
+            _showLandmarkDetails(landmark);
+          }
         });
       });
     }
@@ -180,22 +188,30 @@ class _NavigationViewState extends State<NavigationView> {
     try {
       final response = await APICall().client.post(
             '${url}api/hikes/${landmark.id}/route',
-            data: {
+            data: jsonEncode({
               'navigation_mode': 'walking',
-            },
+            }),
             options: Options(headers: {
               'Content-Type': 'application/json',
             }),
           );
 
       if (response.statusCode == 200) {
-        final waypoints = response.data['waypoints'];
-        _navigateWithWaypoints(waypoints);
-        setState(() {
-          _isNavigating = true;
-        });
+        final route = response.data['route'];
+        debugPrint('Route received: $route');
+
+        if (route != null &&
+            route['routes'] != null &&
+            route['routes'].isNotEmpty) {
+          _startNavigation(route['routes'][0]);
+          setState(() {
+            _isNavigating = true;
+          });
+        } else {
+          debugPrint('No routes found in the response');
+        }
       } else {
-        debugPrint('Failed to load waypoints: ${response.data}');
+        debugPrint('Failed to load route: ${response.data}');
       }
     } on DioException catch (e) {
       debugPrint('Error occurred: $e');
@@ -208,11 +224,11 @@ class _NavigationViewState extends State<NavigationView> {
     try {
       final response = await APICall().client.post(
             '${url}api/hikes/${landmark.id}/route',
-            data: {
+            data: jsonEncode({
               'latitude': userLocation.latitude.toString(),
               'longitude': userLocation.longitude.toString(),
               'navigation_mode': 'driving',
-            },
+            }),
             options: Options(headers: {
               'Content-Type': 'application/json',
             }),
@@ -220,7 +236,7 @@ class _NavigationViewState extends State<NavigationView> {
 
       if (response.statusCode == 200) {
         final route = response.data['route'];
-        debugPrint('Route received: $route');
+        // debugPrint('Route received: $route');
 
         if (route != null &&
             route['routes'] != null &&
@@ -243,18 +259,6 @@ class _NavigationViewState extends State<NavigationView> {
     }
   }
 
-  void _navigateWithWaypoints(List waypoints) {
-    List<LatLng> routeCoordinates = waypoints
-        .map((point) => LatLng(point['latitude'], point['longitude']))
-        .toList();
-
-    mapController!.addLine(LineOptions(
-      geometry: routeCoordinates,
-      lineColor: "#ff0000",
-      lineWidth: 5.0,
-    ));
-  }
-
   void _startNavigation(Map<String, dynamic> route) {
     List<LatLng> routeCoordinates = (route['geometry']['coordinates'] as List)
         .map((coord) => LatLng(coord[1], coord[0]))
@@ -272,7 +276,7 @@ class _NavigationViewState extends State<NavigationView> {
     });
   }
 
-  void _showDrivingStats(double duration, double distance) {
+  void _showDrivingStats(double duration, distance) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -423,7 +427,7 @@ class _NavigationViewState extends State<NavigationView> {
           MapboxMap(
             initialCameraPosition: _initialCameraPosition,
             accessToken: dotenv.env['MAPBOX_ACCESS_TOKEN'],
-            styleString: MapboxStyles.DARK,
+            styleString: MapboxStyles.OUTDOORS,
             onMapCreated: _onMapCreated,
             onMapClick: (point, latLng) {
               // Handle map click
