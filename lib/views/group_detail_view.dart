@@ -81,6 +81,11 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   @override
   void initState() {
+    hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
+      setState(() {
+        requested = value;
+      });
+    });
     loadNum = widget.details.length;
     // if(widget.details['events'] != null){
     detailEvent = widget.details['events'];
@@ -99,15 +104,10 @@ class _CommunityViewState extends State<GroupDetailView> {
       roleID = 1;
       roleSwitch = canEdit(roleID);
     }
-    if (roleSwitch) {
-      hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
-        setState(() {
-          requested = value;
-        });
-      });
-    } else {
-      requested = false;
-    }
+    // if (roleSwitch) {
+    // } else {
+    //   requested = false;
+    // }
 
     displayUrl = '';
     profileImageID = widget.group['image_id'];

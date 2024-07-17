@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/model/map_data.dart';
 import 'package:tembeakenya/views/nav_page.dart';
 // import 'package:tembeakenya/views/test.dart';
-import '../../assets/colors.dart';
 import 'package:tembeakenya/constants/timer_operation.dart';
 
 class NavigationView extends StatefulWidget {
   final dynamic user;
-  const NavigationView({super.key, required this.user});
+  // final List<MapData> landmarks;
+  const NavigationView({
+    super.key,
+    required this.user,
+    // required this.landmarks,
+  });
 
   @override
   State<NavigationView> createState() => _NavigationViewState();
@@ -78,27 +83,9 @@ class _NavigationViewState extends State<NavigationView> {
               height: height,
               width: width,
               color: const Color.fromARGB(135, 99, 126, 32),
-              child: const NavigationPageView()
-              // Column(
-              // children: [
-              //   Text('Reference Time: ${lineText[0]}'),
-              //   Text('Paused Time: ${lineText[1]}'),
-              //   Text('Started Time: ${lineText[2]}'),
-              //   // TextButton(onPressed: () {
-              //   //   Navigator.push(
-              //   //   context,
-              //   //   MaterialPageRoute(
-              //   //       builder: (context) => const TestApp()
-              //   //   ));
-              //   // }, child: const Text('Test'),)
-              //   /**************
-
-              //     Map Section
-
-              //   **************/
-              // ],
-              // ),
-              ),
+              child: const NavigationPageView(
+                  // landmarks: widget.landmarks,
+                  )),
         ],
       ),
     );

@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/map_data.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/navigations/community_nav_bar.dart';
+// import 'package:tembeakenya/repository/mapbox_requests.dart';
 import 'package:tembeakenya/views/home_page.dart';
 // import 'package:tembeakenya/views/map.dart';
 import 'package:tembeakenya/views/navigation_page.dart';
 import 'package:tembeakenya/views/profile_view.dart';
+// import 'package:mapbox_gl/mapbox_gl.dart';
 
 class LayoutView extends StatefulWidget {
   final User user;
@@ -25,6 +28,7 @@ class _LayoutViewState extends State<LayoutView> {
   late NavigationService navigationService;
   User? theUser;
   dynamic locations;
+  late List<MapData> landmarks;
 
   @override
   void initState() {
@@ -35,11 +39,16 @@ class _LayoutViewState extends State<LayoutView> {
         locations = hikes;
       });
     });
+    // fetchLandmarks().then((value) {
+    //   setState(() {
+    //     landmarks = value;
+    //   });
+    // });
 
     navigationService = NavigationService(router);
 
     int count = 0;
-    Timer.periodic(const Duration(seconds: 5), (timer) {
+    Timer.periodic(const Duration(seconds: 15), (timer) {
       setState(() {
         AuthController(navigationService).refreshUserDetails().then((value) {
           theUser = value;
@@ -67,6 +76,7 @@ class _LayoutViewState extends State<LayoutView> {
             ),
       NavigationView(
         user: theUser,
+        // landmarks: landmarks,
       ),
       CommunityView(
         user: theUser,
