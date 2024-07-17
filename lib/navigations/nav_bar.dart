@@ -8,7 +8,7 @@ import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/navigations/community_nav_bar.dart';
 import 'package:tembeakenya/views/home_page.dart';
-import 'package:tembeakenya/views/map.dart';
+// import 'package:tembeakenya/views/map.dart';
 import 'package:tembeakenya/views/navigation_page.dart';
 import 'package:tembeakenya/views/profile_view.dart';
 

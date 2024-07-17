@@ -13,22 +13,23 @@ import 'package:tembeakenya/constants/location_stuff.dart';
 import 'package:tembeakenya/model/map_data.dart';
 import 'package:tembeakenya/repository/mapbox_requests.dart';
 
-class NavigationView extends StatefulWidget {
-  final bool isDestination;
-  final TextEditingController textEditingController;
-  const NavigationView(
-      {super.key,
-      required this.isDestination,
-      required this.textEditingController});
+class NavigationPageView extends StatefulWidget {
+  // final bool isDestination;
+  // final TextEditingController textEditingController;
+  const NavigationPageView({
+    super.key,
+    // required this.isDestination,
+    // required this.textEditingController
+  });
 
   @override
-  State<NavigationView> createState() => _NavigationViewState();
+  State<NavigationPageView> createState() => _NavigationPageViewState();
 
-  static _NavigationViewState? of(BuildContext context) =>
-      context.findAncestorStateOfType<_NavigationViewState>();
+  static _NavigationPageViewState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_NavigationPageViewState>();
 }
 
-class _NavigationViewState extends State<NavigationView> {
+class _NavigationPageViewState extends State<NavigationPageView> {
   MapboxMapController? mapController;
   LatLng currentLocation = getCurrentLatLngFromSharedPrefs();
   late CameraPosition _initialCameraPosition;

@@ -120,10 +120,7 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/map-nav',
       name: '/map-nav',
-      builder: (context, state) => NavigationView(
-        isDestination: true,
-        textEditingController: TextEditingController(),
-      ),
+      builder: (context, state) => const NavigationPageView(),
     ),
     GoRoute(
       path: '/navbar',
