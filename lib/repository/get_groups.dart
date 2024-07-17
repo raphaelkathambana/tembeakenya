@@ -331,6 +331,7 @@ var groupHikeDetails = {
     }
   ]
 };
+
 // loop through the data to get the list of members who've made a request to join a group
 Map<String, User> getRequestData(requestsData) {
   Map<String, User> requestsInfo = {};
@@ -425,4 +426,39 @@ List<dynamic> getHikeDetails(data) {
     hike.add(hikeInfo);
   }
   return hike;
+}
+
+List<dynamic> getgroupData(data) {
+  List<dynamic> group = [];
+  if (data['group'] != null) {
+    List<dynamic> groupInfo = [];
+    groupInfo.add(data['group']['id']);
+    groupInfo.add(data['group']['name']);
+    groupInfo.add(data['group']['description']);
+    groupInfo.add(data['group']['guide_id']);
+    groupInfo.add(data['group']['image_id']);
+    group.add(groupInfo);
+  }
+  return group;
+}
+
+List<dynamic> getReviewData(data) {
+  List<dynamic> reviewsInfo = [];
+  if (data != null) {
+    for (var review in data) {
+      final listing = review;
+      reviewsInfo.add(listing);
+    }
+  }
+  return reviewsInfo;
+}
+
+List<dynamic> getUserDataReview(List<dynamic> data) {
+  List<dynamic> usersInfo = [];
+  for (var review in data) {
+    if (review.containsKey('user')) {
+      usersInfo.add(review['user']);
+    }
+  }
+  return usersInfo;
 }

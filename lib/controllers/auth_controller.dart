@@ -306,6 +306,12 @@ class AuthController with ChangeNotifier {
           return false;
         }
       } else {
+        // token is null, should be signed out
+        debugPrint('Token is null, should be signed out');
+        final response = await apiCall.client.post('${url}api/v1/logout');
+        if (response.statusCode == 204) {
+          return true;
+        }
         return false;
       }
     } on DioException catch (e) {

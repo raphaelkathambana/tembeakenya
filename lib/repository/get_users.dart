@@ -349,3 +349,34 @@ List<User> getUsersFromData(Map<String, dynamic> data) {
     )
   ];
 }
+
+List<User> getListOfUsersFromData(Map<String, dynamic> data) {
+  if (data['data'] != null) {
+    List<User> users = [];
+    // var userData = data['data'] as List<Map<String, dynamic>>?;
+    var userData = data['data'];
+    if (userData != null) {
+      for (var user in userData) {
+        users.add(User.fromJson(user));
+      }
+      return users;
+    }
+  }
+  return [
+    User(
+      id: 0,
+      firstName: 'empty',
+      lastName: 'empty',
+      username: 'empty',
+      email: 'empty',
+      email_verified_at: DateTime(2024),
+      role_id: 1,
+      image_id: 'empty',
+      no_of_hikes: 0,
+      total_distance_walked: 0,
+      no_of_steps_taken: 0,
+      followers_count: 0,
+      following_count: 0,
+    )
+  ];
+}
