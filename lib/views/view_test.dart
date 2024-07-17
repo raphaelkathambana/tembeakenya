@@ -10,11 +10,11 @@ class TestView extends StatefulWidget {
 }
 
 class _TestViewState extends State<TestView> {
-  late Map list;
+  late List list;
   @override
   void initState() {
     super.initState();
-    CommunityController().getReviews().then((value) {
+    CommunityController().getHikes().then((value) {
       setState(() {
         list = value;
       });
@@ -62,7 +62,7 @@ class _TestViewState extends State<TestView> {
                   style: raisedButtonStyle,
                   child: const Text('click me'),
                 ),
-                Text(list.entries.first.value[0]['user']['email'].toString()),
+                Text(list[1][1].toString()),
               ],
             )
           ],

@@ -260,18 +260,26 @@ class CommunityController {
   }
 
   // request to join group
-  Future<void> requestToJoinGroup(int id, BuildContext context) async {
+  Future<bool> requestToJoinGroup(int id, BuildContext context) async {
     try {
       var response =
           await apiCall.client.post('${url}api/groups/$id/request-to-join');
       if (response.statusCode == 200) {
         debugPrint('Successfully Requested');
-        if (!context.mounted) return;
+        // if (!context.mounted) return;
         await context.watch<AuthController>().refreshUserDetails();
         await onRefresh();
+        return true;
+      } else {
+        return false;
       }
     } on DioException catch (e) {
+      if (e.response?.statusCode == 403) {
+        debugPrint('Already Requested');
+        return true;
+      }
       debugPrint('Error: ${e.message}');
+      return false;
     }
   }
 
@@ -362,25 +370,12 @@ class CommunityController {
     }
   }
 
-  // Future<void> joinGroup(int id, BuildContext context) async {
-  //   try {
-  //     var response = await apiCall.client.post('${url}api/groups/$id/join');
-  //     if (response.statusCode == 200) {
-  //       debugPrint('Successfully Joined');
-  //       if (!context.mounted) return;
-  //       await context.watch<AuthController>().refreshUserDetails();
-  //       await onRefresh();
-  //     }
-  //   } on DioException catch (e) {
-  //     debugPrint('Error: ${e.message}');
-  //   }
-  // }
-
   Future<void> leaveGroup(int id, BuildContext context) async {
     try {
       var response = await apiCall.client.post('${url}api/groups/$id/leave');
       if (response.statusCode == 200) {
         debugPrint('Successfully Left');
+        await onRefresh();
         if (!context.mounted) return;
         await context.watch<AuthController>().refreshUserDetails();
         await onRefresh();

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
@@ -76,18 +77,10 @@ class _CommunityViewState extends State<GroupDetailView> {
         });
       });
     }
-
-    hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
-      setState(() {
-        requested = value;
-      });
-    });
   }
 
   @override
   void initState() {
-    requested = false;
-
     loadNum = widget.details.length;
     // if(widget.details['events'] != null){
     detailEvent = widget.details['events'];
@@ -105,6 +98,15 @@ class _CommunityViewState extends State<GroupDetailView> {
     } else {
       roleID = 1;
       roleSwitch = canEdit(roleID);
+    }
+    if (roleSwitch) {
+      hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
+        setState(() {
+          requested = value;
+        });
+      });
+    } else {
+      requested = false;
     }
 
     displayUrl = '';
@@ -128,11 +130,6 @@ class _CommunityViewState extends State<GroupDetailView> {
       );
     });
 
-    hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
-      setState(() {
-        requested = value;
-      });
-    });
     super.initState();
   }
 
@@ -188,13 +185,25 @@ class _CommunityViewState extends State<GroupDetailView> {
                           actions: [
                             TextButton(
                               onPressed: () {
-                                Navigator.of(context).pop();
+                                context.pop();
                               },
                               child: const Text('Cancel'),
                             ),
                             TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
+                              onPressed: () async {
+                                await CommunityController()
+                                    .leaveGroup(widget.group['id'], context)
+                                    .then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'You have left the group Successfully'),
+                                    ),
+                                  );
+                                  context.pop();
+                                  context.pop();
+                                  context.pop();
+                                });
                               },
                               child: const Text('Yes'),
                             ),
@@ -466,12 +475,16 @@ class _CommunityViewState extends State<GroupDetailView> {
                                   if (!isMember(
                                       widget.user, widget.details['members']))
                                     ElevatedButton(
-                                      onPressed: () {
-                                        CommunityController()
-                                            .requestToJoinGroup(theId, context);
-                                        setState(() {
-                                          requested = true;
-                                        });
+                                      onPressed: () async {
+                                        await CommunityController()
+                                            .requestToJoinGroup(theId, context)
+                                            .then(
+                                          (value) {
+                                            setState(() {
+                                              requested = true;
+                                            });
+                                          },
+                                        );
                                       },
                                       style: ElevatedButton.styleFrom(
                                           minimumSize: const Size(150, 30),

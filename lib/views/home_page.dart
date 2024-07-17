@@ -22,7 +22,6 @@ class _HomeViewState extends State<HomeView> {
   late List<String> displayUrl;
   // late List<User> reviews;
   // late String? dropdownValue;
-  List<String> groupFilter = <String>['All Groups', 'My Groups'];
   late NavigationService navigationService;
   User? user;
 
