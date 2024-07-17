@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
@@ -12,9 +11,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
 // import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/location_stuff.dart';
-import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/map_data.dart';
-import 'package:tembeakenya/repository/mapbox_requests.dart';
 
 class NavigationPage extends StatefulWidget {
   final bool isDestination;

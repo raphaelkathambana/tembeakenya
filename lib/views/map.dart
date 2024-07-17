@@ -1,12 +1,9 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/model/map_data.dart';
+import 'package:tembeakenya/repository/mapbox_requests.dart';
 // import 'package:tembeakenya/constants/constants.dart';
 
 class MapView extends StatefulWidget {

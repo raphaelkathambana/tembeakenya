@@ -11,6 +11,7 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/constants/location_stuff.dart';
 import 'package:tembeakenya/model/map_data.dart';
+import 'package:tembeakenya/repository/mapbox_requests.dart';
 
 class NavigationView extends StatefulWidget {
   final bool isDestination;
@@ -111,24 +112,6 @@ class _NavigationViewState extends State<NavigationView> {
     }).catchError((error) {
       debugPrint('Failed to fetch landmarks: $error');
     });
-  }
-
-  Future<List<MapData>> fetchLandmarks() async {
-    try {
-      final response = await APICall().client.get('${url}api/landmarks');
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = response.data;
-        return jsonResponse
-            .map((landmark) => MapData.fromJson(landmark))
-            .toList();
-      } else {
-        throw Exception('Failed to load landmarks');
-      }
-    } on DioException catch (e) {
-      debugPrint('Failed to load landmarks: $e');
-      throw Exception('Failed to load landmarks');
-    }
   }
 
   void _addLandmarkMarkers() {
@@ -349,7 +332,7 @@ class _NavigationViewState extends State<NavigationView> {
         mapController!.clearLines();
         mapController!.addLine(LineOptions(
           geometry: _userPath,
-          lineColor: "#ff0000",
+          lineColor: ColorsUtil.accentColorDark.toHexStringRGB(),
           lineWidth: 5.0,
         ));
       });

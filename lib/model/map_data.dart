@@ -1,17 +1,6 @@
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 
-Future<List<MapData>> fetchLandmarks() async {
-  final response = await APICall().client.get('${url}api/landmarks');
-
-  if (response.statusCode == 200) {
-    List<dynamic> jsonResponse = response.data;
-    return jsonResponse.map((landmark) => MapData.fromJson(landmark)).toList();
-  } else {
-    throw Exception('Failed to load landmarks');
-  }
-}
-
 class MapData {
   final int id;
   final String name;
