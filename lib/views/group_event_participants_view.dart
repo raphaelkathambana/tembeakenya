@@ -246,7 +246,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                 child: const Text(
                                   'Following',
                                   style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       color: ColorsUtil.textColorDark),
                                 ),
                               ))
@@ -268,7 +268,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                 child: const Text(
                                   'Follow',
                                   style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       color: ColorsUtil.textColorDark),
                                 ),
                               )),
@@ -287,9 +287,9 @@ class _CommunityViewState extends State<ParticipantDetailView> {
               Container(
                 // height: 367,
                 margin:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
                     color: ColorsUtil.descriptionColorDark,
                     borderRadius: BorderRadius.circular(10)),
@@ -334,7 +334,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                 },
                                 child: Text('$theEmail ',
                                     style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         color: ColorsUtil.textColorDark)),
                               )
                             ]),
@@ -415,7 +415,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                               child: Text(
                                 '+$thePhoneNumber ',
                                 style: const TextStyle(
-                                    fontSize: 17,
+                                    fontSize: 16,
                                     color: ColorsUtil.textColorDark),
                               ),
                             ),
@@ -429,9 +429,9 @@ class _CommunityViewState extends State<ParticipantDetailView> {
 
               Container(
                 margin:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
                     color: ColorsUtil.descriptionColorDark,
                     borderRadius: BorderRadius.circular(10)),
@@ -476,7 +476,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                 },
                                 child: Text('$otherFullName ',
                                     style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 16,
                                         color: ColorsUtil.textColorDark)),
                               )
                             ]),
@@ -557,7 +557,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                               child: Text(
                                 '+$otherPhoneNumber ',
                                 style: const TextStyle(
-                                    fontSize: 17,
+                                    fontSize: 16,
                                     color: ColorsUtil.textColorDark),
                               ),
                             ),

@@ -2,32 +2,39 @@
 / ************* TODO ************* /
 
   TODO: Extra config wit Raph (Map)
+  TODO: Merge navigation page with mine
 
-
-  TODO: When not a member, have a functional Request/Pending Button
-  TODO: Have a Functioning Page with functional Accept/Reject Button
-
-  TODO: Table for Emergency contact name and number
-
-  TODO: Fix locationID situation 
-  TODO: Home Page - When clicking on a location, take to Navigation page with the details
-  TODO: Navigation Page - Raph is working on that one
-
-  TODO: Make it delete request work
-
-  TODO: Make Location page
+  TODO: When Request pressed, become pending permanently
 
   TODO: After creating, automatically make guide an attendee
 
-  TODO: When reaching the bottom of the page, load more people
+  TODO: Stats reflect when navigation ends 
+
 
 / ************* DONE ************* /
 
+  NOT DONE: Make it delete request work
+  KINDA DONE (Full Search Works): When reaching the bottom of the page, load more people
+
+  DONE: Make Location page
   DONE: Add new attendee
   DONE: When paying, include money and phone number in "Proceed" pop up
   DONE: Include Hike Fee 
   DONE: Upcoming events updates when pull to refresh
   DONE: When writing a form/creating event "Fill out all detail"
+  DONE: When not a member, have a functional Request/Pending Button
+  DONE: Have a Functioning Page with functional Accept/Reject Button
+  DONE: Table for Emergency contact name and number
+  DONE: Fix locationID situation 
+  DONE: Home Page - When clicking on a location, take to Navigation page with the details
+  DONE: Navigation Page - Raph is working on that one
+  DONE: Make leave group
+  DONE: Remove delete group
+  DONE: Make UI baby-phone inclusive 
+  DONE: Location Drop Down in Create Event
+  DONE: Profile Image for Request Page
+  DONE: When Accept/Reject pressed, user vanishes
+  DONE: Differentiate group and people profile name
 
 
 

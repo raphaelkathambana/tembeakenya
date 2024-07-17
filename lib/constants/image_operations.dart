@@ -51,6 +51,15 @@ Future<String> uploadPic(Uint8List newImage, String? id) async {
   reference.putData(newImage);
   return imageID;
 }
+
+Future<String> uploadGroupPic(Uint8List newImage, String? id) async {
+
+
+  String imageID = "G${id}ProfilePic";
+  Reference reference = storageRef.ref().child("profile_images/$imageID.png");
+  reference.putData(newImage);
+  return imageID;
+}
 // ****************************************** //
 
 // ************** CROP IMAGE **************** //

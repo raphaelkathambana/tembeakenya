@@ -194,7 +194,7 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
                                   child: Text(
                                     widget.users[num].fullName,
                                     style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         color: ColorsUtil.textColorDark),
                                   ),
@@ -202,7 +202,7 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
                                 Text(
                                   '@${widget.users[num].username}',
                                   style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: ColorsUtil.accentColorDark),
                                 ),
@@ -228,7 +228,7 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
                                     child: const Text(
                                       'Following',
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: ColorsUtil.textColorDark),
                                     ),
                                   ),
@@ -251,7 +251,7 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
                                     child: const Text(
                                       'Follow',
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: ColorsUtil.textColorDark),
                                     ),
                                   ),

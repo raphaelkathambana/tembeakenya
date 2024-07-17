@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/dummy_db_3.dart';
+// import 'package:tembeakenya/dummy_db_3.dart';
 import 'package:tembeakenya/views/home_location_view.dart';
 import 'package:tembeakenya/assets/colors.dart';
 // import 'package:tembeakenya/model/user_model.dart';
 
 class HomeView extends StatefulWidget {
   final User user;
-  const HomeView({super.key, required this.user});
+  final dynamic locations;
+  const HomeView({super.key, required this.locations, required this.user});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -18,12 +20,13 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   late List<String> displayUrl;
+  // late List<User> reviews;
   // late String? dropdownValue;
   List<String> groupFilter = <String>['All Groups', 'My Groups'];
   late NavigationService navigationService;
   User? user;
 
-  String profileImageID = "defaultProfilePic";
+  String profileImageID = "";
   late int loadNum;
 
   final TextEditingController _search = TextEditingController();
@@ -31,7 +34,7 @@ class _HomeViewState extends State<HomeView> {
 
   searchCard(String search, int num) {
     if (search != '') {
-      if (location[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.locations[num][1].toLowerCase().contains(search.toLowerCase())) {
         return locationCard(num);
       }
       return const SizedBox();
@@ -41,34 +44,32 @@ class _HomeViewState extends State<HomeView> {
   }
 
   locationCard(int num) {
+    dynamic name = widget.locations[num][1];
+    dynamic waypoints = widget.locations[num][2];
+    dynamic distance = widget.locations[num][3];
+    dynamic duration = widget.locations[num][4];
+
     return TextButton(
         onPressed: () async {
-          // user = widget.user;
-          // var selectedGroup = widget.groups[num];
-          // var groupDetails;
+          
+          dynamic reviews;
 
-          // await CommunityController().getGroupDetails(num + 1).then(
-          //   (group) {
-          //     setState(() {
-          //       groupDetails = group;
-          //     });
-          //   },
-          // );
+          await CommunityController().getReviews().then(
+            (review) {
+              setState(() {
+                reviews = review;
+              });
+            },
+          );
 
-          // if (!mounted) return;
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => GroupDetailView(
-          //               user: user,
-          //               group: selectedGroup,
-          //               details: groupDetails,
-          //             )));
+          if (!mounted) return;
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => HomeLocationView(
                         user: user,
+                        location: widget.locations[num],
+                        reviews: reviews,
                       )));
         },
         style: const ButtonStyle(
@@ -79,9 +80,9 @@ class _HomeViewState extends State<HomeView> {
             border: Border.all(color: ColorsUtil.secondaryColorDark),
             color: ColorsUtil.cardColorDark,
           ),
-          height: 360,
+          // height: 400,
           padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+          // margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
           child: Column(children: [
             if (displayUrl[num].isEmpty)
               Container(
@@ -123,7 +124,7 @@ class _HomeViewState extends State<HomeView> {
             ),
             Container(
                 width: MediaQuery.sizeOf(context).width * .9,
-                height: 110,
+                // height: 130,
                 margin: const EdgeInsets.all(7),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -135,14 +136,19 @@ class _HomeViewState extends State<HomeView> {
                   // mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text((location[num]),
+                    Text(name,
                         style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.normal,
                             color: ColorsUtil.textColorDark)),
-                    Text((locationDesc[num]),
+                    Text('Distance: ${distance}m',
                         style: const TextStyle(
-                            fontSize: 15,
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal,
+                            color: ColorsUtil.primaryColorDark)),
+                    Text('Estimated Duration: $duration',
+                        style: const TextStyle(
+                            fontSize: 13,
                             fontWeight: FontWeight.normal,
                             color: ColorsUtil.primaryColorDark)),
                   ],
@@ -156,8 +162,11 @@ class _HomeViewState extends State<HomeView> {
 
     String profileImageID = '';
 
+    loadNum = widget.locations.length;
+    displayUrl = List<String>.filled(loadNum, '');
+
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = locationImage[i];
+      profileImageID = widget.locations[i][5];
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
@@ -171,11 +180,11 @@ class _HomeViewState extends State<HomeView> {
   void initState() {
     navigationService = NavigationService(router);
 
-    loadNum = location.length;
+    loadNum = widget.locations.length;
     displayUrl = List<String>.filled(loadNum, '');
 
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = locationImage[i];
+      profileImageID = widget.locations[i][5];
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;

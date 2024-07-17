@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
@@ -263,11 +264,11 @@ class _ProfileViewState extends State<ProfileView> {
 
                 // Statistic has dummy writing
                 Container(
-                  height: 350,
+                  // height: 350,
                   margin:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
@@ -283,8 +284,9 @@ class _ProfileViewState extends State<ProfileView> {
                           height: 15,
                           color: ColorsUtil.secondaryColorDark,
                         ),
-                        Row(
-                          children: [
+                        SizedBox(
+                          width: MediaQuery.sizeOf(context).width,
+                          child:
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -341,18 +343,18 @@ class _ProfileViewState extends State<ProfileView> {
                                 ]),
                               ],
                             ),
-                          ],
+                          
                         ),
                       ]),
                 ),
 
                 // Milestone has dummy writing
                 Container(
-                  height: 350,
+                  // height: 350,
                   margin:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   padding:
-                      const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),

@@ -32,6 +32,7 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   late NavigationService navigationService;
 
   User? selectedUser;
+  late List<bool> confirmed;
   // List<User> users = [];
 
   String profileImageID = '';
@@ -147,13 +148,14 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                               widget.group['id'],
                               widget.requests.entries.elementAt(num).value.id!,
                               context);
+                          setState(() {
+                            confirmed[num] = true;
+                          });
                         },
                         icon: const Icon(
                           Icons.check_circle_outline,
                           color: ColorsUtil.accentColorDark,
                           size: 35,
-                          semanticLabel:
-                              'Text to announce in accessibility modes',
                         )),
                     IconButton(
                       onPressed: () {
@@ -162,13 +164,14 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                             widget.group['id'],
                             widget.requests.entries.elementAt(num).value.id!,
                             context);
+                        setState(() {
+                          confirmed[num] = true;
+                        });
                       },
                       icon: const Icon(
                         Icons.cancel_outlined,
                         color: ColorsUtil.secondaryColorDark,
                         size: 35,
-                        semanticLabel:
-                            'Text to announce in accessibility modes',
                       ),
                     )
                   ],
@@ -192,12 +195,11 @@ class _GroupJoinViewState extends State<GroupJoinView> {
     navigationService = NavigationService(router);
 
     loadNum = widget.requests.length;
-    // loadNum = 1;
+    confirmed = List<bool>.filled(loadNum, false);
     displayUrl = List<String>.filled(loadNum, '');
 
     for (int i = 0; i < loadNum; i++) {
-      // profileImageID = users[i].image_id!;
-      // profileImageID = widget.requests
+      profileImageID = widget.requests.entries.elementAt(i).value.image_id!;
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
@@ -244,7 +246,20 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                       ),
                     )
                   else
-                    for (int i = 0; i < loadNum; i++) userCard(i),
+                    for (int i = 0; i < loadNum; i++)
+                      if (!confirmed[i]) 
+                        userCard(i)
+                      else if (confirmed.every((element) => element = true))
+                        const Center(
+                      child: Text(
+                        'No Requests',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: ColorsUtil.primaryColorDark,
+                        ),
+                      ),
+                    )
                 ],
               ),
             ),

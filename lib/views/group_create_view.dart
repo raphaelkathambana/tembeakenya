@@ -124,7 +124,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ))
               ]),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: ColorsUtil.descriptionColorDark,
@@ -160,7 +160,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ),
                   ])),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: ColorsUtil.descriptionColorDark,
@@ -197,7 +197,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ),
                   ])),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 16),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/mpesa/models/mpesa.dart';
 import 'package:tembeakenya/mpesa/models/mpesaResponse.dart';
@@ -88,21 +89,22 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
           indent: 12,
           endIndent: 12,
         ),
-        const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Padding(
-              padding: EdgeInsets.only(left: 30, top: 30),
-              child: Text(
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(
+              width: MediaQuery.sizeOf(context).width/2,
+              padding: const EdgeInsets.only(left: 10, top: 30),
+              child: const Text(
                 'Fill out your details',
                 style: TextStyle(
                   color: ColorsUtil.primaryColorLight,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ))
         ]),
         Container(
           width: MediaQuery.sizeOf(context).width,
           margin: const EdgeInsets.all(7),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(color: ColorsUtil.accentColorDark),
@@ -113,7 +115,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
             children: [
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
@@ -150,7 +152,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                       ])),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
@@ -187,7 +189,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                       ])),
               Container(
                 margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     color: ColorsUtil.descriptionColorDark,
@@ -253,21 +255,22 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
             ],
           ),
         ),
-        const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Padding(
-              padding: EdgeInsets.only(left: 30, top: 30),
-              child: Text(
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(
+              width: MediaQuery.sizeOf(context).width/1.5,
+              padding: const EdgeInsets.only(left: 10, top: 30),
+              child: const Text(
                 'Fill out details of your emergency contact',
                 style: TextStyle(
                   color: ColorsUtil.primaryColorLight,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ))
         ]),
         Container(
           width: MediaQuery.sizeOf(context).width,
           margin: const EdgeInsets.all(7),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(color: ColorsUtil.accentColorDark),
@@ -278,7 +281,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
             children: [
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
@@ -314,7 +317,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                       ])),
               Container(
                 margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                 padding: const EdgeInsets.all(15),
                 decoration: BoxDecoration(
                     color: ColorsUtil.descriptionColorDark,
@@ -427,7 +430,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                           ));
                 }
               },
-              child: const Text('Pay to Sign Up'),
+              child: const Text('Pay to Sign Up', style: TextStyle(fontSize: 14),),
             ))
       ])),
     );
@@ -444,7 +447,8 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
         .stkPush(Mpesa(widget.details[7], "254${_phone.text}"));
     if (response.status) {
       notify("successful stk push. please enter pin");
-      showDialog(
+      showDialog (
+          // ignore: use_build_context_synchronously
           context: context,
           builder: (context) => AlertDialog(
                 title: const Text('Confirm Payment'),

@@ -92,9 +92,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               ),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
@@ -123,9 +123,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       ])),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
@@ -155,9 +155,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       ])),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),

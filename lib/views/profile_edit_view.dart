@@ -233,7 +233,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theFullName,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -294,7 +294,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theUsername,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -356,7 +356,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theEmail,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),

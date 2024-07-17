@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/navigations/community_nav_bar.dart';
 import 'package:tembeakenya/views/home_page.dart';
@@ -20,14 +21,20 @@ class LayoutView extends StatefulWidget {
 }
 
 class _LayoutViewState extends State<LayoutView> {
-
   late NavigationService navigationService;
   User? theUser;
+  dynamic locations;
 
   @override
   void initState() {
     theUser = widget.user;
-    
+
+    CommunityController().getHikes().then((hikes) {
+      setState(() {
+        locations = hikes;
+      });
+    });
+
     navigationService = NavigationService(router);
 
     int count = 0;
@@ -36,22 +43,27 @@ class _LayoutViewState extends State<LayoutView> {
         AuthController(navigationService).refreshUserDetails().then((value) {
           theUser = value;
         });
-      });      
+      });
       count++;
       debugPrint('User Updated times: $count');
     });
 
     super.initState();
   }
-  int _currentIndex = 0;
 
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
-      HomeView(
-        user: theUser!,
-      ),
+      locations != null && locations.isNotEmpty
+          ? HomeView(user: theUser!, locations: locations)
+          : Container(
+              alignment: Alignment.center,
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            ),
       NavigationView(
         user: theUser,
       ),

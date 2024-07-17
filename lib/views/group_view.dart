@@ -229,7 +229,7 @@ class _GroupViewState extends State<GroupView> {
                             width: MediaQuery.sizeOf(context).width,
                             child: Text((theGroups[num]['name']),
                                 style: const TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                     color: ColorsUtil.textColorDark)),
                           ),
@@ -240,7 +240,7 @@ class _GroupViewState extends State<GroupView> {
                             if (widget.user.id == theGroups[num]['guide_id'])
                               const Text('Guide',
                                   style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                       color: ColorsUtil.primaryColorDark))
                             else if (widget.user.id !=

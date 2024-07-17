@@ -435,9 +435,10 @@ List<dynamic> getHikeData(data) {
     List<dynamic> hikeInfo = [];
     hikeInfo.add(hike['id']);
     hikeInfo.add(hike['name']);
-    hikeInfo.add(hike['map_data']);
+    hikeInfo.add(hike['waypoints']);
     hikeInfo.add(hike['distance']);
     hikeInfo.add(hike['estimated_duration']);
+    hikeInfo.add(hike['image_id']);
     hikes.add(hikeInfo);
   }
 
