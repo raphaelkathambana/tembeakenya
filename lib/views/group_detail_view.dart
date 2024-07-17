@@ -260,32 +260,6 @@ class _CommunityViewState extends State<GroupDetailView> {
                           group: widget.group,
                         ))),
           ),
-          ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Delete Group'),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text('Delete'),
-                          content: const Text(
-                              'Would you like to send a request to delete group to admins?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Cancel'),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: const Text('Send Request'),
-                            ),
-                          ],
-                        ));
-              }),
         ]),
       );
     }
@@ -298,7 +272,7 @@ class _CommunityViewState extends State<GroupDetailView> {
       padding: const EdgeInsets.all(10),
       child: const Text(
         'There are no upcoming events...',
-        style: TextStyle(color: ColorsUtil.primaryColorDark, fontSize: 16),
+        style: TextStyle(color: ColorsUtil.primaryColorDark, fontSize: 14),
       ),
     );
   }
@@ -332,7 +306,7 @@ class _CommunityViewState extends State<GroupDetailView> {
       child: Container(
         width: MediaQuery.sizeOf(context).width,
         // height: 100,
-        margin: const EdgeInsets.all(7),
+        // margin: const EdgeInsets.all(3),
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
@@ -358,7 +332,7 @@ class _CommunityViewState extends State<GroupDetailView> {
             Text(
               groupDetails?['events']?[eventID]['description'],
               style: const TextStyle(
-                fontSize: 17,
+                fontSize: 14,
                 fontWeight: FontWeight.normal,
                 color: ColorsUtil.primaryColorDark,
               ),
@@ -366,9 +340,11 @@ class _CommunityViewState extends State<GroupDetailView> {
             const Text(
               'Click for more details',
               style: TextStyle(
-                  fontSize: 14,
+                  decorationColor: ColorsUtil.textColorDark,
+                  decoration: TextDecoration.underline,
+                  fontSize: 12,
                   fontWeight: FontWeight.normal,
-                  color: ColorsUtil.primaryColorDark,
+                  color: ColorsUtil.textColorDark,
                   fontStyle: FontStyle.italic),
             ),
           ],

@@ -264,7 +264,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: ColorsUtil.textColorDark,
                           ),
                         ),
@@ -277,7 +277,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                   color: ColorsUtil.accentColorDark,
                 ),
                 Text(
-                  widget.details['groupHikeDetails'][2],
+                  '${widget.details['groupHikeDetails'][2]}\n',
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.normal,
@@ -302,7 +302,6 @@ class _GroupEventViewState extends State<GroupEventView> {
                   ),
                 ),
                 Text(
-                  // TODO
                   'Hike Fee: ${widget.details['groupHikeDetails'][7]}',
                   style: const TextStyle(
                     fontSize: 15,

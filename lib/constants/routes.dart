@@ -137,11 +137,13 @@ final GoRouter router = GoRouter(
         path: '/home',
         builder: (context, state) => HomeView(
               user: state.extra as User,
+              locations: const [],
             )),
     GoRoute(
       path: '/verify-email-success',
       builder: (context, state) => HomeView(
         user: state.extra as User,
+        locations: const [],
       ),
     ),
   ],

@@ -19,6 +19,20 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
   late final TextEditingController _description;
   late final TextEditingController _date;
 
+  List<String> locations = [
+      'Karura Forest', 
+      'Nairobi Arboretum',
+      ];
+
+  int locationID(String? locationName){
+  for(int i = 0; i < locations.length; i++){
+    if (locations[i] == locationName){
+      return i + 1;
+    }
+  }
+  return 0;
+}
+
   // late final List<DateTime?> _dates;
 
   late String? dropdownValue;
@@ -91,7 +105,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                 children: [
                   Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 10, horizontal: 10),
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                           color: ColorsUtil.descriptionColorDark,
@@ -128,7 +142,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                           ])),
                   Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 10, horizontal: 10),
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                           color: ColorsUtil.descriptionColorDark,
@@ -166,7 +180,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                           ])),
                   Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 10, horizontal: 10),
                       padding: const EdgeInsets.all(15),
                       decoration: BoxDecoration(
                           color: ColorsUtil.descriptionColorDark,
@@ -204,7 +218,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                           ])),
                   Container(
                     margin: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 20),
+                        vertical: 10, horizontal: 10),
                     padding:
                         const EdgeInsets.symmetric(vertical: 4, horizontal: 15),
                     // width: 250,
@@ -234,7 +248,7 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
                   ),
                   Container(
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 10, horizontal: 10),
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       width: 250,
                       height: 60,
@@ -356,20 +370,4 @@ class _GroupCreateHikeViewState extends State<GroupCreateHikeView> {
     );
   }
 }
-
-int locationID(String? locationName){
-  for(int i = 0; i < locations.length; i++){
-    if (locations[i] == locationName){
-      return i + 1;
-    }
-  }
-  return 0;
-}
-
-List<String> locations = [
-      'Hike 1', 
-      'Hike 2', 
-      'ullam', 
-      'et',
-      ];
 

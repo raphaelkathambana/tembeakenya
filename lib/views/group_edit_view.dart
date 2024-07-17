@@ -228,7 +228,7 @@ class _GroupEditViewState extends State<GroupEditView> {
               ),
               onPressed: () async {
                 if (pickedImage != null) {
-                  await uploadPic(pickedImage!, theGroupID.toString())
+                  await uploadGroupPic(pickedImage!, theGroupID.toString())
                       .then((value) => imageId = value);
                 }
                 final groupName = _groupName.text.isNotEmpty

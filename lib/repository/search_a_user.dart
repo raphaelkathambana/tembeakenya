@@ -169,19 +169,12 @@ class _UserListScreenState extends State<UserListScreen> {
           }
           if (dropdownValue == userFilters.last) {
             if (widget.isFriend[index] == true) {
-              return ListTile(
-                  // title:
-                  //     Text('${users[index].firstName} ${users[index].lastName}'),
-                  // subtitle: Text(users[index].email!),
-                  title: userCard(users, index));
+              return userCard(users, index);
             } else {
               return const SizedBox();
             }
           } else {
-            return ListTile(
-                // title: Text('${users[index].firstName} ${users[index].lastName}'),
-                // subtitle: Text(users[index].email!),
-                title: userCard(users, index));
+            return userCard(users, index);
           }
         },
       ),
@@ -313,7 +306,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                   child: Text(
                                     theUsers[num].fullName,
                                     style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                         color: ColorsUtil.textColorDark),
                                   ),
@@ -321,7 +314,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                 Text(
                                   '@${theUsers[num].username}',
                                   style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       fontWeight: FontWeight.normal,
                                       color: ColorsUtil.accentColorDark),
                                 ),
@@ -348,7 +341,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                     child: const Text(
                                       'Following',
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: ColorsUtil.textColorDark),
                                     ),
                                   ),
@@ -372,7 +365,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                     child: const Text(
                                       'Follow',
                                       style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: ColorsUtil.textColorDark),
                                     ),
                                   ),

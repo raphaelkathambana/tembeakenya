@@ -122,19 +122,19 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                           width: MediaQuery.sizeOf(context).width,
                           child: Text(widget.members[num].fullName,
                               style: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
                         Text('@${widget.members[num].username}',
                             style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.primaryColorDark)),
                         if (widget.members[num].id == widget.group['guide_id'])
                           const Text('Guide',
                               style: TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.accentColorDark)),
                       ],
