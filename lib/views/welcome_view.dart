@@ -28,7 +28,7 @@ class WelcomeView extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: ColorsUtil.primaryColorLight)),
                   const Text(
-                    'Where Every Step is a\nJourney',
+                    'Where Every Step is\na Journey',
                     style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

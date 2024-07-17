@@ -3,17 +3,24 @@ import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ******************* DUMMY DATABASE ******************* //
 
-import 'package:tembeakenya/dummy_db.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
 class GroupMemberView extends StatefulWidget {
-  final user;
-  const GroupMemberView({super.key, required this.user});
+  final dynamic user;
+  final dynamic group;
+  final dynamic members;
+  const GroupMemberView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.members});
 
   @override
   State<GroupMemberView> createState() => _GroupMemberViewState();
@@ -25,6 +32,8 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   late String displayUrl;
   late NavigationService navigationService;
 
+  User? selectedUser;
+
   String profileImageID = "defaultProfilePic";
   late int loadNum;
 
@@ -34,7 +43,9 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   // ****************************************************** //
   searchCard(String search, int num) {
     if (search != '') {
-      if (fullName[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.members[num].fullName
+          .toLowerCase()
+          .contains(search.toLowerCase())) {
         return userCard(num);
       }
       return const SizedBox();
@@ -44,11 +55,18 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   }
 
   userCard(int num) {
+    int selectedUserId = widget.members[num].id;
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          final selectedUser = CommunityController().getAUsersDetails(num);
-          navigationService.navigateToPeopleDetailsView(context, widget.user);
+        onPressed: () async {
+          await CommunityController().getAUsersDetails(selectedUserId).then(
+            (user) {
+              setState(() {
+                selectedUser = user;
+              });
+            },
+          );
+          // navigationService.navigateToPeopleDetailsView(context, widget.user);
+          if (!mounted) return;
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -58,9 +76,9 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                       )));
         },
         style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
+            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
         child: Card(
-          color: const Color.fromARGB(55, 99, 126, 32),
+          color: ColorsUtil.cardColorDark,
           margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
           child: Column(children: [
             const Divider(
@@ -76,7 +94,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                   if (displayUrl.isEmpty)
                     const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -87,7 +105,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                   else
                     CircleAvatar(
                         radius: 45,
-                        backgroundColor: const Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
                             radius: 37,
                             backgroundColor: ColorsUtil.accentColorDark,
@@ -102,17 +120,23 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                       children: [
                         SizedBox(
                           width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
+                          child: Text(widget.members[num].fullName,
                               style: const TextStyle(
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark)),
                         ),
-                        Text('@${username[num]}',
+                        Text('@${widget.members[num].username}',
                             style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 12,
                                 fontWeight: FontWeight.normal,
-                                color: ColorsUtil.accentColorDark)),
+                                color: ColorsUtil.primaryColorDark)),
+                        if (widget.members[num].id == widget.group['guide_id'])
+                          const Text('Guide',
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.accentColorDark)),
                       ],
                     ),
                   ),
@@ -135,7 +159,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   void initState() {
     displayUrl = '';
     navigationService = NavigationService(router);
-    loadNum = fullName.length;
+    loadNum = widget.members.length;
 
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -168,7 +192,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
             height: 50,
             padding: const EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
-              color: const Color.fromARGB(55, 99, 126, 32),
+              color: ColorsUtil.cardColorDark,
               borderRadius: BorderRadius.circular(25.0),
             ),
             child: Row(
@@ -196,7 +220,7 @@ class _GroupMemberViewState extends State<GroupMemberView> {
         Container(
             padding: const EdgeInsets.symmetric(horizontal: 3),
             decoration: const BoxDecoration(
-              color: Color.fromARGB(0, 0, 0, 0),
+              color: Colors.transparent,
             ),
             child: Column(
               children: [

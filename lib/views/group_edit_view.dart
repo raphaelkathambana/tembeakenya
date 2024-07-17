@@ -1,39 +1,18 @@
 import 'dart:typed_data';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 
 // ******************* DUMMY DATABASE ******************* //
-import 'package:tembeakenya/dummy_db.dart';
-
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-//      | UserID | GoupID | RoleID |
-//      | ------ | ------ | ------ |
-//      | 1      | 1      | 1      |
-//      | 1      | 2      | 2      |
-//      | 2      | 2      | 1      |
-
-// ****************************************************** //
+// import 'package:tembeakenya/dummy_db.dart';
 
 class GroupEditView extends StatefulWidget {
-  final int userID;
-  const GroupEditView({super.key, required this.userID});
+  final group;
+  final user;
+  const GroupEditView({super.key, required this.group, required this.user});
 
   @override
   State<GroupEditView> createState() => _GroupEditViewState();
@@ -43,31 +22,29 @@ class _GroupEditViewState extends State<GroupEditView> {
   Uint8List? pickedImage;
   late String displayUrl;
 
-  late int uID;
-
   late final TextEditingController _groupName;
   late final TextEditingController _description;
 
+  late int theGroupID;
+
+  String imageId = '';
   String theGroupName = '';
   String theDescription = '';
+
   String profileImageID = '';
 
   @override
   void initState() {
-    // user = widget.currentUser;
-    // navigationService = NavigationService(router);
-    // profileImageID = "${user!.image_id}";
-    profileImageID = "defaultGroupPic";
+    _groupName = TextEditingController(text: widget.group['name']);
+    _description = TextEditingController(text: widget.group['description']);
     displayUrl = '';
+    profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
       });
     });
 
-    int uID = widget.userID;
-    _groupName = TextEditingController(text: groupName[uID]);
-    _description = TextEditingController(text: description[uID]);
     super.initState();
   }
 
@@ -87,10 +64,9 @@ class _GroupEditViewState extends State<GroupEditView> {
 
   @override
   Widget build(BuildContext context) {
-    int uID = widget.userID;
-
-    theGroupName = groupName[uID];
-    theDescription = description[uID];
+    theGroupID = widget.group['id'];
+    theGroupName = widget.group['name'];
+    theDescription = widget.group['description'];
 
     return Scaffold(
       appBar: AppBar(
@@ -125,7 +101,7 @@ class _GroupEditViewState extends State<GroupEditView> {
               if (displayUrl.isEmpty)
                 const CircleAvatar(
                     radius: 70,
-                    backgroundColor: Color(0x00000000),
+                    backgroundColor: Colors.transparent,
                     child: CircleAvatar(
                         radius: 62,
                         backgroundColor: ColorsUtil.accentColorDark,
@@ -171,7 +147,7 @@ class _GroupEditViewState extends State<GroupEditView> {
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -196,8 +172,8 @@ class _GroupEditViewState extends State<GroupEditView> {
                     hintText: "Edit Group Name",
                   ),
                   onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
+                    widget.group['name'] = value;
+                    theGroupName = value;
                   },
                 ),
               ),
@@ -206,7 +182,7 @@ class _GroupEditViewState extends State<GroupEditView> {
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 49, 59, 21),
+                color: ColorsUtil.descriptionColorDark,
                 borderRadius: BorderRadius.circular(10)),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -227,12 +203,13 @@ class _GroupEditViewState extends State<GroupEditView> {
               SizedBox(
                 child: TextField(
                   controller: _description,
+                  maxLines: null,
                   decoration: const InputDecoration(
                     hintText: "Write down a description",
                   ),
                   onChanged: (value) {
-                    // user?.username = value;
-                    // theUsername = value;
+                    widget.group['description'] = value;
+                    theDescription = value;
                   },
                 ),
               ),
@@ -250,37 +227,28 @@ class _GroupEditViewState extends State<GroupEditView> {
                 ),
               ),
               onPressed: () async {
-                //   if (pickedImage != null) {
-                //     await uploadPic(
-                //             pickedImage!,
-                //             _username.text.isNotEmpty
-                //                 ? _username.text
-                //                 : user!.username)
-                //         .then((value) => imageId = value);
-                //   }
-                //   final firstname = _firstname.text.isNotEmpty
-                //       ? _firstname.text
-                //       : user!.firstName;
-                //   final lastname = _lastname.text.isNotEmpty
-                //       ? _lastname.text
-                //       : user!.lastName;
-                //   final username = _username.text.isNotEmpty
-                //       ? _username.text
-                //       : user!.username;
-                //   final email =
-                //       _email.text.isNotEmpty ? _email.text : user!.email;
-                //   final profileImageId =
-                //       imageId.isNotEmpty ? imageId : user!.image_id.toString();
-                //   if (!context.mounted) return;
-                //   AuthController(navigationService).updateProfileInformation(
-                //       username!,
-                //       email!,
-                //       firstname!,
-                //       lastname!,
-                //       profileImageId,
-                //       context);
-                // int count = 0;
-                // Navigator.of(context).popUntil((_) => count++ >= 2);
+                if (pickedImage != null) {
+                  await uploadGroupPic(pickedImage!, theGroupID.toString())
+                      .then((value) => imageId = value);
+                }
+                final groupName = _groupName.text.isNotEmpty
+                    ? _groupName.text
+                    : widget.group['name'];
+                final description = _description.text.isNotEmpty
+                    ? _description.text
+                    : widget.group['description'];
+                final profileImageId =
+                    imageId.isNotEmpty ? imageId : widget.group['image_id'];
+
+                if (!context.mounted) return;
+                CommunityController().updateGroupDetails(
+                    widget.group['id'],
+                    widget.user.id,
+                    groupName,
+                    description,
+                    profileImageId,
+                    context);
+                
               },
               child: const Text('Update'),
             ))

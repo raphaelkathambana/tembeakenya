@@ -1,142 +1,116 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_group_members.dart';
 import 'package:tembeakenya/repository/get_users.dart';
 
-import 'package:tembeakenya/views/group_create_hike_view.dart';
+import 'package:tembeakenya/views/group_event_create_view.dart';
 import 'package:tembeakenya/views/group_edit_view.dart';
-// import 'package:tembeakenya/views/group_event_view.dart';
+import 'package:tembeakenya/views/group_event_view.dart';
 import 'package:tembeakenya/views/group_join_request_view.dart';
 import 'package:tembeakenya/views/group_members_view.dart';
 
-// ******************* DUMMY DATABASE ******************* //
-// import 'package:tembeakenya/dummy_db.dart';
-
-// ****************************************************** //
-
-//      | RoleID | Role        |
-//      | ------ | ----------- |
-//      | 1      | Hike        |
-//      | 2      | Guide       |
-//      | 3      | Super Admin |
-
-// *********** EXAMPLE DB ************ //
-
-//      | UserID | RoleID |
-//      | ------ | ------ |
-//      | 1      | 1      |
-//      | 1      | 2      |
-//      | 2      | 1      |
-
-//      | UserID | GoupID | RoleID |
-//      | ------ | ------ | ------ |
-//      | 1      | 1      | 1      |
-//      | 1      | 2      | 2      |
-//      | 2      | 2      | 1      |
-
-// ****************************************************** //
 class GroupDetailView extends StatefulWidget {
-  final user;
-  final group;
-  const GroupDetailView({super.key, required this.user, required this.group});
+  final dynamic user;
+  final dynamic group;
+  final dynamic details;
+  const GroupDetailView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.details});
 
   @override
   State<GroupDetailView> createState() => _CommunityViewState();
 }
 
 class _CommunityViewState extends State<GroupDetailView> {
-  late String displayUrl;
   late NavigationService navigationService;
-  String profileImageID = "defaultProfilePic";
+  late String displayUrl;
+  late String profileImageID;
 
   late String theGroupName;
-  // late bool theMember;
   late String theDescription;
+  late int theId;
 
-  late int uID;
-
-  // TODO: Temporary
-  // ***** ROLE *****  //
   late int roleID;
   late bool roleSwitch;
-  // ***************** //
+  late bool requested;
 
-  eventCard() {
-    return TextButton(
-      onPressed: () {
-        // TODO: Add to route
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => GroupEventView(userID: uID)));
+  late int loadNum;
+  dynamic detailEvent;
+  late List<int> theHikeID;
+  late Map<String, dynamic>? groupDetails;
+
+  Future<void> _handleRefresh() async {
+    await Future.delayed(const Duration(seconds: 2));
+
+    CommunityController().getGroupDetails(widget.group['id']).then(
+      (group) {
+        setState(() {
+          groupDetails = group;
+        });
       },
-      style: const ButtonStyle(
-          overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
-      child: Container(
-        width: MediaQuery.sizeOf(context).width,
-        // height: 100,
-        margin: const EdgeInsets.all(7),
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          border: Border.all(color: ColorsUtil.accentColorDark),
-          color: const Color.fromARGB(29, 99, 126, 32),
-        ),
-        child: const Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Title of the Hike',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: ColorsUtil.primaryColorDark,
-                ),
-              ),
-              Divider(
-                height: 6,
-                color: ColorsUtil.accentColorDark,
-              ),
-              Text(
-                'Come Join us on the hike! If you want to attend the hike, make sure you fill out the form and pay.',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.textColorDark,
-                ),
-              ),
-              Text(
-                'Location: Karura Forest',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.normal,
-                  color: ColorsUtil.primaryColorDark,
-                ),
-              ),
-              Text('Date: July 7, 2024',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: ColorsUtil.primaryColorDark,
-                  ))
-            ]),
-      ),
     );
+
+    setState(() {
+      loadNum = groupDetails!.length;
+
+      detailEvent = groupDetails!['events'];
+      var group = widget.group;
+      theGroupName = group['name'];
+      theDescription = group['description'];
+    });
+
+    displayUrl = '';
+    for (int i = 0; i < loadNum; i++) {
+      profileImageID = widget.group['image_id'];
+      getImageUrl(profileImageID).then((String result) {
+        setState(() {
+          displayUrl = result;
+        });
+      });
+    }
   }
 
   @override
   void initState() {
-    // TODO: Temporary
-    // ***** ROLE *****  //
-    User user = widget.user;
-    roleID = user.roleNo!;
-    roleSwitch = canEdit(roleID);
-    // ***************** //
+    loadNum = widget.details.length;
+    // if(widget.details['events'] != null){
+    detailEvent = widget.details['events'];
+    // }
+    var group = widget.group;
+    theGroupName = group['name'];
+    theDescription = group['description'];
+    theId = group['id'];
 
+    User user = widget.user;
+
+    if (group['guide_id'] == user.id) {
+      roleID = user.role_id!;
+      roleSwitch = canEdit(roleID);
+    } else {
+      roleID = 1;
+      roleSwitch = canEdit(roleID);
+    }
+    if (roleSwitch) {
+      hasRequestedToJoinGroup(widget.user, widget.group['id']).then((value) {
+        setState(() {
+          requested = value;
+        });
+      });
+    } else {
+      requested = false;
+    }
+
+    displayUrl = '';
+    profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
       setState(() {
         displayUrl = result;
@@ -144,356 +118,474 @@ class _CommunityViewState extends State<GroupDetailView> {
     });
 
     navigationService = NavigationService(router);
-    displayUrl = '';
+    groupDetails = widget.details;
+
+    Timer.periodic(const Duration(seconds: 30), (timer) {
+      CommunityController().getGroupDetails(widget.group['id']).then(
+        (group) {
+          setState(() {
+            groupDetails = group;
+          });
+        },
+      );
+    });
+
     super.initState();
+  }
+
+  // TEMPORARY ROLE SWITCH BUTTON
+  roleButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          roleSwitch = !roleSwitch;
+          roleID = roleSwitch ? 2 : 1;
+        });
+      },
+      style: ElevatedButton.styleFrom(
+          minimumSize: const Size(150, 30),
+          foregroundColor: ColorsUtil.textColorDark,
+          backgroundColor: roleSwitch
+              ? ColorsUtil.secondaryColorDark
+              : ColorsUtil.accentColorDark),
+      child: roleSwitch
+          ? const Text('debug button: Group\'s Guide')
+          : const Text('debug button: Hiker'),
+    );
+  }
+  // ***************** //
+
+  sideBar(int theRole) {
+    if (theRole == 1) {
+      return Drawer(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ListTile(
+            leading: const Icon(Icons.people_outline),
+            title: const Text('Members'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GroupMemberView(
+                            members: widget.details['members'],
+                            group: widget.group,
+                            user: widget.user,
+                          )));
+            },
+          ),
+          ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Leave Group'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text('Leave Group'),
+                          content: const Text('Are you sure?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                context.pop();
+                              },
+                              child: const Text('Cancel'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await CommunityController()
+                                    .leaveGroup(widget.group['id'], context)
+                                    .then((value) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text(
+                                          'You have left the group Successfully'),
+                                    ),
+                                  );
+                                  context.pop();
+                                  context.pop();
+                                  context.pop();
+                                });
+                              },
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        ));
+              }),
+        ]),
+      );
+    } else {
+      return Drawer(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          ListTile(
+            leading: const Icon(Icons.people_outline),
+            title: const Text('Members'),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => GroupMemberView(
+                            members: widget.details['members'],
+                            group: widget.group,
+                            user: widget.user,
+                          )));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.edit_note),
+            title: const Text('Edit Group'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupEditView(
+                          group: widget.group,
+                          user: widget.user,
+                        ))),
+          ),
+          ListTile(
+            leading: const Icon(Icons.read_more),
+            title: const Text('Membership Request'),
+            onTap: () async {
+              await CommunityController()
+                  .getJoinRequests(widget.group['id'])
+                  .then((value) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GroupJoinView(
+                              user: widget.user,
+                              group: widget.group,
+                              requests: value,
+                            )));
+              });
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.event),
+            title: const Text('Create a Hike Event'),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => GroupCreateHikeView(
+                          user: widget.user,
+                          group: widget.group,
+                        ))),
+          ),
+        ]),
+      );
+    }
+  }
+
+  noEventCard() {
+    return Container(
+      width: MediaQuery.sizeOf(context).width,
+      margin: const EdgeInsets.all(7),
+      padding: const EdgeInsets.all(10),
+      child: const Text(
+        'There are no upcoming events...',
+        style: TextStyle(color: ColorsUtil.primaryColorDark, fontSize: 14),
+      ),
+    );
+  }
+
+  eventCard(int eventID) {
+    dynamic selectedEvent;
+    var selectedHikeID = detailEvent![eventID]['id'];
+
+    return TextButton(
+      onPressed: () async {
+        // Load the hike detail
+        await CommunityController()
+            .getGroupHikesDetails(selectedHikeID)
+            .then((value) {
+          setState(() {
+            selectedEvent = value;
+          });
+        });
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupEventView(
+                      user: widget.user,
+                      group: widget.group,
+                      details: selectedEvent,
+                    )));
+      },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width,
+        // height: 100,
+        // margin: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: ColorsUtil.accentColorDark),
+          color: ColorsUtil.descriptionColorDark,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              groupDetails?['events']?[eventID]['name'],
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: ColorsUtil.primaryColorDark,
+              ),
+            ),
+            const Divider(
+              height: 6,
+              color: ColorsUtil.accentColorDark,
+            ),
+            Text(
+              groupDetails?['events']?[eventID]['description'],
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: ColorsUtil.primaryColorDark,
+              ),
+            ),
+            const Text(
+              'Click for more details',
+              style: TextStyle(
+                  decorationColor: ColorsUtil.textColorDark,
+                  decoration: TextDecoration.underline,
+                  fontSize: 12,
+                  fontWeight: FontWeight.normal,
+                  color: ColorsUtil.textColorDark,
+                  fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // ****************************************************** //
-    var group = widget.group;
-    theGroupName = group['name'];
-    // theMember = ;
-    theDescription = group['description'];
-    // ****************************************************** //
-
-    // user = widget.currentUser;
-    debugPrint('Ok, Image URL: $displayUrl');
-
-    // TODO: TEMPORARY ROLE SWITCH BUTTON
-    roleButton() {
-      return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            roleSwitch = !roleSwitch;
-            roleID = roleSwitch ? 2 : 1;
-          });
-        },
-        style: ElevatedButton.styleFrom(
-            minimumSize: const Size(150, 30),
-            foregroundColor: ColorsUtil.textColorDark,
-            backgroundColor: roleSwitch
-                ? ColorsUtil.secondaryColorDark
-                : ColorsUtil.accentColorDark),
-        child: roleSwitch ? const Text('Guide') : const Text('Hiker'),
-      );
-    }
-
-    sideBar(int theRole) {
-      if (theRole == 1) {
-        return Drawer(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: const Text('Members'),
-              // TODO: Add to route
-              onTap: () {
-                debugPrint(getGroupMembers().toString());
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GroupMemberView(
-                              user: widget.user,
-                            )));
-              },
-            ),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Leave Group'),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('Leave Group'),
-                            content: const Text('Are you sure?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Yes'),
-                              ),
-                            ],
-                          ));
-                }),
-          ]),
-        );
-      } else if (theRole == 2) {
-        return Drawer(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-            ListTile(
-              leading: const Icon(Icons.people_outline),
-              title: const Text('Members'),
-              // TODO: Add to route
-              onTap: () {
-                debugPrint(getGroupMembers().toString());
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GroupMemberView(
-                              user: widget.user,
-                            )));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.edit_note),
-              title: const Text('Edit Group'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => GroupEditView(userID: uID))),
-            ),
-            ListTile(
-              leading: const Icon(Icons.read_more),
-              title: const Text('Membership Request'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => GroupJoinView(
-                            user: widget.user,
-                          ))),
-            ),
-            ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text('Create a Hike Event'),
-              // TODO: Add to route
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const GroupCreateHikeView())),
-            ),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text('Delete Group'),
-                onTap: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('Delete'),
-                            content: const Text(
-                                'Would you like to send a request to delete group to admins?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text('Send Request'),
-                              ),
-                            ],
-                          ));
-                }),
-          ]),
-        );
-      }
-    }
-
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color.fromARGB(57, 22, 26, 15),
           title: const Text(
             'Hike Group',
             style: TextStyle(color: ColorsUtil.textColorDark),
           ),
         ),
         endDrawer: sideBar(roleID),
-        body: SingleChildScrollView(
-            child: Column(children: [
-          // Group Name
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            padding: const EdgeInsets.only(right: 3.5),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: Color.fromARGB(55, 99, 126, 32),
-            ),
-            child: Column(children: [
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      if (displayUrl.isEmpty)
-                        const CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Color(0x00000000),
-                            child: CircleAvatar(
-                                radius: 42,
-                                backgroundColor: ColorsUtil.accentColorDark,
-                                child: CircleAvatar(
-                                  radius: 40,
-                                  child: CircularProgressIndicator(),
-                                )))
-                      else
-                        IconButton(
-                          icon: CircleAvatar(
-                              radius: 42,
-                              backgroundColor: ColorsUtil.accentColorDark,
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: NetworkImage(displayUrl),
-                              )),
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => Container(
-                                      padding: const EdgeInsets.all(15),
-                                      child: CircleAvatar(
-                                          radius:
-                                              MediaQuery.sizeOf(context).width,
-                                          backgroundColor:
-                                              ColorsUtil.accentColorDark,
-                                          child: CircleAvatar(
-                                            radius: MediaQuery.sizeOf(context)
-                                                    .width *
-                                                .45,
-                                            backgroundImage:
-                                                NetworkImage(displayUrl),
-                                          )),
-                                    ));
-                          },
-                        ),
-                      SizedBox(
-                        width: MediaQuery.sizeOf(context).width * .6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+        body: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(children: [
+                // Group Name
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  padding: const EdgeInsets.only(right: 3.5),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: ColorsUtil.cardColorDark,
+                  ),
+                  child: Column(children: [
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
                           children: [
-                            SizedBox(
-                              width: MediaQuery.sizeOf(context).width * .35,
-                              child: Text(theGroupName,
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: ColorsUtil.textColorDark)),
-                            ),
-                            if (isGroupMember(widget.user))
-                              const Text('Member',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal,
-                                      color: ColorsUtil.accentColorDark)),
-                            if (!isGroupMember(widget.user))
-                              ElevatedButton(
+                            if (displayUrl.isEmpty)
+                              const CircleAvatar(
+                                  radius: 50,
+                                  backgroundColor: Colors.transparent,
+                                  child: CircleAvatar(
+                                      radius: 42,
+                                      backgroundColor:
+                                          ColorsUtil.accentColorDark,
+                                      child: CircleAvatar(
+                                        radius: 40,
+                                        child: CircularProgressIndicator(),
+                                      )))
+                            else
+                              IconButton(
+                                icon: CircleAvatar(
+                                    radius: 42,
+                                    backgroundColor: ColorsUtil.accentColorDark,
+                                    child: CircleAvatar(
+                                      radius: 40,
+                                      backgroundImage: NetworkImage(displayUrl),
+                                    )),
                                 onPressed: () {
-                                  setState(() {
-                                    // todo add the request functionality
-                                  });
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) => Container(
+                                            padding: const EdgeInsets.all(15),
+                                            child: CircleAvatar(
+                                                radius:
+                                                    MediaQuery.sizeOf(context)
+                                                        .width,
+                                                backgroundColor:
+                                                    ColorsUtil.accentColorDark,
+                                                child: CircleAvatar(
+                                                  radius:
+                                                      MediaQuery.sizeOf(context)
+                                                              .width *
+                                                          .45,
+                                                  backgroundImage:
+                                                      NetworkImage(displayUrl),
+                                                )),
+                                          ));
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    minimumSize: const Size(150, 30),
-                                    foregroundColor: ColorsUtil.textColorDark,
-                                    backgroundColor:
-                                        hasRequestedToJoinGroup(widget.user)
-                                            ? ColorsUtil.accentColorDark
-                                            : ColorsUtil.secondaryColorDark),
-                                child: hasRequestedToJoinGroup(widget.user)
-                                    ? const Text('Pending...')
-                                    : const Text('Request to Join'),
-                              )
+                              ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * .6,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * .35,
+                                    child: Text(theGroupName,
+                                        style: const TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: ColorsUtil.textColorDark)),
+                                  ),
+                                  if (isMember(
+                                      widget.user, widget.details['members']))
+                                    if (widget.user.id ==
+                                        widget.group['guide_id'])
+                                      const Text('Guide',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorsUtil.accentColorDark))
+                                    else
+                                      const Text('Member',
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                                  ColorsUtil.accentColorDark)),
+                                  if (!isMember(
+                                      widget.user, widget.details['members']))
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        await CommunityController()
+                                            .requestToJoinGroup(theId, context)
+                                            .then(
+                                          (value) {
+                                            setState(() {
+                                              requested = true;
+                                            });
+                                          },
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          minimumSize: const Size(150, 30),
+                                          foregroundColor:
+                                              ColorsUtil.textColorDark,
+                                          backgroundColor: requested
+                                              ? ColorsUtil.accentColorDark
+                                              : ColorsUtil.secondaryColorDark),
+                                      child: requested
+                                          ? const Text('Pending...')
+                                          : const Text('Request to Join'),
+                                    )
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-            ]),
-          ),
+                      ],
+                    ),
+                    const Divider(
+                      height: 2,
+                      color: ColorsUtil.secondaryColorDark,
+                      indent: 12,
+                      endIndent: 12,
+                    ),
+                  ]),
+                ),
 
-          // Description
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-            padding: const EdgeInsets.all(0),
-            decoration: BoxDecoration(
-                border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: const Color.fromARGB(255, 49, 59, 21),
-                borderRadius: BorderRadius.circular(10)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // const Padding(
-              //   padding: EdgeInsets.symmetric(horizontal: 10),
-              //   child: Text('Description',
-              //       style: TextStyle(
-              //           fontSize: 22,
-              //           fontWeight: FontWeight.bold,
-              //           color: ColorsUtil.primaryColorDark)),
-              // ),
-              // const Divider(
-              //   height: 2,
-              //   color: ColorsUtil.secondaryColorDark,
-              // ),
-              Container(
-                  width: MediaQuery.sizeOf(context).width,
-                  height: 100,
-                  margin: const EdgeInsets.all(7),
-                  padding: const EdgeInsets.all(10),
+                // Description
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+                  padding: const EdgeInsets.all(0),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: ColorsUtil.backgroundColorDark),
-                    color: const Color.fromARGB(29, 99, 126, 32),
+                      border: Border.all(color: ColorsUtil.secondaryColorDark),
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                            width: MediaQuery.sizeOf(context).width,
+                            // height: 100,
+                            margin: const EdgeInsets.all(7),
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              border: Border.all(
+                                  color: ColorsUtil.backgroundColorDark),
+                              color: ColorsUtil.descriptionColorDark,
+                            ),
+                            child: Text(theDescription,
+                                style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.normal,
+                                    color: ColorsUtil.primaryColorDark))),
+                      ]),
+                ),
+
+                // Events
+                if (isMember(widget.user, widget.details['members']))
+                  Container(
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 15, horizontal: 15),
+                    padding: const EdgeInsets.only(
+                        top: 15, bottom: 15, left: 5, right: 5),
+                    decoration: BoxDecoration(
+                        border:
+                            Border.all(color: ColorsUtil.secondaryColorDark),
+                        color: const Color.fromARGB(150, 49, 59, 21),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: Text('Upcoming Events',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.textColorDark)),
+                          ),
+                          const Divider(
+                            height: 6,
+                            color: ColorsUtil.accentColorDark,
+                          ),
+                          if (loadNum == 0)
+                            noEventCard()
+                          else if (detailEvent
+                              .isEmpty) // if they don't have any hikeID from hike-group
+                            noEventCard()
+                          else
+                            for (int i = 0; i < detailEvent.length; i++)
+                              eventCard(i),
+                        ]),
                   ),
-                  child: Text(theDescription,
-                      style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.normal,
-                          color: ColorsUtil.primaryColorDark))),
-            ]),
-          ),
-
-          // Events
-
-          Container(
-            margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
-            padding:
-                const EdgeInsets.only(top: 15, bottom: 15, left: 5, right: 5),
-            decoration: BoxDecoration(
-                border: Border.all(color: ColorsUtil.secondaryColorDark),
-                color: const Color.fromARGB(150, 49, 59, 21),
-                borderRadius: BorderRadius.circular(10)),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                child: Text('Upcoming Events',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: ColorsUtil.primaryColorDark)),
-              ),
-              const Divider(
-                height: 6,
-                color: ColorsUtil.accentColorDark,
-              ),
-              eventCard(),
-            ]),
-          ),
-          // TEMPORARY ROLE SWITCH BUTTON
-          roleButton(),
-        ])));
+                roleButton(),
+              ])),
+        ));
   }
 }
+
+isGroup() {}

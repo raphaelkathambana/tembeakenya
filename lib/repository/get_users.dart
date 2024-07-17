@@ -11,7 +11,7 @@ var data = {
         "username": "superadmin",
         "email": "codeclimberske@gmail.com",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 3,
+        "role_id": 3,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 10,
         "total_distance_walked": 10,
@@ -26,7 +26,7 @@ var data = {
         "username": "goyette.herminia",
         "email": "qdare@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 2,
+        "role_id": 2,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -41,7 +41,7 @@ var data = {
         "username": "carlee.dare",
         "email": "reilly.marilyne@example.org",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 2,
+        "role_id": 2,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -56,7 +56,7 @@ var data = {
         "username": "feil.milan",
         "email": "claudine.gleason@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 2,
+        "role_id": 2,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -71,7 +71,7 @@ var data = {
         "username": "rice.rahsaan",
         "email": "toy71@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -86,7 +86,7 @@ var data = {
         "username": "ryan.emerson",
         "email": "brice.bode@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -101,7 +101,7 @@ var data = {
         "username": "larson.frederik",
         "email": "mozelle.smith@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -116,7 +116,7 @@ var data = {
         "username": "antonette.thompson",
         "email": "schamberger.stanton@example.net",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -131,7 +131,7 @@ var data = {
         "username": "drew.frami",
         "email": "carlos.gusikowski@example.org",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -146,7 +146,7 @@ var data = {
         "username": "liza.king",
         "email": "kendall.schmeler@example.com",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -224,7 +224,7 @@ var data = {
 //   final String username;
 //   final String email;
 //   final String emailVerifiedAt;
-//   final int roleNo;
+//   final int role_id;
 //   final String imageId;
 //   final int noOfHikes;
 //   final int totalDistanceWalked;
@@ -239,7 +239,7 @@ var data = {
 //     required this.username,
 //     required this.email,
 //     required this.emailVerifiedAt,
-//     required this.roleNo,
+//     required this.role_id,
 //     required this.imageId,
 //     required this.noOfHikes,
 //     required this.totalDistanceWalked,
@@ -256,7 +256,7 @@ var data = {
 //       username: json['username'],
 //       email: json['email'],
 //       emailVerifiedAt: json['email_verified_at'],
-//       roleNo: json['roleNo'],
+//       role_id: json['role_id'],
 //       imageId: json['image_id'],
 //       noOfHikes: json['no_of_hikes'],
 //       totalDistanceWalked: json['total_distance_walked'],
@@ -286,7 +286,7 @@ var data = {
 //           username: 'empty',
 //           email: 'empty',
 //           email_verified_at: DateTime(2024),
-//           roleNo: 1,
+//           role_id: 1,
 //           image_id: 'empty',
 //           no_of_hikes: 0,
 //           total_distance_walked: 0,
@@ -301,8 +301,8 @@ var data = {
 // }
 
 // check if a user is a hiker, a guide or an admin
-String getRole(int roleNo) {
-  switch (roleNo) {
+String getRole(int role_id) {
+  switch (role_id) {
     case 1:
       return 'Hiker';
     case 2:
@@ -315,8 +315,8 @@ String getRole(int roleNo) {
 }
 
 // check whether the user is allowed to edit (admin or guide) or not (hiker)
-bool canEdit(int roleNo) {
-  return roleNo != 1;
+bool canEdit(int role_id) {
+  return role_id != 1;
 }
 
 List<User> getUsersFromData(Map<String, dynamic> data) {
@@ -339,7 +339,38 @@ List<User> getUsersFromData(Map<String, dynamic> data) {
       username: 'empty',
       email: 'empty',
       email_verified_at: DateTime(2024),
-      roleNo: 1,
+      role_id: 1,
+      image_id: 'empty',
+      no_of_hikes: 0,
+      total_distance_walked: 0,
+      no_of_steps_taken: 0,
+      followers_count: 0,
+      following_count: 0,
+    )
+  ];
+}
+
+List<User> getListOfUsersFromData(Map<String, dynamic> data) {
+  if (data['data'] != null) {
+    List<User> users = [];
+    // var userData = data['data'] as List<Map<String, dynamic>>?;
+    var userData = data['data'];
+    if (userData != null) {
+      for (var user in userData) {
+        users.add(User.fromJson(user));
+      }
+      return users;
+    }
+  }
+  return [
+    User(
+      id: 0,
+      firstName: 'empty',
+      lastName: 'empty',
+      username: 'empty',
+      email: 'empty',
+      email_verified_at: DateTime(2024),
+      role_id: 1,
       image_id: 'empty',
       no_of_hikes: 0,
       total_distance_walked: 0,

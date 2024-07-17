@@ -4,6 +4,7 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/search_a_user.dart';
 // import 'package:tembeakenya/views/nav.dart';
 import 'package:tembeakenya/views/nav_page.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
@@ -31,6 +32,17 @@ final GoRouter router = GoRouter(
       pageBuilder: (context, state) => const MaterialPage(child: WelcomeView()),
     ),
     GoRoute(
+      path: '/new-search',
+      pageBuilder: (context, state) => MaterialPage(
+          child: UserListScreen(
+        displayUrl: const [],
+        isFriend: const [],
+        followsLoaded: const [],
+        loaded: false,
+        currentUser: state.extra as User,
+      )),
+    ),
+    GoRoute(
       path: '/login',
       pageBuilder: (context, state) => const MaterialPage(child: LoginView()),
     ),
@@ -55,7 +67,6 @@ final GoRouter router = GoRouter(
       name: '/profile',
       pageBuilder: (context, state) => MaterialPage(
           child: ProfileView(
-        user: state.extra as User,
         currentUser: state.extra as User,
       )),
     ),
@@ -136,11 +147,13 @@ final GoRouter router = GoRouter(
         path: '/home',
         builder: (context, state) => HomeView(
               user: state.extra as User,
+              locations: const [],
             )),
     GoRoute(
       path: '/verify-email-success',
       builder: (context, state) => HomeView(
         user: state.extra as User,
+        locations: const [],
       ),
     ),
   ],
@@ -227,7 +240,7 @@ class NavigationService {
   }
 
   void navigateTo(route, {required User arguments}) {
-    _router.go(route, extra: arguments);
+    _router.push(route, extra: arguments);
   }
 
   void navigateToPeopleDetailsView(BuildContext context, List<User> users) {
@@ -236,5 +249,9 @@ class NavigationService {
 
   void navigateToNav(BuildContext context) {
     _router.pushNamed('/map-nav');
+  }
+
+  void navigateToTest(BuildContext context) {
+    _router.push('/test-view');
   }
 }

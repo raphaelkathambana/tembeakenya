@@ -124,10 +124,10 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ))
               ]),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,10 +160,10 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ),
                   ])),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -185,6 +185,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     SizedBox(
                       child: TextField(
                         controller: _description,
+                        maxLines: null,
                         decoration: const InputDecoration(
                           hintText: "Write down a description",
                         ),
@@ -196,7 +197,7 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                     ),
                   ])),
           Container(
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 16),
@@ -208,17 +209,31 @@ class _GroupCreateViewState extends State<GroupCreateView> {
                   ),
                 ),
                 onPressed: () async {
-                  // if (pickedImage != null) {
-                  //   await uploadPic(pickedImage!, _groupName.text)
-                  //       .then((value) => imageId = value);
-                  // }
                   final groupName = _groupName.text;
                   final description = _description.text;
                   final guideId = user!.id;
+                  if (groupName.isEmpty || description.isEmpty) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('Incomplete'),
+                              content: const Text('Fill out all the details.'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text('Okay'),
+                                ),
+                              ],
+                            ));
+                  } 
+                  else {
                   CommunityController()
                       .createGroup(groupName, description, guideId!, context);
+                  }
                 },
-                child: const Text('Update'),
+                child: const Text('Create Group'),
               ))
         ])));
   }

@@ -35,7 +35,7 @@ class _LoginViewState extends State<LoginView> {
   late NavigationService navigationService;
 
   bool hidePassword = true;
-  bool isCheched = false;
+  bool isChecked = false;
 
 
   @override
@@ -110,10 +110,10 @@ class _LoginViewState extends State<LoginView> {
                   Row(
                     children: [
                       Checkbox(
-                          value: isCheched,
+                          value: isChecked,
                           onChanged: (value) {
                             setState(() {
-                              isCheched = value!;
+                              isChecked = value!;
                               hidePassword = !hidePassword;
                             });
                           }),

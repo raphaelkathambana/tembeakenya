@@ -12,9 +12,14 @@ class ColorsUtil {
   static const Color accentColorDark = Color(0xFF637e20);
   static const Color textColorDark = Color(0xfffcfef6);
   static const Color backgroundColorDark = Color(0xff161a0f);
+  static const Color cardColorDark = Color(0xff262f14);
+  static const Color descriptionColorDark = Color(0xff2d3915);
+  // static const Color cardColorDark = ColorsUtil.cardColorDark;
+  // static const Color describtionColorDark = ColorsUtil.describtionColorDark;
 }
 
 ThemeData darkThemeData = ThemeData(
+  fontFamily: 'Montserrat',
   /* dark theme settings */
   brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
@@ -24,7 +29,8 @@ ThemeData darkThemeData = ThemeData(
     secondary: ColorsUtil.secondaryColorDark,
     surface: ColorsUtil.backgroundColorDark,
     background: ColorsUtil.backgroundColorDark,
-    onPrimary: ColorsUtil.textColorDark,
+    // card: ColorsUtil.cardColorDark,
+    // describtion: ColorsUtil.describtionColorDark,
     onSecondary: ColorsUtil.textColorDark,
     onSurface: ColorsUtil.textColorDark,
     onBackground: ColorsUtil.textColorDark,
@@ -34,6 +40,7 @@ ThemeData darkThemeData = ThemeData(
   useMaterial3: true,
 );
 ThemeData lightThemeData = ThemeData(
+  fontFamily: 'Montserrat',
   brightness: Brightness.light,
   /* light theme settings */
   colorScheme: ColorScheme.fromSeed(

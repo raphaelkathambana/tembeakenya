@@ -1,3 +1,4 @@
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 
 var data = {
@@ -10,7 +11,7 @@ var data = {
         "username": "liza.king",
         "email": "kendall.schmeler@example.com",
         "email_verified_at": "2024-07-04T14:25:02.000000Z",
-        "roleNo": 1,
+        "role_id": 1,
         "image_id": "defaultProfilePic",
         "no_of_hikes": 0,
         "total_distance_walked": 0,
@@ -54,7 +55,7 @@ var data = {
 };
 
 // loop through the data to get the list of users
-List<User> getFriendDetails() {
+List<User> getFollowingFriendDetails() {
   if (data['data']?['data'] != null) {
     List<User> users = [];
     var userData = data['data']?['data'] as List<Map<String, dynamic>>?;
@@ -72,7 +73,7 @@ List<User> getFriendDetails() {
           username: 'empty',
           email: 'empty',
           email_verified_at: DateTime(2024),
-          roleNo: 1,
+          role_id: 1,
           image_id: 'empty',
           no_of_hikes: 0,
           total_distance_walked: 0,
@@ -92,13 +93,70 @@ Map<String, Object?>? getMeta() {
 }
 
 // check if the logged in user is following the friend
-bool getFriends(int friendID, User user) {
-  // var user = getUsersFromDb()[num];
-  // List<User> friends = getFriendDetails();
-  // for (var friend in friends) {
-  if (friendID == user.id) {
-    return true;
+getFollowingFriend(int friendID) async {
+  dynamic friends = [];
+  late bool result;
+  await CommunityController().getFollowing().then((values) {
+    friends = values;
+    for (var friend in friends) {
+      if (friendID == friend.id) {
+        result = true;
+        break;
+      } 
+      else if (friendID != friend.id) {
+        result = false;
+      }
+    }
+  });
+  return result;
+}
+
+getFollowersFriend(int friendID) async {
+  dynamic friends = [];
+  late bool result;
+  await CommunityController().getFollowers().then((values) {
+    friends = values;
+    for (var friend in friends) {
+      if (friendID == friend.id) {
+        result = true;
+        break;
+      } 
+      else if (friendID != friend.id) {
+        result = false;
+      }
+    }
+  });
+  return result;
+}
+
+List<User> getFollowingData(Map<String, dynamic> friendData) {
+  if (friendData['data']?['data'] != null) {
+    List<User> users = [];
+    var userData = friendData['data']?['data'] as List<Map<String, dynamic>>?;
+    if (userData != null) {
+      for (var user in userData) {
+        users.add(User.fromJson(user));
+      }
+      return users;
+    } else {
+      return [
+        User(
+          id: 0,
+          firstName: 'empty',
+          lastName: 'empty',
+          username: 'empty',
+          email: 'empty',
+          email_verified_at: DateTime(2024),
+          role_id: 1,
+          image_id: 'empty',
+          no_of_hikes: 0,
+          total_distance_walked: 0,
+          no_of_steps_taken: 0,
+          followers_count: 0,
+          following_count: 0,
+        )
+      ];
+    }
   }
-  // }
-  return false;
+  return []; // Add a return statement here
 }

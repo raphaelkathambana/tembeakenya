@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'package:tembeakenya/assets/colors.dart';
 import 'package:tembeakenya/constants/routes.dart';
@@ -18,19 +23,33 @@ Future<void> main() async {
   await Firebase.initializeApp();
   await dotenv.load(fileName: ".env");
   await determinePosition();
+  NavigationService navigationService = NavigationService(router);
   runApp(
-    MaterialApp.router(
-      title: 'Tembea Kenya',
-      themeMode: ThemeMode.dark,
-      darkTheme: darkThemeData,
-      theme: lightThemeData,
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthController(navigationService),
+        )
+      ],
+      child: MaterialApp.router(
+        title: 'Tembea Kenya',
+        themeMode: ThemeMode.dark,
+        darkTheme: darkThemeData,
+        theme: lightThemeData,
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
+      ),
     ),
   );
 }
 
 class MainPage extends StatelessWidget {
+  write() async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/time.txt');
+    await file.writeAsString('00:00:00\n00:00:00\n00:00:00');
+  }
+
   const MainPage({super.key});
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.system);
@@ -62,6 +81,7 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    write();
     return FutureBuilder<Map<String, dynamic>>(
       future: AuthController(NavigationService(router)).isAuthenticated(),
       builder:

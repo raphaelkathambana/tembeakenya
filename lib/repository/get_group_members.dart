@@ -1,5 +1,5 @@
+import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
-import 'package:tembeakenya/repository/get_groups.dart';
 
 var data = [
   {
@@ -9,7 +9,7 @@ var data = [
     "username": "goyette.herminia",
     "email": "qdare@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 2,
+    "role_id": 2,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -24,7 +24,7 @@ var data = [
     "username": "superadmin",
     "email": "codeclimberske@gmail.com",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 3,
+    "role_id": 3,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -39,7 +39,7 @@ var data = [
     "username": "rice.rahsaan",
     "email": "toy71@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -54,7 +54,7 @@ var data = [
     "username": "ryan.emerson",
     "email": "brice.bode@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -69,7 +69,7 @@ var data = [
     "username": "larson.frederik",
     "email": "mozelle.smith@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -84,7 +84,7 @@ var data = [
     "username": "antonette.thompson",
     "email": "schamberger.stanton@example.net",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -99,7 +99,7 @@ var data = [
     "username": "drew.frami",
     "email": "carlos.gusikowski@example.org",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -114,7 +114,7 @@ var data = [
     "username": "liza.king",
     "email": "kendall.schmeler@example.com",
     "email_verified_at": "2024-07-04T14:25:02.000000Z",
-    "roleNo": 1,
+    "role_id": 1,
     "image_id": "defaultProfilePic",
     "no_of_hikes": 0,
     "total_distance_walked": 0,
@@ -145,24 +145,32 @@ bool isGroupMember(User user) {
   return false;
 }
 
-// check if user has requested to join a group
-bool hasRequestedToJoinGroup(User user) {
-  // var user = getUsersFromDb()[userId];
-  List<dynamic> requests = getRequestData();
-  for (var request in requests) {
-    if (user.id == request.id) {
+bool isMember(user, members) {
+  for (var member in members) {
+    if (user.id == member.id) {
       return true;
     }
   }
   return false;
 }
-// bool getFriends(int num) {
-//   var user = getUsersFromDb()[num];
-//   List<User> friends = getFriendDetails();
-//   for (var friend in friends) {
-//     if (friend.id == user.id) {
-//       return true;
-//     }
-//   }
-//   return false;
-// }
+
+bool isMemberGroup(user, members, num) {
+  for (var member in members) {
+    if (user.id == member.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// check if user has requested to join a group
+Future<bool> hasRequestedToJoinGroup(User user, int groupId) async {
+  // var user = getUsersFromDb()[userId];
+  Map<String, User> data = await CommunityController().getJoinRequests(groupId);
+  for (var request in data.entries) {
+    if (user.id == request.value.id) {
+      return true;
+    }
+  }
+  return false;
+}

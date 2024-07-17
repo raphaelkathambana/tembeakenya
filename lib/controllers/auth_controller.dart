@@ -15,12 +15,12 @@ class AuthController with ChangeNotifier {
   final APICall apiCall = APICall();
   final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   NavigationService navigationService = NavigationService(router);
-  User? user;
+  User? _user;
 
-  // User? get user => _user;
+  User? get user => _user;
 
   set setUser(User? value) {
-    user = value;
+    _user = value;
   }
 
   AuthController(this.navigationService);
@@ -56,9 +56,10 @@ class AuthController with ChangeNotifier {
         var getUserData = await apiCall.client.get('${url}api/user');
         final userData = getUserData.data;
         // Load the user data into the user model
-        final user = User.fromJson(userData);
+        setUser = User.fromJson(userData);
+        notifyListeners();
         if (!context.mounted) return;
-        await isVerified(user, context);
+        await isVerified(context);
         // if (!context.mounted) return;
         // context.goNamed('/home');
         // navigationService.navigateToHome(context);
@@ -71,10 +72,10 @@ class AuthController with ChangeNotifier {
         if (!context.mounted) return;
         if (userData.statusCode == 200) {
           // Load the user data into the user model
-          final user = User.fromJson(userData.data);
+          setUser = User.fromJson(userData.data);
           notifyListeners();
           if (!context.mounted) return;
-          await isVerified(user, context);
+          await isVerified(context);
         }
       } else {
         if (!context.mounted) return;
@@ -131,7 +132,7 @@ class AuthController with ChangeNotifier {
         final userResponse = await apiCall.client.get('${url}api/user');
         if (userResponse.statusCode == 200) {
           debugPrint('User Data Retrieved Successfully');
-          final user = User.fromJson(userResponse.data);
+          setUser = User.fromJson(userResponse.data);
           notifyListeners();
           debugPrint(user.toString());
           debugPrint('attempting to assign a new user a token');
@@ -151,7 +152,7 @@ class AuthController with ChangeNotifier {
           debugPrint('Auth Token Saved');
           if (!context.mounted) return;
           // context.goNamed('/email-verify');
-          navigationService.navigateToEmailVerify(context, user);
+          navigationService.navigateToEmailVerify(context, user!);
         } else {
           debugPrint('Failed to get User Data');
           debugPrint(userResponse.data.toString());
@@ -201,19 +202,19 @@ class AuthController with ChangeNotifier {
     }
   }
 
-  Future<void> isVerified(User user, BuildContext context) async {
-    debugPrint(user.toJson().toString());
+  Future<void> isVerified(BuildContext context) async {
+    debugPrint(user!.toJson().toString());
     //check if the response has an email verified field and if it has a value
-    if (!user.isVerified) {
+    if (!user!.isVerified) {
       //if false, then the user has not verified their email
       //navigate to the verify page
       if (!context.mounted) return;
-      navigationService.navigateToEmailVerify(context, user);
+      navigationService.navigateToEmailVerify(context, user!);
     } else {
       //if true, then the user has verified their email
       //navigate to the home page
       if (!context.mounted) return;
-      navigationService.navigateToNavbar(context, user);
+      navigationService.navigateToNavbar(context, user!);
     }
   }
 
@@ -292,7 +293,7 @@ class AuthController with ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('auth_token');
 
-      if (token != null) {
+      if (token != null && token.isNotEmpty) {
         final response = await apiCall.client.post('${url}api/v1/logout');
         if (response.statusCode == 204) {
           await prefs.remove('auth_token');
@@ -305,6 +306,12 @@ class AuthController with ChangeNotifier {
           return false;
         }
       } else {
+        // token is null, should be signed out
+        debugPrint('Token is null, should be signed out');
+        final response = await apiCall.client.post('${url}api/v1/logout');
+        if (response.statusCode == 204) {
+          return true;
+        }
         return false;
       }
     } on DioException catch (e) {
@@ -357,7 +364,7 @@ class AuthController with ChangeNotifier {
         debugPrint('Should return true, true');
         final userData = response.data;
         // Load the user data into the user model
-        final user = User.fromJson(userData);
+        setUser = User.fromJson(userData);
         notifyListeners();
         return {
           'isAuthenticated': true,
@@ -449,12 +456,16 @@ class AuthController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         debugPrint('Password updated successfully');
+        setUser = await refreshUserDetails();
+        notifyListeners();
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Password has been Updated'),
           ),
         );
+        int count = 0;
+        Navigator.of(context).popUntil((_) => count++ >= 2);
       }
     } on DioException catch (e) {
       if (!context.mounted) return;
@@ -497,6 +508,8 @@ class AuthController with ChangeNotifier {
       );
       if (response.statusCode == 200) {
         debugPrint('Profile information updated successfully');
+        setUser = await refreshUserDetails();
+        notifyListeners();
         int count = 0;
         if (!context.mounted) return;
         context.pop((_) => count++ >= 2);
@@ -519,5 +532,13 @@ class AuthController with ChangeNotifier {
         ),
       );
     }
+  }
+
+  Future<User> refreshUserDetails() async {
+    final response = await apiCall.client.get('${url}api/user');
+    final userData = response.data;
+    setUser = User.fromJson(userData);
+    notifyListeners();
+    return user!;
   }
 }

@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:tembeakenya/controllers/community_controller.dart';
 import '../../assets/colors.dart';
 
-class TestView extends StatelessWidget {
+class TestView extends StatefulWidget {
   const TestView({super.key});
+
+  @override
+  State<TestView> createState() => _TestViewState();
+}
+
+class _TestViewState extends State<TestView> {
+  late List list;
+  @override
+  void initState() {
+    super.initState();
+    CommunityController().getHikes().then((value) {
+      setState(() {
+        list = value;
+      });
+    });
+    // list = getReviewData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,45 +51,18 @@ class TestView extends StatelessWidget {
             ),
             Column(
               children: [
-                const Text('Tembea Kenya',
-                    style: TextStyle(
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                        color: ColorsUtil.primaryColorLight)),
-                const Text(
-                  'Where Every Step is a\nJourney',
-                  style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: ColorsUtil.accentColorLight),
-                  textAlign: TextAlign.center,
+                ElevatedButton(
+                  onPressed: () {
+                    // CommunityController().getReviews().then((value) {
+                    //   setState(() {
+                    //     list = value;
+                    //   });
+                    // });
+                  },
+                  style: raisedButtonStyle,
+                  child: const Text('click me'),
                 ),
-                SizedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/login/', (route) => false);
-                            },
-                            style: raisedButtonStyle,
-                            child: const Text('Login')),
-                        const SizedBox(
-                          height: 19,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.of(context).pushNamedAndRemoveUntil(
-                                  '/register/', (route) => false);
-                            },
-                            style: raisedButtonStyle,
-                            child: const Text('Register')),
-                      ],
-                    ),
-                  ),
-                ),
+                Text(list[1][1].toString()),
               ],
             )
           ],

@@ -71,7 +71,6 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
 
   @override
   Widget build(BuildContext context) {
-
     // NavigationService navigationService = NavigationService(router);
     return Scaffold(
         appBar: AppBar(
@@ -93,11 +92,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
               ),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -118,18 +117,17 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                           enableSuggestions: false,
                           autocorrect: false,
                           onChanged: (value) {
-                            // user?.username = value;
                             currentPassword = value;
                           },
                         ),
                       ])),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,11 +155,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       ])),
               Container(
                   margin:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
+                      left: 15, right: 15, top: 10, bottom: 10),
                   decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 49, 59, 21),
+                      color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,23 +186,20 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                         ),
                       ])),
               Container(
-                margin:
-                      const EdgeInsets.only(left: 20),
-                child: 
-              Row(
-                children: [
-                  Checkbox(
-                      value: isCheched,
-                      onChanged: (value) {
-                        setState(() {
-                          isCheched = value!;
-                          hidePassword = !hidePassword;
-                        });
-                      }),
-                  const Text('Show Password'),
-                ],
-              )
-              ),
+                  margin: const EdgeInsets.only(left: 20),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                          value: isCheched,
+                          onChanged: (value) {
+                            setState(() {
+                              isCheched = value!;
+                              hidePassword = !hidePassword;
+                            });
+                          }),
+                      const Text('Show Password'),
+                    ],
+                  )),
               Container(
                   margin:
                       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -229,14 +224,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                                 content: Text('Passwords do not match')));
                         return;
                       }
+                      // try{
                       AuthController(navigationService).updatePassword(
                           oldPassword,
                           newPassword,
                           newPasswordConfirm,
                           context);
-
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     },
                     child: const Text('Update'),
                   ))

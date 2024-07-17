@@ -1,57 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/assets/colors.dart';
-import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
+import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
-
+import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/views/people_detail_view.dart';
 // ******************* DUMMY DATABASE ******************* //
 
-import 'package:tembeakenya/dummy_db.dart';
-import 'package:tembeakenya/views/people_detail_view.dart';
+// import 'package:tembeakenya/dummy_db.dart';
 
 // ****************************************************** //
 
 class GroupJoinView extends StatefulWidget {
-  final user;
-  const GroupJoinView({super.key, required this.user});
+  final dynamic user;
+  final dynamic group;
+  final Map<String, User> requests;
+  const GroupJoinView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.requests});
 
   @override
   State<GroupJoinView> createState() => _GroupJoinViewState();
 }
 
+// TODO: Request table that has id, name, username, and image_id
+
 class _GroupJoinViewState extends State<GroupJoinView> {
   // ****************************************************** //
-
-  late String displayUrl;
-  late String? dropdownValue;
-  List<String> listUser = <String>['All', 'Friend'];
   late NavigationService navigationService;
-  // User? user;
 
-  String profileImageID = "defaultProfilePic";
+  User? selectedUser;
+  late List<bool> confirmed;
+  // List<User> users = [];
+
+  String profileImageID = '';
+
   late int loadNum;
+  late List<String> displayUrl;
 
   // ****************************************************** //
 
   userCard(int num) {
     return TextButton(
-        onPressed: () {
-          // TODO: Add to route
-          final selectedUser = CommunityController().getAUsersDetails(num);
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => PeopleDetailView(
-                        selectedUser: selectedUser,
-                        currentUser: widget.user,
-                  )));
-        },
-        style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Color.fromARGB(0, 0, 0, 0))),
-        child: Card(
-          color: const Color.fromARGB(55, 99, 126, 32),
-          margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-          child: Column(children: [
+      onPressed: () async {
+        await CommunityController().getAUsersDetails(num + 1).then(
+          (user) {
+            setState(() {
+              selectedUser = user;
+            });
+          },
+        );
+
+        if (!mounted) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PeopleDetailView(
+              selectedUser: selectedUser!,
+              currentUser: widget.user,
+            ),
+          ),
+        );
+      },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+      child: Card(
+        color: ColorsUtil.cardColorDark,
+        margin: const EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+        child: Column(
+          children: [
             const Divider(
               height: 2,
               color: ColorsUtil.secondaryColorDark,
@@ -59,67 +79,99 @@ class _GroupJoinViewState extends State<GroupJoinView> {
               endIndent: 12,
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(children: [
-                  if (displayUrl.isEmpty)
-                    const CircleAvatar(
+                Row(
+                  children: [
+                    if (displayUrl[num].isEmpty)
+                      const CircleAvatar(
                         radius: 45,
-                        backgroundColor: Color(0x00000000),
+                        backgroundColor: Colors.transparent,
                         child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              child: CircularProgressIndicator(),
-                            )))
-                  else
-                    CircleAvatar(
-                        radius: 45,
-                        backgroundColor: const Color(0x00000000),
-                        child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              backgroundImage: NetworkImage(displayUrl),
-                            ))),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * .35,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          child: Text(fullName[num],
-                              style: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.textColorDark)),
+                          radius: 37,
+                          backgroundColor: ColorsUtil.accentColorDark,
+                          child: CircleAvatar(
+                            radius: 35,
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
-                        
-                      ],
-                    ),
-                  ),
-                ]),
-                  Row(children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: 
-                      const Icon(
-                        Icons.check_circle_outline,
-                        color: ColorsUtil.accentColorDark,
-                        size: 35,
-                        semanticLabel: 'Text to announce in accessibility modes',
                       )
+                    else
+                      CircleAvatar(
+                        radius: 45,
+                        backgroundColor: Colors.transparent,
+                        child: CircleAvatar(
+                          radius: 37,
+                          backgroundColor: ColorsUtil.accentColorDark,
+                          child: CircleAvatar(
+                            radius: 35,
+                            backgroundImage: NetworkImage(displayUrl[num]),
+                          ),
+                        ),
+                      ),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 230,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width,
+                            child: Text(
+                              widget.requests.entries
+                                  .elementAt(num)
+                                  .value
+                                  .fullName,
+                              style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.textColorDark),
+                            ),
+                          ),
+                          Text(
+                            '@${widget.requests.entries.elementAt(num).value.username}',
+                            style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorDark),
+                          ),
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+                Row(
+                  children: [
                     IconButton(
-                      onPressed: () {}, 
+                        onPressed: () {
+                          // Accept request
+                          CommunityController().approveJoinRequest(
+                              widget.group['id'],
+                              widget.requests.entries.elementAt(num).value.id!,
+                              context);
+                          setState(() {
+                            confirmed[num] = true;
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: ColorsUtil.accentColorDark,
+                          size: 35,
+                        )),
+                    IconButton(
+                      onPressed: () {
+                        // Decline request
+                        CommunityController().rejectJoinRequest(
+                            widget.group['id'],
+                            widget.requests.entries.elementAt(num).value.id!,
+                            context);
+                        setState(() {
+                          confirmed[num] = true;
+                        });
+                      },
                       icon: const Icon(
                         Icons.cancel_outlined,
                         color: ColorsUtil.secondaryColorDark,
                         size: 35,
-                        semanticLabel: 'Text to announce in accessibility modes',
                       ),
                     )
                   ],
@@ -132,66 +184,88 @@ class _GroupJoinViewState extends State<GroupJoinView> {
               indent: 12,
               endIndent: 12,
             ),
-          ]),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 
   @override
-  void initState() { 
-    displayUrl = '';
+  void initState() {
     navigationService = NavigationService(router);
-    loadNum = fullName.length;
 
-    getImageUrl(profileImageID).then((String result) {
-      setState(() {
-        displayUrl = result;
+    loadNum = widget.requests.length;
+    confirmed = List<bool>.filled(loadNum, false);
+    displayUrl = List<String>.filled(loadNum, '');
+
+    for (int i = 0; i < loadNum; i++) {
+      profileImageID = widget.requests.entries.elementAt(i).value.image_id!;
+      getImageUrl(profileImageID).then((String result) {
+        setState(() {
+          displayUrl[i] = result;
+        });
       });
-    });
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            backgroundColor: ColorsUtil.backgroundColorDark,
-            title: const Text(
-              'Requests Page',
-              style: TextStyle(color: ColorsUtil.textColorDark),
-            )),
-        body: SingleChildScrollView(
-        child: Column(children: [
-      const Divider(
-        height: 2,
-        color: ColorsUtil.secondaryColorDark,
-        indent: 12,
-        endIndent: 12,
-      ),
-      
-      Container(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(0, 0, 0, 0),
-          ),
-          child: Column(
-            children: [
-              for (int i = 0; i < loadNum; i++) 
-                  userCard(i)
-            ],
+      appBar: AppBar(
+          backgroundColor: ColorsUtil.backgroundColorDark,
+          title: const Text(
+            'Requests Page',
+            style: TextStyle(color: ColorsUtil.textColorDark),
           )),
-    ])),
-        // body: const Column(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        //         Text('GroupJoinView: Page Incomplete',
-        //             style: TextStyle(
-        //                 fontSize: 15,
-        //                 fontWeight: FontWeight.normal,
-        //                 color: ColorsUtil.primaryColorDark))
-        //       ]),
-        //     ]),
-            
-            );
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const Divider(
+              height: 2,
+              color: ColorsUtil.secondaryColorDark,
+              indent: 12,
+              endIndent: 12,
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 3),
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+              ),
+              child: Column(
+                children: [
+                  if (loadNum == 0)
+                    const Center(
+                      child: Text(
+                        'No Requests',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: ColorsUtil.primaryColorDark,
+                        ),
+                      ),
+                    )
+                  else
+                    for (int i = 0; i < loadNum; i++)
+                      if (!confirmed[i]) 
+                        userCard(i)
+                      else if (confirmed.every((element) => element = true))
+                        const Center(
+                      child: Text(
+                        'No Requests',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: ColorsUtil.primaryColorDark,
+                        ),
+                      ),
+                    )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

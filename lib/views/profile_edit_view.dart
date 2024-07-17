@@ -107,7 +107,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 if (displayUrl.isEmpty)
                   const CircleAvatar(
                       radius: 70,
-                      backgroundColor: Color(0x00000000),
+                      backgroundColor: Colors.transparent,
                       child: CircleAvatar(
                           radius: 62,
                           backgroundColor: ColorsUtil.accentColorDark,
@@ -156,7 +156,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,14 +233,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theFullName,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,14 +294,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theUsername,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               padding: const EdgeInsets.only(
                   left: 20, right: 20, top: 0, bottom: 10),
               decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 49, 59, 21),
+                  color: ColorsUtil.descriptionColorDark,
                   borderRadius: BorderRadius.circular(10)),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -356,7 +356,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     ),
                     Text(theEmail,
                         style: const TextStyle(
-                            fontSize: 18, color: ColorsUtil.textColorDark)),
+                            fontSize: 15, color: ColorsUtil.textColorDark)),
                   ])),
           Container(
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -372,9 +372,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 ),
                 onPressed: () async {
                   if (pickedImage != null) {
-                    await uploadPic(
-                            pickedImage!,
-                            user!.id.toString())
+                    await uploadPic(pickedImage!, user!.id.toString())
                         .then((value) => imageId = value);
                   }
                   final firstname = _firstname.text.isNotEmpty
@@ -398,11 +396,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       lastname!,
                       profileImageId,
                       context);
-                int count = 0;
-                Navigator.of(context).popUntil((_) => count++ >= 2);
-
+                  int count = 0;
+                  Navigator.of(context).popUntil((_) => count++ >= 2);
                 },
-                
                 child: const Text('Update'),
               ))
         ])));

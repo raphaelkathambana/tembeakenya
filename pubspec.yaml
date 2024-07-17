@@ -30,6 +30,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   # app_settings: ^5.1.1
+  cloud_firestore: ^4.17.5
   connectivity: ^3.0.6
   cookie_jar: ^4.0.8
   cupertino_icons: ^1.0.6
@@ -38,26 +39,28 @@ dependencies:
   dio_cookie_manager: ^3.1.1
   firebase_auth: ^4.19.5
   firebase_core: ^2.31.0
+  firebase_storage: ^11.7.7
   flutter:
     sdk: flutter
   flutter_native_splash: ^2.4.0
+  flutter_phone_direct_caller: ^2.1.1
   flutter_secure_storage: ^9.2.2
   get: ^4.6.6
   go_router: ^14.1.4
   http: ^1.2.1
+  image_cropper: ^7.0.5
+  image_picker: ^1.1.2
   internet_connection_checker_plus: ^2.3.0
+  intl: ^0.19.0
   json_annotation: ^4.9.0
   json_extractor: ^1.1.2
+  logger: ^2.0.2+1
   mockito: ^5.4.4
   path_provider: ^2.1.3
   provider: ^6.1.2
   shared_preferences: ^2.2.3
   shared_prefs_cookie_store: ^0.0.2
-  image_picker: ^1.1.2
-  # file_picker: ^8.0.5
-  cloud_firestore: ^4.17.5
-  firebase_storage: ^11.7.7
-  image_cropper: ^7.0.5
+  url_launcher: ^6.3.0
   # location: ^6.0.2
   flutter_dotenv: ^5.1.0
   geolocator: ^12.0.0
@@ -104,9 +107,11 @@ flutter:
   fonts:
     - family: Montserrat
       fonts:
-        - asset: lib\assets\fonts\Montserrat-Bold.ttf
-        - asset: lib\assets\fonts\Montserrat-BoldItalic.ttf
+        - asset: lib\assets\fonts\Montserrat-Regular.ttf
+        - asset: lib\assets\fonts\Montserrat-Italic.ttf
           style: italic
+        - asset: lib\assets\fonts\Montserrat-Bold.ttf
+          weight: 700
         - asset: lib\assets\fonts\Montserrat-Light.ttf
           weight: 300
         - asset: lib\assets\fonts\Montserrat-LightItalic.ttf

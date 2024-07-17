@@ -7,7 +7,7 @@ var data = {
   "username": "liza.king",
   "email": "kendall.schmeler@example.com",
   "email_verified_at": "2024-07-04T14:25:02.000000Z",
-  "roleNo": 1,
+  "role_id": 1,
   "image_id": "defaultProfilePic",
   "no_of_hikes": 0,
   "total_distance_walked": 0,
@@ -41,7 +41,7 @@ User getUserDetails() {
   user.username = data['username'] as String?;
   user.email = data['email'] as String?;
   user.email_verified_at = DateTime.parse(data['email_verified_at'] as String);
-  user.roleNo = data['roleNo'] as int?;
+  user.role_id = data['role_id'] as int?;
   // user.image_id = data['image_id'];
   user.no_of_hikes = data['no_of_hikes'] as int?;
   user.total_distance_walked = data['total_distance_walked'] as int?;
@@ -81,8 +81,8 @@ User getAUserDetails(data) {
   user.username = data['username'] as String?;
   user.email = data['email'] as String?;
   user.email_verified_at = DateTime.parse(data['email_verified_at'] as String);
-  user.roleNo = data['roleNo'] as int?;
-  // user.image_id = data['image_id'];
+  user.role_id = data['role_id'] as int?;
+  user.profileImageId = data['image_id'] as String?;
   user.no_of_hikes = data['no_of_hikes'] as int?;
   user.total_distance_walked = data['total_distance_walked'] as int?;
   user.no_of_steps_taken = data['no_of_steps_taken'] as int?;
