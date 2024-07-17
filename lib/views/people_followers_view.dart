@@ -13,17 +13,19 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ****************************************************** //
 
-class ProfileFollowersView extends StatefulWidget {
+class PeopleFollowersView extends StatefulWidget {
   final dynamic currentUser;
-  final dynamic users;
-  const ProfileFollowersView(
-      {super.key, required this.currentUser, required this.users});
+  final dynamic selectedUser;
+  final users;
+  const PeopleFollowersView(
+      
+      {super.key, required this.currentUser, required this.selectedUser, required this.users});
 
   @override
-  State<ProfileFollowersView> createState() => _ProfileFollowersViewState();
+  State<PeopleFollowersView> createState() => _PeopleFollowersViewState();
 }
 
-class _ProfileFollowersViewState extends State<ProfileFollowersView> {
+class _PeopleFollowersViewState extends State<PeopleFollowersView> {
   // ****************************************************** //
 
   late NavigationService navigationService;
@@ -343,11 +345,13 @@ class _ProfileFollowersViewState extends State<ProfileFollowersView> {
   Widget build(BuildContext context) {
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
+        // TODO: Make a function getFollowers for other users
         getFollowersFriend(i + 1).then((value) => {
               setState(() {
                 otherFriend[i] = value;
               })
             });
+        // TODO: Make a function getFollowing for other users
         getFollowingFriend(i + 1).then(
           (value) => {
             if (isFriend[i] = value)

@@ -1,11 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:tembeakenya/constants/routes.dart';
+// import 'package:tembeakenya/views/test.dart';
 import '../../assets/colors.dart';
 import 'package:tembeakenya/constants/timer_operation.dart';
 
 class NavigationView extends StatefulWidget {
-  final user;
+  final dynamic user;
   const NavigationView({super.key, required this.user});
 
   @override
@@ -71,16 +72,11 @@ class _NavigationViewState extends State<NavigationView> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Navigation Page',
-          style: TextStyle(
-            color: ColorsUtil.primaryColorLight,
-            fontSize: 33,
-            fontWeight: FontWeight.bold,
+          title: const Text(
+            'Navigation Page',
+            style: TextStyle(color: ColorsUtil.textColorDark),
           ),
         ),
-      ),
       body: Stack(
         children: [
           Container(
@@ -92,6 +88,13 @@ class _NavigationViewState extends State<NavigationView> {
                 Text('Reference Time: ${lineText[0]}'),
                 Text('Paused Time: ${lineText[1]}'),
                 Text('Started Time: ${lineText[2]}'),
+                // TextButton(onPressed: () {
+                //   Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //       builder: (context) => const TestApp()
+                //   ));
+                // }, child: const Text('Test'),)
                 /**************
                 
                 

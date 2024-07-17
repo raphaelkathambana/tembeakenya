@@ -108,6 +108,17 @@ class CommunityController {
     }
   }
 
+  getFollowers() async {
+    try {
+      var response = await apiCall.client.get('${url}api/followers');
+      if (response.statusCode == 200) {
+        return getUsersFromData(response.data);
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+    }
+  }
+
   Future<void> createGroup(String name, String description, int guideId,
       BuildContext context) async {
     String token = await getCsrfToken();
@@ -219,7 +230,7 @@ class CommunityController {
         // return to group view
         if (!context.mounted) return;
         int count = 0;
-        context.pop((_) => count++ >= 3);
+        Navigator.of(context).popUntil((_) => count++ >= 2);
         // navigationService.navigateTo(
         //   '',
         //   arguments: response.data,
@@ -306,7 +317,8 @@ class CommunityController {
       String name,
       String phoneNumber,
       String email,
-      String emergencyContact,
+      String emergencyContactName,
+      String emergencyContactPhoneNumber,
       BuildContext context) async {
     String token = await getCsrfToken();
     try {
@@ -317,7 +329,8 @@ class CommunityController {
             'name': name,
             'phone_number': phoneNumber,
             'email': email,
-            'emergency_contact': emergencyContact,
+            'emergency_contact_name': emergencyContactName,
+            'emergency_contact_phone_number': emergencyContactPhoneNumber,
           }),
           options: Options(headers: {
             'X-XSRF-TOKEN': token,
@@ -392,54 +405,56 @@ class CommunityController {
   //   }
   // }
 
-  Future<void> createGroupHike(String name, String description, String hikeId,
+  Future<void> createGroupHike(String name, String description, double fee, String hikeId,
       String date, int groupID, int guideId, BuildContext context) async {
     debugPrint(name);
     debugPrint(description);
+    debugPrint(fee.toString());
     debugPrint(hikeId);
     debugPrint(date);
     debugPrint(groupID.toString());
     debugPrint(guideId.toString());
-    // String token = await getCsrfToken();
-    // try {
-    //   var response = await apiCall.client.post('${url}api/group-hikes',
-    //       data: jsonEncode({
-    //         'name': name,
-    //         'description': description,
-    //         'hike_id': hikeId,
-    //         'group_id': groupID,
-    //         'hike_date': date,
-    //         'guide_id': guideId,
-    //       }),
-    //       options: Options(headers: {
-    //         'X-XSRF-TOKEN': token,
-    //         'Accept': 'application/json',
-    //       }));
-    //   if (response.statusCode == 201) {
-    //     // snackbar for created successfully
-    //     if (!context.mounted) return;
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(
-    //         content: Text('Group Hike created successfully'),
-    //         duration: Duration(seconds: 3),
-    //       ),
-    //     );
-    //     // delay 3 seconds
-    //     await Future.delayed(const Duration(seconds: 1));
-    //     // return to group view
-    //     if (!context.mounted) return;
-    //     context.pop();
-    //     // navigationService.navigateTo(
-    //     //   '',
-    //     //   arguments: response.data,
-    //     // );
-    //   }
-    // } on DioException catch (e) {
-    //   debugPrint('Error Occurred: Getting Message');
-    //   debugPrint(e.response?.data.toString());
-    //   if (!context.mounted) return;
-    //   alertErrorHandler(context, e.response?.data);
-    // }
+    String token = await getCsrfToken();
+    try {
+      var response = await apiCall.client.post('${url}api/group-hikes',
+          data: jsonEncode({
+            'name': name,
+            'description': description,
+            'hike_fee': fee,
+            'hike_id': hikeId,
+            'group_id': groupID,
+            'hike_date': date,
+            'guide_id': guideId,
+          }),
+          options: Options(headers: {
+            'X-XSRF-TOKEN': token,
+            'Accept': 'application/json',
+          }));
+      if (response.statusCode == 201) {
+        // snackbar for created successfully
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Group Hike created successfully'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+        // delay 3 seconds
+        await Future.delayed(const Duration(seconds: 1));
+        // return to group view
+        if (!context.mounted) return;
+        context.pop();
+        // navigationService.navigateTo(
+        //   '',
+        //   arguments: response.data,
+        // );
+      }
+    } on DioException catch (e) {
+      debugPrint('Error Occurred: Getting Message');
+      debugPrint(e.response?.data.toString());
+      if (!context.mounted) return;
+      alertErrorHandler(context, e.response?.data);
+    }
   }
 
   // Future<void> deleteGroupHike(int id, BuildContext context) async {

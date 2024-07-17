@@ -1,5 +1,6 @@
 // group_event_view
 
+import 'package:intl/intl.dart';
 import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
@@ -13,9 +14,10 @@ import 'package:tembeakenya/assets/colors.dart';
 // import 'package:tembeakenya/dummy_db.dart';
 
 class GroupEventView extends StatefulWidget {
-  final user;
-  final details;
-  const GroupEventView({super.key, required this.user, required this.details});
+  final dynamic user;
+  final dynamic group;
+  final dynamic details;
+  const GroupEventView({super.key, required this.user, required this.group, required this.details});
 
   @override
   State<GroupEventView> createState() => _GroupEventViewState();
@@ -38,21 +40,19 @@ class _GroupEventViewState extends State<GroupEventView> {
   late List<String> displayUrl;
   // late List<bool?> isAttendee;
   late List<bool> attendingLoaded;
+  bool signUp = true;
   bool loaded = false;
 
-  // String hikeName = 'Karura...? More like KAZUMA!!!';
-  // String hikeDescription =
-  //     'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  // String hikeLocation = 'Karura Forest';
-  // String hikeDate = 'July 7, 2024';
-
-  // The participator's page will have the same logic as the friends
-  // But instead of filtering "friends" from all group, you filter
-  // "attendees" from group hikers
 
   userCard(int num) {
     users = widget.details['attendees'];
-    var selectedUserId = users.entries.elementAt(num).key.id;
+    var selectedUserId = users.entries.elementAt(num).value['user_id'];
+    debugPrint('CHECKME: ${users.entries}');
+    if (widget.user.id == selectedUserId){
+      signUp = false;
+    } else {
+      signUp = true;
+    }
     return TextButton(
         onPressed: () async {
           await CommunityController().getAUsersDetails(selectedUserId!).then(
@@ -69,6 +69,7 @@ class _GroupEventViewState extends State<GroupEventView> {
             context,
             MaterialPageRoute(
               builder: (context) => ParticipantDetailView(
+                attendeeUser: widget.details['attendees'].entries.elementAt(num),
                 selectedUser: selectedUser!,
                 currentUser: widget.user,
               ),
@@ -124,7 +125,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
                             child: Text(
-                              users[num].fullName,
+                              users.entries.elementAt(num).key.fullName,
                               style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -132,12 +133,18 @@ class _GroupEventViewState extends State<GroupEventView> {
                             ),
                           ),
                           Text(
-                            '@${users[num].username}',
+                            '@${users.entries.elementAt(num).key.username}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.accentColorDark),
                           ),
+                          if (users.entries.elementAt(num).key.id == widget.group['guide_id'])
+                        const Text('Guide',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: ColorsUtil.accentColorDark)),
                         ],
                       ),
                     ),
@@ -155,12 +162,9 @@ class _GroupEventViewState extends State<GroupEventView> {
     navigationService = NavigationService(router);
     initStateAgain = false;
 
-    // TODO: Create a function that gets the list of all group members
-    // CommunityController().getCommunityData().then((list) {
     setState(() {
       users = widget.details['attendees'];
     });
-    // });
   }
 
   @override
@@ -188,23 +192,7 @@ class _GroupEventViewState extends State<GroupEventView> {
       }
     }
 
-    // for (int i = 0; i < loadNum; i++) {
-    //   if (attendingLoaded[i] == false) {
-    //     // TODO: Create a function that filters out attendees from all group members
-    //     getFriend(i + 1).then((value) => {
-    //           if (isAttendee[i] = value)
-    //             {loaded = attendingLoaded.every((element) => element = true)}
-    //         });
-    //     attendingLoaded[i] = true;
-    //   }
-    // }
-
     double width = MediaQuery.sizeOf(context).width;
-
-    // int gID = 1;
-
-    // theGroupName = widget.details['group']['name'];
-    // theDescription = widget.details['group']['description'];
 
     return Scaffold(
       appBar: AppBar(
@@ -244,6 +232,13 @@ class _GroupEventViewState extends State<GroupEventView> {
                         ),
                       ),
                     ),
+                    if(!signUp)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      height: 45,
+                      width: 100,
+                    )
+                    else if (signUp)
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -262,6 +257,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                               MaterialPageRoute(
                                   builder: (context) => GroupEventSignUp(
                                       user: widget.user,
+                                      details: widget.details['groupHikeDetails'],
                                       groupId: widget
                                           .details['groupHikeDetails'][2])));
                         },
@@ -297,7 +293,17 @@ class _GroupEventViewState extends State<GroupEventView> {
                   ),
                 ),
                 Text(
-                  'Date: ${widget.details['groupHikeDetails'][6]}',
+                  // DateFormat('HH:mm:ss').format
+                  'Date: ${DateFormat('yyyy-mm-dd').format(DateFormat('yyyy-mm-dd').parse(widget.details['groupHikeDetails'][6]))}',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
+                    color: ColorsUtil.primaryColorDark,
+                  ),
+                ),
+                Text(
+                  // TODO
+                  'Hike Fee: ${widget.details['groupHikeDetails'][7]}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,
@@ -307,8 +313,6 @@ class _GroupEventViewState extends State<GroupEventView> {
               ],
             ),
           ),
-
-          // *********************************************************** //
 
           DraggableScrollableSheet(
             initialChildSize: 90 / width,

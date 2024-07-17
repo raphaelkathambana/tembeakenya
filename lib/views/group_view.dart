@@ -25,6 +25,8 @@ class _GroupViewState extends State<GroupView> {
   late int roleID;
   late bool roleSwitch;
 
+  late dynamic theGroups;
+
   // TEMPORARY ROLE SWITCH BUTTON
   roleButton() {
     return ElevatedButton(
@@ -52,6 +54,11 @@ class _GroupViewState extends State<GroupView> {
   List<String> groupFilter = <String>['All Groups', 'My Groups'];
   late NavigationService navigationService;
   User? user;
+  dynamic groupDetails;
+
+  late List<dynamic> details;
+  late List<bool> membersLoaded;
+  bool loaded = false;
 
   String profileImageID = "defaultProfilePic";
   late int loadNum;
@@ -59,22 +66,20 @@ class _GroupViewState extends State<GroupView> {
   final TextEditingController _search = TextEditingController();
   String search = '';
 
-  searchCard(String search, int num, bool isMember) {
+  searchCard(String search, int num, bool member) {
     if (search != '') {
-      if (widget.groups[num]['name']
-          .toLowerCase()
-          .contains(search.toLowerCase())) {
-        return groupMember(num, isMember);
+      if (theGroups[num]['name'].toLowerCase().contains(search.toLowerCase())) {
+        return groupMember(num, member);
       }
       return const SizedBox();
     } else {
-      return groupMember(num, isMember);
+      return groupMember(num, member);
     }
   }
 
-  groupMember(int num, bool isMember) {
-    if (isMember == true) {
-      if (isGroupMember(widget.user)) {
+  groupMember(int num, bool member) {
+    if (member == true) {
+      if (isMember(widget.user, details[num]['members'])) {
         return groupCard(num);
       } else {
         return const SizedBox();
@@ -86,116 +91,198 @@ class _GroupViewState extends State<GroupView> {
 
   groupCard(int num) {
     return TextButton(
-        onPressed: () async {
-          user = widget.user;
-          var selectedGroup = widget.groups[num];
-          var groupDetails;
-          debugPrint(widget.groups.toString());
-          debugPrint('GROUP DETAIL: ');
-          debugPrint(widget.groups[num].toString());
-          await CommunityController().getGroupDetails(num + 1).then(
-            (group) {
-              setState(() {
-                groupDetails = group;
-              });
-            },
-          );
-          if (!mounted) return;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => GroupDetailView(
-                        user: user,
-                        group: selectedGroup,
-                        details: groupDetails,
-                      )));
-        },
-        style: const ButtonStyle(
-            overlayColor: MaterialStatePropertyAll(Colors.transparent)),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: ColorsUtil.secondaryColorDark),
-            color: ColorsUtil.cardColorDark,
-          ),
-          height: 270,
-          padding: const EdgeInsets.all(5),
-          margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
-          child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
-                  if (displayUrl[num].isEmpty)
+      onPressed: () async {
+        user = widget.user;
+        var selectedGroup = theGroups[num];
+        dynamic groupDetails;
+        await CommunityController().getGroupDetails(num + 1).then(
+          (group) {
+            setState(() {
+              groupDetails = group;
+            });
+          },
+        );
+        if (!mounted) return;
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => GroupDetailView(
+                      user: user,
+                      group: selectedGroup,
+                      details: groupDetails,
+                    )));
+      },
+      style: const ButtonStyle(
+          overlayColor: MaterialStatePropertyAll(Colors.transparent)),
+      child: Column(children: [
+        if (!loaded)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: ColorsUtil.secondaryColorDark),
+              color: ColorsUtil.cardColorDark,
+            ),
+            height: 270,
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
                     const CircleAvatar(
                         radius: 45,
                         backgroundColor: Colors.transparent,
                         child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              child: CircularProgressIndicator(),
-                            )))
-                  else
-                    CircleAvatar(
-                        radius: 45,
-                        backgroundColor: Colors.transparent,
-                        child: CircleAvatar(
-                            radius: 37,
-                            backgroundColor: ColorsUtil.accentColorDark,
-                            child: CircleAvatar(
-                              radius: 35,
-                              backgroundImage: NetworkImage(displayUrl[num]),
-                            ))),
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * .35,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width,
-                          child: Text((widget.groups[num]['name']),
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: ColorsUtil.textColorDark)),
-                        ),
-                        if (isGroupMember(widget.user))
-                          const Text('Member',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: ColorsUtil.accentColorDark)),
-                      ],
+                          radius: 37,
+                          backgroundColor: ColorsUtil.descriptionColorDark,
+                        )),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width - 230,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 5),
+                            height: 20,
+                            width: 150,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: ColorsUtil.descriptionColorDark,
+                            ),
+                          ),
+                          Container(
+                            height: 20,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: ColorsUtil.descriptionColorDark,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ]),
-              ],
-            ),
-            const Divider(
-              height: 2,
-              color: ColorsUtil.accentColorDark,
-              indent: 12,
-              endIndent: 12,
-            ),
-            Container(
+                  ]),
+                ],
+              ),
+              const Divider(
+                height: 2,
+                color: ColorsUtil.accentColorDark,
+                indent: 12,
+                endIndent: 12,
+              ),
+              Container(
                 width: MediaQuery.sizeOf(context).width * .9,
                 height: 150,
                 margin: const EdgeInsets.all(7),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
-                  border: Border.all(color: ColorsUtil.backgroundColorDark),
                   color: ColorsUtil.descriptionColorDark,
                 ),
-                child: Text((widget.groups[num]['description']),
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                        color: ColorsUtil.primaryColorDark))),
-          ]),
-        ));
+              ),
+            ]),
+          )
+        else if (loaded)
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: ColorsUtil.secondaryColorDark),
+              color: ColorsUtil.cardColorDark,
+            ),
+            height: 270,
+            padding: const EdgeInsets.all(5),
+            margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 7),
+            child: Column(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(children: [
+                    if (displayUrl[num].isEmpty)
+                      const CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.transparent,
+                          child: CircleAvatar(
+                              radius: 37,
+                              backgroundColor: ColorsUtil.accentColorDark,
+                              child: CircleAvatar(
+                                radius: 35,
+                                child: CircularProgressIndicator(),
+                              )))
+                    else
+                      CircleAvatar(
+                          radius: 45,
+                          backgroundColor: Colors.transparent,
+                          child: CircleAvatar(
+                              radius: 37,
+                              backgroundColor: ColorsUtil.accentColorDark,
+                              child: CircleAvatar(
+                                radius: 35,
+                                backgroundImage: NetworkImage(displayUrl[num]),
+                              ))),
+                    SizedBox(
+                      width: MediaQuery.sizeOf(context).width * .35,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.sizeOf(context).width,
+                            child: Text((theGroups[num]['name']),
+                                style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.textColorDark)),
+                          ),
+                          if (!loaded)
+                            const SizedBox()
+                          else if (isMember(
+                              widget.user, details[num]['members']))
+                            if (widget.user.id == theGroups[num]['guide_id'])
+                              const Text('Guide',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: ColorsUtil.primaryColorDark))
+                            else if (widget.user.id !=
+                                theGroups[num]['guide_id'])
+                              const Text(
+                                'Member',
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark),
+                              )
+                        ],
+                      ),
+                    ),
+                  ]),
+                ],
+              ),
+              const Divider(
+                height: 2,
+                color: ColorsUtil.accentColorDark,
+                indent: 12,
+                endIndent: 12,
+              ),
+              Container(
+                  width: MediaQuery.sizeOf(context).width * .9,
+                  height: 150,
+                  margin: const EdgeInsets.all(7),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: ColorsUtil.backgroundColorDark),
+                    color: ColorsUtil.descriptionColorDark,
+                  ),
+                  child: Text((theGroups[num]['description']),
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: ColorsUtil.primaryColorDark))),
+            ]),
+          )
+      ]),
+    );
   }
 
   createGroup() {
@@ -248,8 +335,38 @@ class _GroupViewState extends State<GroupView> {
 
     String profileImageID = '';
 
+    CommunityController().getCommunityGroups().then((value) {
+      setState(() {
+        theGroups = value;
+        loadNum = theGroups.length;
+        loaded = false;
+        displayUrl = List<String>.filled(loadNum, '');
+        details = List<dynamic>.filled(loadNum, [0]);
+        membersLoaded = List<bool>.filled(loadNum, false);
+      });
+    });
+
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.groups[i]['image_id'].toString();
+      if (membersLoaded[i] == false) {
+        CommunityController().getGroupDetails(i + 1).then(
+          (group) {
+            setState(() async {
+              details[i] = group;
+              // await Future.delayed(const Duration(microseconds: 10), () {
+              //   loaded = membersLoaded.every((element) => element = true);
+              // });
+            });
+          },
+        );
+        membersLoaded[i] = true;
+      }
+      Future.delayed(const Duration(seconds: 2), () {
+        loaded = membersLoaded.every((element) => element = true);
+      });
+    }
+
+    for (int i = 0; i < loadNum; i++) {
+      profileImageID = theGroups[i]['image_id'].toString();
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
@@ -261,14 +378,17 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   void initState() {
+    theGroups = widget.groups;
     navigationService = NavigationService(router);
 
     dropdownValue = groupFilter.first;
-    loadNum = widget.groups.length;
+    loadNum = theGroups.length;
     displayUrl = List<String>.filled(loadNum, '');
+    details = List<dynamic>.filled(loadNum, [0]);
+    membersLoaded = List<bool>.filled(loadNum, false);
 
     for (int i = 0; i < loadNum; i++) {
-      profileImageID = widget.groups[i]['image_id']!;
+      profileImageID = theGroups[i]['image_id']!;
       getImageUrl(profileImageID).then((String result) {
         setState(() {
           displayUrl[i] = result;
@@ -285,13 +405,27 @@ class _GroupViewState extends State<GroupView> {
 
   @override
   Widget build(BuildContext context) {
+    for (int i = 0; i < loadNum; i++) {
+      if (membersLoaded[i] == false) {
+        CommunityController().getGroupDetails(i + 1).then(
+          (group) {
+            setState(() async {
+              details[i] = group;
+            });
+          },
+        );
+        membersLoaded[i] = true;
+      }
+      Future.delayed(const Duration(seconds: 2), () {
+        loaded = membersLoaded.every((element) => element = true);
+      });
+    }
     return Scaffold(
         body: RefreshIndicator(
       onRefresh: _handleRefresh,
       child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Column(children: [
-            roleButton(),
             const Divider(
               height: 2,
               color: ColorsUtil.secondaryColorDark,
@@ -374,6 +508,7 @@ class _GroupViewState extends State<GroupView> {
                         searchCard(search, i, false)
                   ],
                 )),
+            roleButton(),
           ])),
     ));
   }

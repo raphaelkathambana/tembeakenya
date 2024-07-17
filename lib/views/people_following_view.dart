@@ -13,24 +13,25 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 
 // ****************************************************** //
 
-class ProfileFollowingView extends StatefulWidget {
+class PeopleFollowingView extends StatefulWidget {
   final dynamic currentUser;
-  final dynamic users;
-  const ProfileFollowingView(
+  final dynamic selectedUser;
+  final users;
+  const PeopleFollowingView(
       {super.key,
       required this.currentUser,
+      required this.selectedUser,
       required this.users});
 
   @override
-  State<ProfileFollowingView> createState() => _ProfileFollowingViewState();
+  State<PeopleFollowingView> createState() => _PeopleFollowingViewState();
 }
 
-class _ProfileFollowingViewState extends State<ProfileFollowingView> {
+class _PeopleFollowingViewState extends State<PeopleFollowingView> {
   // ****************************************************** //
 
   late NavigationService navigationService;
 
-  User? users;
 
   User? selectedUser;
 
@@ -60,7 +61,7 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
   }
 
   userFriend(int num) {
-    if (widget.users[num].id == widget.currentUser.id) {
+    if (widget.users[num].id == widget.selectedUser.id) {
       return const SizedBox();
     }
       if (isFriend[num] == true) {
@@ -74,15 +75,6 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
   userCard(int num) {
       return TextButton(
         onPressed: () async {
-          await CommunityController().getAUsersDetails(num + 1).then(
-          (user) {
-            setState(() {
-              selectedUser = user;
-            });
-          },
-        );
-
-        if (!mounted) return;
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -310,14 +302,12 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
   @override
   void initState() {
     navigationService = NavigationService(router);
-    
 
     loadNum = widget.users.length;
     displayUrl = List<String>.filled(loadNum, '');
-    isFriend = List<bool?>.filled(loadNum, null);
+    isFriend = List<bool?>.filled(loadNum, false);
     followsLoaded = List<bool>.filled(loadNum, false);
 
-    // users = List<User?>.filled(loadNum, null);
 
     for (int i = 0; i < loadNum; i++) {
       profileImageID = widget.users[i].image_id!;
@@ -336,6 +326,7 @@ class _ProfileFollowingViewState extends State<ProfileFollowingView> {
 
     for (int i = 0; i < loadNum; i++) {
       if (followsLoaded[i] == false) {
+        // TODO: Make a function getFollowing for other users
         getFollowingFriend(i + 1).then((value) => {
               setState(() {
                 if (isFriend[i] = value) {

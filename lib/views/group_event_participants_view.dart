@@ -11,15 +11,17 @@ import 'package:url_launcher/url_launcher.dart';
 class ParticipantDetailView extends StatefulWidget {
   final dynamic currentUser;
   final dynamic selectedUser;
+  final dynamic attendeeUser;
   const ParticipantDetailView(
-      {super.key, required this.selectedUser, required this.currentUser});
+      {super.key, required this.attendeeUser, required this.selectedUser, required this.currentUser});
 
   @override
   State<ParticipantDetailView> createState() => _CommunityViewState();
 }
 
 class _CommunityViewState extends State<ParticipantDetailView> {
-  User? user;
+  User? selectedUser;
+  User? attendeeUser;
   String displayUrl = '';
   late NavigationService navigationService;
   String profileImageID = '';
@@ -37,7 +39,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
 
   late String otherFullName;
   late String otherPhoneNumber;
-  late String otherEmail;
 
   late bool theFriend;
   bool isFriend = false;
@@ -48,7 +49,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
     // Uri androidURL = Uri.parse('https://wa.me/$thePhoneNumber?text');
     Uri whatsappURL = Uri.parse('whatsapp://send/?phone=$thisPhoneNum?&text');
     if (await canLaunchUrl(whatsappURL)) {
-      debugPrint(whatsappURL.toString());
       await launchUrl(whatsappURL);
     } else {
       const AlertDialog(
@@ -60,7 +60,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
   textSMS(thisPhoneNum) async {
     Uri smsURL = Uri.parse('sms:+$thisPhoneNum?');
     if (await canLaunchUrl(smsURL)) {
-      debugPrint(smsURL.toString());
       await launchUrl(smsURL);
     } else {
       const AlertDialog(
@@ -72,7 +71,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
   email(thisEmail) async {
     Uri emailURL = Uri.parse('mailto:+$thisEmail?');
     if (await canLaunchUrl(emailURL)) {
-      debugPrint(emailURL.toString());
       await launchUrl(emailURL);
     } else {
       const AlertDialog(
@@ -83,16 +81,9 @@ class _CommunityViewState extends State<ParticipantDetailView> {
 
   @override
   void initState() {
-    user = widget.selectedUser;
-    profileImageID = user!.image_id!;
+    selectedUser = widget.selectedUser;
+    profileImageID = selectedUser!.image_id!;
     dropdownValue = null;
-
-    // profileImageID = widget.selectedUser.image_id!;
-
-    debugPrint("user: ${widget.selectedUser.fullName.toString()}");
-    debugPrint("user: ${widget.selectedUser.no_of_hikes.toString()}");
-    debugPrint("user: $profileImageID");
-    // debugPrint(getReviews().toString());
 
     getImageUrl(profileImageID).then((String result) {
       setState(() {
@@ -100,7 +91,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
       });
     });
 
-    getFriend(widget.selectedUser.id!).then((value) => {
+    getFollowingFriend(widget.selectedUser.id!).then((value) => {
           setState(() {
             isFriend = value;
           })
@@ -111,31 +102,31 @@ class _CommunityViewState extends State<ParticipantDetailView> {
   }
 
   Future<void> _handleRefresh() async {
-    await Future.delayed(const Duration(seconds: 2));
-    profileImageID = user!.image_id!;
-    displayUrl = '';
+    // await Future.delayed(const Duration(seconds: 2));
+    // profileImageID = selectedUser!.image_id!;
+    // displayUrl = '';
 
-    getImageUrl(profileImageID).then((String result) {
-      setState(() {
-        displayUrl = result;
-      });
-    });
-    debugPrint('Ok, Image URL: $displayUrl');
+    // getImageUrl(profileImageID).then((String result) {
+    //   setState(() {
+    //     displayUrl = result;
+    //   });
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    theFullName = user!.fullName;
-    theUsername = user!.username!;
-    theEmail = user!.email!;
+    theFullName = selectedUser!.fullName;
+    theUsername = selectedUser!.username!;
+    theEmail = selectedUser!.email!;
 
     // TODO: DUMMY DATA
-    thePhoneNumber = '254115190303';
-    otherFullName = 'no name';
-    otherEmail = 'no email';
-    otherPhoneNumber = '254719882834';
+    thePhoneNumber = widget.attendeeUser.value['phone_number'];
+    otherFullName = widget.attendeeUser.value['emergency_contact_name'];
+    otherPhoneNumber = widget.attendeeUser.value['emergency_contact_phone_number'];
+    debugPrint('Details: ${widget.attendeeUser.value}');
+    debugPrint('the id: ${widget.attendeeUser.value['user_id'].toString()}');
+    debugPrint('the id: ${widget.currentUser!.id.toString()}');
 
-    debugPrint('Ok, Image URL: $displayUrl');
 
     return Scaffold(
       appBar: AppBar(
@@ -233,6 +224,9 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                           ),
                         ],
                       ),
+                      if (widget.attendeeUser.value['user_id'] == widget.currentUser!.id!)
+                      const SizedBox()
+                      else
                       isFriend
                           ? Container(
                               margin: const EdgeInsets.only(right: 3.5),
@@ -277,7 +271,8 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                       fontSize: 14,
                                       color: ColorsUtil.textColorDark),
                                 ),
-                              ))
+                              )),
+                              
                     ],
                   ),
                   const Divider(
@@ -289,7 +284,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                 ]),
               ),
 
-              // TODO: Phone number has dummy writing
               Container(
                 // height: 367,
                 margin:
@@ -433,7 +427,6 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                 ),
               ),
 
-              // TODO: Phone number has dummy writing
               Container(
                 margin:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -459,29 +452,29 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Email',
+                            const Text('Full Name',
                                 style: TextStyle(
                                     fontSize: 16,
                                     color: ColorsUtil.primaryColorDark)),
                             Row(children: [
                               TextButton(
                                 onPressed: () {
-                                  showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            title: const Text('Email?'),
-                                            actions: [
-                                              TextButton(
-                                                  onPressed: () {
-                                                    email(otherEmail);
-                                                    Navigator.pop(context);
-                                                  },
-                                                  child:
-                                                      const Text('Open Email'))
-                                            ],
-                                          ));
+                                  // showDialog(
+                                  //     context: context,
+                                  //     builder: (context) => AlertDialog(
+                                  //           title: const Text('Email?'),
+                                  //           actions: [
+                                  //             TextButton(
+                                  //                 onPressed: () {
+                                  //                   // email(otherEmail);
+                                  //                   Navigator.pop(context);
+                                  //                 },
+                                  //                 child:
+                                  //                     const Text('Open Email'))
+                                  //           ],
+                                  //         ));
                                 },
-                                child: Text('$otherEmail ',
+                                child: Text('$otherFullName ',
                                     style: const TextStyle(
                                         fontSize: 18,
                                         color: ColorsUtil.textColorDark)),

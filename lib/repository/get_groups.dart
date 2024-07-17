@@ -386,6 +386,7 @@ List<dynamic> getEventHikesDetails(data) {
   groupHikesInfo.add(data['guide_id']);
   groupHikesInfo.add(data['hike_id']);
   groupHikesInfo.add(data['hike_date']);
+  groupHikesInfo.add(data['hike_fee']);
   return groupHikesInfo;
 }
 

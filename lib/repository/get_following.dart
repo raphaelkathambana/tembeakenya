@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 
@@ -56,7 +55,7 @@ var data = {
 };
 
 // loop through the data to get the list of users
-List<User> getFriendDetails() {
+List<User> getFollowingFriendDetails() {
   if (data['data']?['data'] != null) {
     List<User> users = [];
     var userData = data['data']?['data'] as List<Map<String, dynamic>>?;
@@ -94,13 +93,30 @@ Map<String, Object?>? getMeta() {
 }
 
 // check if the logged in user is following the friend
-getFriend(int friendID) async {
+getFollowingFriend(int friendID) async {
   dynamic friends = [];
   late bool result;
   await CommunityController().getFollowing().then((values) {
     friends = values;
     for (var friend in friends) {
-      debugPrint(friend.id.toString());
+      if (friendID == friend.id) {
+        result = true;
+        break;
+      } 
+      else if (friendID != friend.id) {
+        result = false;
+      }
+    }
+  });
+  return result;
+}
+
+getFollowersFriend(int friendID) async {
+  dynamic friends = [];
+  late bool result;
+  await CommunityController().getFollowers().then((values) {
+    friends = values;
+    for (var friend in friends) {
       if (friendID == friend.id) {
         result = true;
         break;

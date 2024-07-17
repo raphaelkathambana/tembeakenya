@@ -13,9 +13,14 @@ import 'package:tembeakenya/views/people_detail_view.dart';
 // ****************************************************** //
 
 class GroupMemberView extends StatefulWidget {
-  final user;
-  final members;
-  const GroupMemberView({super.key, required this.user, required this.members});
+  final dynamic user;
+  final dynamic group;
+  final dynamic members;
+  const GroupMemberView(
+      {super.key,
+      required this.user,
+      required this.group,
+      required this.members});
 
   @override
   State<GroupMemberView> createState() => _GroupMemberViewState();
@@ -38,7 +43,9 @@ class _GroupMemberViewState extends State<GroupMemberView> {
   // ****************************************************** //
   searchCard(String search, int num) {
     if (search != '') {
-      if (widget.members[num].toLowerCase().contains(search.toLowerCase())) {
+      if (widget.members[num].fullName
+          .toLowerCase()
+          .contains(search.toLowerCase())) {
         return userCard(num);
       }
       return const SizedBox();
@@ -123,7 +130,13 @@ class _GroupMemberViewState extends State<GroupMemberView> {
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
-                                color: ColorsUtil.accentColorDark)),
+                                color: ColorsUtil.primaryColorDark)),
+                        if (widget.members[num].id == widget.group['guide_id'])
+                          const Text('Guide',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: ColorsUtil.accentColorDark)),
                       ],
                     ),
                   ),

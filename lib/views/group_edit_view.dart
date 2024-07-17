@@ -37,7 +37,6 @@ class _GroupEditViewState extends State<GroupEditView> {
   void initState() {
     _groupName = TextEditingController(text: widget.group['name']);
     _description = TextEditingController(text: widget.group['description']);
-    debugPrint(widget.user.id.toString());
     displayUrl = '';
     profileImageID = widget.group['image_id'];
     getImageUrl(profileImageID).then((String result) {
@@ -204,11 +203,11 @@ class _GroupEditViewState extends State<GroupEditView> {
               SizedBox(
                 child: TextField(
                   controller: _description,
+                  maxLines: null,
                   decoration: const InputDecoration(
                     hintText: "Write down a description",
                   ),
                   onChanged: (value) {
-                    // group?.description = value;
                     widget.group['description'] = value;
                     theDescription = value;
                   },
@@ -249,6 +248,7 @@ class _GroupEditViewState extends State<GroupEditView> {
                     description,
                     profileImageId,
                     context);
+                
               },
               child: const Text('Update'),
             ))

@@ -51,14 +51,12 @@ class _ProfileViewState extends State<ProfileView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // _handleRefresh();
     return Scaffold(
         appBar: AppBar(
           title: const Text(
@@ -155,7 +153,6 @@ class _ProfileViewState extends State<ProfileView> {
                               Text(user!.fullName,
                                   style: const TextStyle(
                                       fontSize: 15,
-                                      // fontWeight: FontWeight.bold,
                                       color: ColorsUtil.textColorDark)),
                               Text('@${user!.username.toString()}',
                                   style: const TextStyle(
@@ -178,8 +175,6 @@ class _ProfileViewState extends State<ProfileView> {
 
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                  // padding: const EdgeInsets.only(
-                  //     left: 20, right: 20,),
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
@@ -191,7 +186,6 @@ class _ProfileViewState extends State<ProfileView> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      // users.isNotEmpty ?
                                       ProfileFollowersView(
                                         currentUser: widget.currentUser,
                                         users: users,
@@ -199,9 +193,18 @@ class _ProfileViewState extends State<ProfileView> {
                         },
                         child: Column(
                           children: [
+                            if (user!.followers_count == 1)
+                            Text(
+                              '${user!.followers_count} Follower',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                                color: ColorsUtil.accentColorLight,
+                              ),
+                            )
+                            else 
                             Text(
                               '${user!.followers_count} Followers',
-                              //  textAlign
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.normal,
@@ -268,15 +271,15 @@ class _ProfileViewState extends State<ProfileView> {
                   decoration: BoxDecoration(
                       color: ColorsUtil.descriptionColorDark,
                       borderRadius: BorderRadius.circular(10)),
-                  child: const Column(
+                  child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Statistics',
+                        const Text('Statistics',
                             style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
                                 color: ColorsUtil.primaryColorDark)),
-                        Divider(
+                        const Divider(
                           height: 15,
                           color: ColorsUtil.secondaryColorDark,
                         ),
@@ -285,18 +288,52 @@ class _ProfileViewState extends State<ProfileView> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Number of Hikes',
+                                const Text('Number of Hikes',
                                     style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.normal,
                                         color: ColorsUtil.primaryColorDark)),
                                 Row(children: [
-                                  Text('1 ',
-                                      style: TextStyle(
+                                  Text(user!.no_of_hikes.toString(),
+                                      style: const TextStyle(
                                           fontSize: 35,
                                           fontWeight: FontWeight.bold,
                                           color: ColorsUtil.textColorDark)),
-                                  Text('hikes',
+                                  const Text(' Hikes',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ]),
+                                const Text('Number of Steps Taken',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Row(children: [
+                                  Text(user!.no_of_steps_taken.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  const Text(' Steps',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.normal,
+                                          color: ColorsUtil.textColorDark)),
+                                ]),
+                                const Text('Total Distance Walked',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: ColorsUtil.primaryColorDark)),
+                                Row(children: [
+                                  Text(user!.total_distance_walked.toString(),
+                                      style: const TextStyle(
+                                          fontSize: 35,
+                                          fontWeight: FontWeight.bold,
+                                          color: ColorsUtil.textColorDark)),
+                                  const Text(' m',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.normal,
@@ -394,7 +431,6 @@ class _ProfileViewState extends State<ProfileView> {
         displayUrl = result;
       });
     });
-    debugPrint('Ok, Image URL: $displayUrl');
   }
 
   Future<void> _handleLogout() async {
