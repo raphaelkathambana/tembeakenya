@@ -4,8 +4,9 @@ import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/constants/routes.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/dummy_db_3.dart';
+import 'package:tembeakenya/views/home_location_view.dart';
+import 'package:tembeakenya/assets/colors.dart';
 // import 'package:tembeakenya/model/user_model.dart';
-import '../../assets/colors.dart';
 
 class HomeView extends StatefulWidget {
   final User user;
@@ -63,6 +64,12 @@ class _HomeViewState extends State<HomeView> {
           //               group: selectedGroup,
           //               details: groupDetails,
           //             )));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeLocationView(
+                        user: user,
+                      )));
         },
         style: const ButtonStyle(
             overlayColor: MaterialStatePropertyAll(Colors.transparent)),
@@ -108,29 +115,6 @@ class _HomeViewState extends State<HomeView> {
                       fit: BoxFit.cover,
                     )),
               ),
-            // SizedBox(
-            //   width: MediaQuery.sizeOf(context).width * .35,
-            //   child: Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     children: [
-            //       SizedBox(
-            //         width: MediaQuery.sizeOf(context).width,
-            //         child: Text((location[num]),
-            //             style: const TextStyle(
-            //                 fontSize: 14,
-            //                 fontWeight: FontWeight.bold,
-            //                 color: ColorsUtil.textColorDark)),
-            //       ),
-            //       // if (isGroupMember(widget.user))
-            //       //   const Text('Member',
-            //       //       style: TextStyle(
-            //       //           fontSize: 14,
-            //       //           fontWeight: FontWeight.normal,
-            //       //           color: ColorsUtil.accentColorDark)),
-            //     ],
-            //   ),
-            // ),
-
             const Divider(
               height: 2,
               color: ColorsUtil.accentColorDark,
