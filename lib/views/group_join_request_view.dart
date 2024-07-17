@@ -32,7 +32,7 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   late NavigationService navigationService;
 
   User? selectedUser;
-  List<User> users = [];
+  // List<User> users = [];
 
   String profileImageID = '';
 
@@ -116,7 +116,10 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
                             child: Text(
-                              users[num].fullName,
+                              widget.requests.entries
+                                  .elementAt(num)
+                                  .value
+                                  .fullName,
                               style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
@@ -124,7 +127,7 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                             ),
                           ),
                           Text(
-                            '@${users[num].username}',
+                            '@${widget.requests.entries.elementAt(num).value.username}',
                             style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
@@ -138,7 +141,13 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                 Row(
                   children: [
                     IconButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          // Accept request
+                          CommunityController().approveJoinRequest(
+                              widget.group['id'],
+                              widget.requests.entries.elementAt(num).value.id!,
+                              context);
+                        },
                         icon: const Icon(
                           Icons.check_circle_outline,
                           color: ColorsUtil.accentColorDark,
@@ -147,7 +156,13 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                               'Text to announce in accessibility modes',
                         )),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Decline request
+                        CommunityController().rejectJoinRequest(
+                            widget.group['id'],
+                            widget.requests.entries.elementAt(num).value.id!,
+                            context);
+                      },
                       icon: const Icon(
                         Icons.cancel_outlined,
                         color: ColorsUtil.secondaryColorDark,
@@ -175,12 +190,6 @@ class _GroupJoinViewState extends State<GroupJoinView> {
   @override
   void initState() {
     navigationService = NavigationService(router);
-
-    CommunityController().getCommunityData().then((list) {
-      setState(() {
-        users = list;
-      });
-    });
 
     loadNum = widget.requests.length;
     // loadNum = 1;
