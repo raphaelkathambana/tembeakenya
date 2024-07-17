@@ -5,6 +5,7 @@ import 'package:tembeakenya/constants/image_operations.dart';
 import 'package:tembeakenya/controllers/community_controller.dart';
 import 'package:tembeakenya/model/user.dart';
 import 'package:tembeakenya/repository/get_following.dart';
+import 'package:tembeakenya/repository/search_a_user.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
 // import 'package:tembeakenya/dummy_db.dart';
 
@@ -21,14 +22,13 @@ class _PeopleViewState extends State<PeopleView> {
   late NavigationService navigationService;
 
   late String? dropdownValue;
-  List<String> listUser = <String>['All', 'Follows'];
+  List<String> userFilters = <String>['All', 'Follows'];
 
   User? selectedUser;
   List<User> theUsers = [];
 
   String profileImageID = '';
 
-  final TextEditingController _search = TextEditingController();
   String search = '';
 
   late int loadNum;
@@ -39,9 +39,7 @@ class _PeopleViewState extends State<PeopleView> {
 
   searchCard(String search, int num, bool friend) {
     if (search != '') {
-      if (theUsers[num].fullName
-          .toLowerCase()
-          .contains(search.toLowerCase())) {
+      if (theUsers[num].fullName.toLowerCase().contains(search.toLowerCase())) {
         return userFriend(num, friend);
       }
       return const SizedBox();
@@ -51,7 +49,7 @@ class _PeopleViewState extends State<PeopleView> {
   }
 
   userFriend(int num, bool friend) {
-    if (theUsers[num].id == widget.currentUser.id){
+    if (theUsers[num].id == widget.currentUser.id) {
       return const SizedBox();
     }
     if (friend == true) {
@@ -274,7 +272,6 @@ class _PeopleViewState extends State<PeopleView> {
     String profileImageID = '';
     followsLoaded = List<bool>.filled(loadNum, false);
 
-
     for (int i = 0; i < loadNum; i++) {
       profileImageID = theUsers[i].image_id!;
       getImageUrl(profileImageID).then((String result) {
@@ -285,10 +282,10 @@ class _PeopleViewState extends State<PeopleView> {
     }
 
     CommunityController().getCommunityData().then((list) {
-        setState(() {
-          theUsers = list;
-        });
+      setState(() {
+        theUsers = list;
       });
+    });
   }
 
   @override
@@ -296,7 +293,7 @@ class _PeopleViewState extends State<PeopleView> {
     theUsers = widget.users;
 
     navigationService = NavigationService(router);
-    dropdownValue = listUser.first;
+    dropdownValue = userFilters.first;
     loadNum = widget.users.length;
     displayUrl = List<String>.filled(loadNum, '');
     isFriend = List<bool?>.filled(loadNum, false);
@@ -319,9 +316,10 @@ class _PeopleViewState extends State<PeopleView> {
       if (followsLoaded[i] == false) {
         getFollowingFriend(i + 1).then(
           (value) => {
-            if (isFriend[i] = value) {
-              loaded = followsLoaded.every((element) => element = true),
-            }
+            if (isFriend[i] = value)
+              {
+                loaded = followsLoaded.every((element) => element = true),
+              }
           },
         );
         followsLoaded[i] = true;
@@ -334,96 +332,104 @@ class _PeopleViewState extends State<PeopleView> {
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: _handleRefresh,
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              const Divider(
-                height: 2,
-                color: ColorsUtil.secondaryColorDark,
-                indent: 12,
-                endIndent: 12,
-              ),
-              Container(
-                width: MediaQuery.sizeOf(context).width * .90,
-                margin: const EdgeInsets.only(top: 20, bottom: 25),
-                height: 50,
-                padding: const EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  color: ColorsUtil.cardColorDark,
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _search,
-                        enableSuggestions: true,
-                        autocorrect: true,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          icon: Icon(Icons.search),
-                          hintText: 'Search',
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            search = _search.text;
-                          });
-                        },
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10, right: 10),
-                      margin:
-                          const EdgeInsets.only(top: 10, bottom: 10, right: 10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20.0),
-                        border: Border.all(
-                            color: Colors.grey,
-                            style: BorderStyle.solid,
-                            width: 0.80),
-                      ),
-                      child: DropdownButton<String>(
-                        value: dropdownValue,
-                        style: const TextStyle(fontSize: 14),
-                        underline: Container(height: 2),
-                        onChanged: (value) {
-                          setState(() {
-                            dropdownValue = value!;
-                          });
-                        },
-                        items: listUser
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
-                child: Column(
-                  children: [
-                    for (int i = 0; i < loadNum; i++)
-                      if (dropdownValue ==
-                          listUser.last) // If dropdown indicates "Friends"
-                        searchCard(search, i, true)
-                      else if (dropdownValue ==
-                          listUser.first) // If dropdown indicates "All"
-                        searchCard(search, i, false)
-                  ],
-                ),
-              ),
-            ],
-          ),
+        child: UserListScreen(
+          displayUrl: displayUrl,
+          isFriend: isFriend,
+          followsLoaded: followsLoaded,
+          loaded: loaded,
+          // selectedUser: selectedUser,
+          currentUser: widget.currentUser,
         ),
+        // child: SingleChildScrollView(
+        //   physics: const AlwaysScrollableScrollPhysics(),
+        //   child: Column(
+        //     children: [
+        //       const Divider(
+        //         height: 2,
+        //         color: ColorsUtil.secondaryColorDark,
+        //         indent: 12,
+        //         endIndent: 12,
+        //       ),
+        //       Container(
+        //         width: MediaQuery.sizeOf(context).width * .90,
+        //         margin: const EdgeInsets.only(top: 20, bottom: 25),
+        //         height: 50,
+        //         padding: const EdgeInsets.only(left: 10),
+        //         decoration: BoxDecoration(
+        //           color: ColorsUtil.cardColorDark,
+        //           borderRadius: BorderRadius.circular(25.0),
+        //         ),
+        //         child: Row(
+        //           children: [
+        //             Expanded(
+        //               child: TextField(
+        //                 controller: _search,
+        //                 enableSuggestions: true,
+        //                 autocorrect: true,
+        //                 decoration: const InputDecoration(
+        //                   border: InputBorder.none,
+        //                   icon: Icon(Icons.search),
+        //                   hintText: 'Search',
+        //                 ),
+        //                 onChanged: (value) {
+        //                   setState(() {
+        //                     search = _search.text;
+        //                   });
+        //                 },
+        //               ),
+        //             ),
+        //             Container(
+        //               padding: const EdgeInsets.only(left: 10, right: 10),
+        //               margin: const EdgeInsets.only(
+        //                   top: 10, bottom: 10, right: 10),
+        //               decoration: BoxDecoration(
+        //                 borderRadius: BorderRadius.circular(20.0),
+        //                 border: Border.all(
+        //                     color: Colors.grey,
+        //                     style: BorderStyle.solid,
+        //                     width: 0.80),
+        //               ),
+        //               child: DropdownButton<String>(
+        //                 value: dropdownValue,
+        //                 style: const TextStyle(fontSize: 14),
+        //                 underline: Container(height: 2),
+        //                 onChanged: (value) {
+        //                   setState(() {
+        //                     dropdownValue = value!;
+        //                   });
+        //                 },
+        //                 items: userFilters
+        //                     .map<DropdownMenuItem<String>>((String value) {
+        //                   return DropdownMenuItem<String>(
+        //                     value: value,
+        //                     child: Text(value),
+        //                   );
+        //                 }).toList(),
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //       Container(
+        //         padding: const EdgeInsets.symmetric(horizontal: 3),
+        //         decoration: const BoxDecoration(
+        //           color: Colors.transparent,
+        //         ),
+        //         child: Column(
+        //           children: [
+        //             for (int i = 0; i < loadNum; i++)
+        //               if (dropdownValue ==
+        //                   userFilters.last) // If dropdown indicates "Friends"
+        //                 searchCard(search, i, true)
+        //               else if (dropdownValue ==
+        //                   userFilters.first) // If dropdown indicates "All"
+        //                 searchCard(search, i, false)
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }

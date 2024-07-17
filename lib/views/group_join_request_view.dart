@@ -115,17 +115,17 @@ class _GroupJoinViewState extends State<GroupJoinView> {
                         children: [
                           SizedBox(
                             width: MediaQuery.sizeOf(context).width,
-                            child: const Text(
-                              "theUsers[num].fullName",
-                              style: TextStyle(
+                            child: Text(
+                              users[num].fullName,
+                              style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.bold,
                                   color: ColorsUtil.textColorDark),
                             ),
                           ),
-                          const Text(
-                            '@{theUsers[num].username}',
-                            style: TextStyle(
+                          Text(
+                            '@${users[num].username}',
+                            style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.normal,
                                 color: ColorsUtil.accentColorDark),
@@ -182,8 +182,8 @@ class _GroupJoinViewState extends State<GroupJoinView> {
       });
     });
 
-    // loadNum = widget.requests.length;
-    loadNum = 1;
+    loadNum = widget.requests.length;
+    // loadNum = 1;
     displayUrl = List<String>.filled(loadNum, '');
 
     for (int i = 0; i < loadNum; i++) {

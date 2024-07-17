@@ -36,6 +36,7 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   late String theGroupName;
   late String theDescription;
+  late int theId;
 
   late int roleID;
   late bool roleSwitch;
@@ -57,10 +58,9 @@ class _CommunityViewState extends State<GroupDetailView> {
       },
     );
 
-    
-    setState(() {      
+    setState(() {
       loadNum = groupDetails!.length;
-      
+
       detailEvent = groupDetails!['events'];
       var group = widget.group;
       theGroupName = group['name'];
@@ -90,11 +90,12 @@ class _CommunityViewState extends State<GroupDetailView> {
 
     loadNum = widget.details.length;
     // if(widget.details['events'] != null){
-      detailEvent = widget.details['events'];
+    detailEvent = widget.details['events'];
     // }
     var group = widget.group;
     theGroupName = group['name'];
     theDescription = group['description'];
+    theId = group['id'];
 
     User user = widget.user;
 
@@ -469,7 +470,8 @@ class _CommunityViewState extends State<GroupDetailView> {
                                             fontWeight: FontWeight.bold,
                                             color: ColorsUtil.textColorDark)),
                                   ),
-                                  if (isMember(widget.user, widget.details['members']))
+                                  if (isMember(
+                                      widget.user, widget.details['members']))
                                     if (widget.user.id ==
                                         widget.group['guide_id'])
                                       const Text('Guide',
@@ -485,11 +487,14 @@ class _CommunityViewState extends State<GroupDetailView> {
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   ColorsUtil.accentColorDark)),
-                                  if (!isMember(widget.user, widget.details['members']))
+                                  if (!isMember(
+                                      widget.user, widget.details['members']))
                                     ElevatedButton(
                                       onPressed: () {
+                                        CommunityController()
+                                            .requestToJoinGroup(theId, context);
                                         setState(() {
-                                          // TODO: add the request functionality
+                                          requested = true;
                                         });
                                       },
                                       style: ElevatedButton.styleFrom(
@@ -580,12 +585,11 @@ class _CommunityViewState extends State<GroupDetailView> {
                           ),
                           if (loadNum == 0)
                             noEventCard()
-                          else if (detailEvent.isEmpty) // if they don't have any hikeID from hike-group
+                          else if (detailEvent
+                              .isEmpty) // if they don't have any hikeID from hike-group
                             noEventCard()
                           else
-                            for (int i = 0;
-                                i < detailEvent.length;
-                                i++)
+                            for (int i = 0; i < detailEvent.length; i++)
                               eventCard(i),
                         ]),
                   ),
@@ -595,6 +599,4 @@ class _CommunityViewState extends State<GroupDetailView> {
   }
 }
 
-isGroup(){
-
-}
+isGroup() {}
