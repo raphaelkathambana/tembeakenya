@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,10 +14,15 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/controllers/auth_controller.dart';
 import 'package:tembeakenya/views/verify_view.dart';
 import 'package:tembeakenya/views/welcome_view.dart';
+import 'constants/location_stuff.dart';
 
+late SharedPreferences prefs;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  prefs = await SharedPreferences.getInstance();
   await Firebase.initializeApp();
+  await dotenv.load(fileName: ".env");
+  await determinePosition();
   NavigationService navigationService = NavigationService(router);
   runApp(
     MultiProvider(
@@ -41,7 +48,7 @@ class MainPage extends StatelessWidget {
     final Directory directory = await getApplicationDocumentsDirectory();
     final File file = File('${directory.path}/time.txt');
     await file.writeAsString('00:00:00\n00:00:00\n00:00:00');
-  } 
+  }
 
   const MainPage({super.key});
   static final ValueNotifier<ThemeMode> themeNotifier =
