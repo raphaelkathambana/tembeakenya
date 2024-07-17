@@ -40,24 +40,18 @@ class _GroupEventViewState extends State<GroupEventView> {
   late List<String> displayUrl;
   // late List<bool?> isAttendee;
   late List<bool> attendingLoaded;
-  bool attending = false;
+  bool signUp = true;
   bool loaded = false;
 
-  // String hikeName = 'Karura...? More like KAZUMA!!!';
-  // String hikeDescription =
-  //     'Get it? Cause this is an Ace Attorney themed hike! Come join in an adventure where we recreate Kazuma\'s iconic "Fresh Breeze Bandana"!';
-  // String hikeLocation = 'Karura Forest';
-  // String hikeDate = 'July 7, 2024';
-
-  // The participator's page will have the same logic as the friends
-  // But instead of filtering "friends" from all group, you filter
-  // "attendees" from group hikers
 
   userCard(int num) {
     users = widget.details['attendees'];
-    var selectedUserId = users.entries.elementAt(num).key.id;
+    var selectedUserId = users.entries.elementAt(num).value['user_id'];
+    debugPrint('CHECKME: ${users.entries}');
     if (widget.user.id == selectedUserId){
-      attending = true;
+      signUp = false;
+    } else {
+      signUp = true;
     }
     return TextButton(
         onPressed: () async {
@@ -75,6 +69,7 @@ class _GroupEventViewState extends State<GroupEventView> {
             context,
             MaterialPageRoute(
               builder: (context) => ParticipantDetailView(
+                attendeeUser: widget.details['attendees'].entries.elementAt(num),
                 selectedUser: selectedUser!,
                 currentUser: widget.user,
               ),
@@ -237,7 +232,13 @@ class _GroupEventViewState extends State<GroupEventView> {
                         ),
                       ),
                     ),
-                    if(!attending)
+                    if(!signUp)
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      height: 45,
+                      width: 100,
+                    )
+                    else if (signUp)
                     Container(
                       margin: const EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
@@ -312,8 +313,6 @@ class _GroupEventViewState extends State<GroupEventView> {
               ],
             ),
           ),
-
-          // *********************************************************** //
 
           DraggableScrollableSheet(
             initialChildSize: 90 / width,

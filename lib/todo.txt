@@ -19,6 +19,8 @@
 
   TODO: After creating, automatically make guide an attendee
 
+  TODO: When reaching the bottom of the page, load more people
+
 / ************* DONE ************* /
 
   DONE: Add new attendee

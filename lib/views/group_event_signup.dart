@@ -33,13 +33,16 @@ class GroupEventSignUp extends StatefulWidget {
 
 class _GroupEventSignUpState extends State<GroupEventSignUp> {
   late final TextEditingController _fullName;
+  late final TextEditingController _email;
   late final TextEditingController _phone;
   late final TextEditingController _otherFullName;
   late final TextEditingController _otherPhone;
 
   late final String fullName;
+  late final String email;
   late final String phone;
   late final String otherFullName;
+  late final String otherEmail;
   late final String otherPhone;
 
   late String? dropdownValue;
@@ -50,6 +53,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   @override
   void initState() {
     _fullName = TextEditingController(text: widget.user.fullName);
+    _email = TextEditingController(text: widget.user.email);
     _phone = TextEditingController();
     _otherFullName = TextEditingController();
     _otherPhone = TextEditingController();
@@ -59,6 +63,7 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
   @override
   void dispose() {
     _fullName.dispose();
+    _email.dispose();
     _phone.dispose();
     _otherFullName.dispose();
     _otherPhone.dispose();
@@ -139,6 +144,43 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                             ),
                             onChanged: (value) {
                               fullName = value;
+                            },
+                          ),
+                        ),
+                      ])),
+              Container(
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                      color: ColorsUtil.descriptionColorDark,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Email',
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: ColorsUtil.primaryColorDark)),
+                            // Icon(
+                            //   Icons.edit,
+                            //   color: ColorsUtil.primaryColorDark,
+                            // ),
+                          ],
+                        ),
+                        SizedBox(
+                          child: TextField(
+                            enabled: false,
+                            controller: _email,
+                            decoration: const InputDecoration(
+                              hintText: "Please write the email",
+                            ),
+                            onChanged: (value) {
+                              email = value;
                             },
                           ),
                         ),
@@ -341,17 +383,11 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
                 ),
               ),
               onPressed: () async {
-                
                 if (_fullName.text == '' ||
                     _otherFullName.text == '' ||
+                    _email.text == '' ||
                     _phone.text.length != 9 ||
                     _otherPhone.text.length != 9) {
-                debugPrint('ID: ${widget.details[0]}');
-                  debugPrint("fullName: ${_fullName.text}");
-                  debugPrint("phone: ${_phone.text.length}");
-                  debugPrint("otherFullName: ${_otherFullName.text}");
-                  debugPrint("otherPhone: ${_otherPhone.text.length}");
-
                   showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -409,33 +445,29 @@ class _GroupEventSignUpState extends State<GroupEventSignUp> {
     if (response.status) {
       notify("successful stk push. please enter pin");
       showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                            title:
-                                                const Text('Confirm Payment'),
-                                            content: const Text(
-                                                'Click "Confirm" after paying!'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  CommunityController()
-                                                      .signUpForGroupHike(
-                                                          int.parse(widget.details[0].toString()),
-                                                          int.parse(widget.user.id!.toString()),
-                                                          _fullName.text,
-                                                          '254${_phone.text}',
-                                                          widget.user.email!,
-                                                          'emergencyContactName',
-                                                          context);
-                                                  int count = 0;
-                                                  Navigator.of(context)
-                                                      .popUntil(
-                                                          (_) => count++ >= 3);
-                                                },
-                                                child: const Text('Confirm'),
-                                              ),
-                                            ],
-                                          ));
+          context: context,
+          builder: (context) => AlertDialog(
+                title: const Text('Confirm Payment'),
+                content: const Text('Click "Confirm" after paying!'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      CommunityController().signUpForGroupHike(
+                          int.parse(widget.details[0].toString()),
+                          int.parse(widget.user.id!.toString()),
+                          _fullName.text,
+                          '254${_phone.text}',
+                          widget.user.email!,
+                          _otherFullName.text,
+                          '254${_otherPhone.text}',
+                          context);
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 3);
+                    },
+                    child: const Text('Confirm'),
+                  ),
+                ],
+              ));
     } else {
       notify("failed. please try again");
     }
