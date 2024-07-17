@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/model/map_data.dart';
 
