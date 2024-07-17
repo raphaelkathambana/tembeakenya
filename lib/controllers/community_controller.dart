@@ -28,7 +28,7 @@ class CommunityController {
     try {
       var response = await apiCall.client.get('${url}api/users');
       if (response.statusCode == 200) {
-        return getUsersFromData(response.data);
+        return getListOfUsersFromData(response.data);
       } else {
         return [];
       }
@@ -248,7 +248,7 @@ class CommunityController {
   Future<void> requestToJoinGroup(int id, BuildContext context) async {
     try {
       var response =
-          await apiCall.client.post('${url}api/groups/{$id}/request-to-join');
+          await apiCall.client.post('${url}api/groups/$id/request-to-join');
       if (response.statusCode == 200) {
         debugPrint('Successfully Requested');
         if (!context.mounted) return;
@@ -405,8 +405,15 @@ class CommunityController {
   //   }
   // }
 
-  Future<void> createGroupHike(String name, String description, double fee, String hikeId,
-      String date, int groupID, int guideId, BuildContext context) async {
+  Future<void> createGroupHike(
+      String name,
+      String description,
+      double fee,
+      String hikeId,
+      String date,
+      int groupID,
+      int guideId,
+      BuildContext context) async {
     debugPrint(name);
     debugPrint(description);
     debugPrint(fee.toString());
@@ -526,4 +533,23 @@ class CommunityController {
   //     alertErrorHandler(context, e.response?.data);
   //   }
   // }
+
+  Future<Map> getReviews() async {
+    try {
+      var response = await apiCall.client.get('${url}api/reviews');
+      if (response.statusCode == 200) {
+        var reviewData = getReviewData(response.data);
+        var userData = getUserDataReview(response.data);
+        return {
+          'reviewData': reviewData,
+          'userData': userData,
+        };
+      } else {
+        return {};
+      }
+    } on DioException catch (e) {
+      debugPrint('Error: ${e.message}');
+      return {};
+    }
+  }
 }
