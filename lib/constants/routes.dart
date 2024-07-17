@@ -4,6 +4,7 @@ import 'package:tembeakenya/navigations/nav_bar.dart';
 import 'package:tembeakenya/constants/constants.dart';
 import 'package:tembeakenya/main.dart';
 import 'package:tembeakenya/model/user.dart';
+import 'package:tembeakenya/repository/search_a_user.dart';
 import 'package:tembeakenya/views/people_detail_view.dart';
 import 'package:tembeakenya/views/profile_change_password_view.dart';
 import 'package:tembeakenya/views/forgot_view.dart';
@@ -27,6 +28,17 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/welcome',
       pageBuilder: (context, state) => const MaterialPage(child: WelcomeView()),
+    ),
+    GoRoute(
+      path: '/new-search',
+      pageBuilder: (context, state) => MaterialPage(
+          child: UserListScreen(
+        displayUrl: const [],
+        isFriend: const [],
+        followsLoaded: const [],
+        loaded: false,
+        currentUser: state.extra as User,
+      )),
     ),
     GoRoute(
       path: '/login',
@@ -216,10 +228,13 @@ class NavigationService {
   }
 
   void navigateTo(route, {required User arguments}) {
-    _router.go(route, extra: arguments);
+    _router.push(route, extra: arguments);
   }
 
   void navigateToPeopleDetailsView(BuildContext context, List<User> users) {
     _router.go('/people-details', extra: users);
+  }
+  void navigateToTest(BuildContext context) {
+    _router.push('/test-view');
   }
 }
