@@ -341,7 +341,7 @@ class _GroupViewState extends State<GroupView> {
         loadNum = theGroups.length;
         loaded = false;
         displayUrl = List<String>.filled(loadNum, '');
-        details = List<dynamic>.filled(loadNum, [0]);
+        // details = List<dynamic>.filled(loadNum, [0]);
         membersLoaded = List<bool>.filled(loadNum, false);
       });
     });

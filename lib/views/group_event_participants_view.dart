@@ -334,7 +334,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                 },
                                 child: Text('$theEmail ',
                                     style: const TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 14,
                                         color: ColorsUtil.textColorDark)),
                               )
                             ]),
@@ -350,6 +350,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                           title: const Text('Call or Text?'),
                                           actions: [
                                             DropdownButton(
+                                              style: const TextStyle(fontSize: 13),
                                                 icon: const Icon(null),
                                                 value: dropdownValue,
                                                 dropdownColor: ColorsUtil
@@ -374,9 +375,11 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                                   );
                                                 }).toList(),
                                                 hint: const SizedBox(
+                                                  // width: 30,
                                                   child: Text('Call'),
                                                 )),
                                             DropdownButton(
+                                                style: const TextStyle(fontSize: 13),
                                                 icon: const Icon(null),
                                                 value: dropdownValue,
                                                 dropdownColor: ColorsUtil
@@ -384,20 +387,20 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                                 underline: Container(height: 2),
                                                 onChanged: (value) {
                                                   setState(() {});
-                                                  if (value == 'SMS text') {
+                                                  if (value == 'SMS') {
                                                     FlutterPhoneDirectCaller
                                                         .callNumber(
                                                             '+$thePhoneNumber');
                                                   } else if (value ==
-                                                      'Whatsapp text') {
+                                                      'Whatsapp') {
                                                     textWhatsApp(
                                                         thePhoneNumber);
                                                   }
                                                   Navigator.pop(context);
                                                 },
                                                 items: [
-                                                  'SMS text',
-                                                  'Whatsapp text'
+                                                  'SMS',
+                                                  'Whatsapp'
                                                 ].map<DropdownMenuItem>(
                                                     (String value) {
                                                   return DropdownMenuItem<
@@ -408,6 +411,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                                 }).toList(),
                                                 hint: const SizedBox(
                                                   child: Text('Text'),
+                                                  
                                                 )),
                                           ],
                                         ));
@@ -492,6 +496,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                           title: const Text('Call or Text?'),
                                           actions: [
                                             DropdownButton(
+                                              style: const TextStyle(fontSize: 13),
                                                 icon: const Icon(null),
                                                 value: dropdownValue,
                                                 dropdownColor: ColorsUtil
@@ -519,6 +524,7 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                                   child: Text('Call'),
                                                 )),
                                             DropdownButton(
+                                              style: const TextStyle(fontSize: 13),
                                                 icon: const Icon(null),
                                                 value: dropdownValue,
                                                 dropdownColor: ColorsUtil
@@ -526,20 +532,20 @@ class _CommunityViewState extends State<ParticipantDetailView> {
                                                 underline: Container(height: 2),
                                                 onChanged: (value) {
                                                   setState(() {});
-                                                  if (value == 'SMS text') {
+                                                  if (value == 'SMS') {
                                                     FlutterPhoneDirectCaller
                                                         .callNumber(
                                                             '+$otherPhoneNumber');
                                                   } else if (value ==
-                                                      'Whatsapp text') {
+                                                      'Whatsapp') {
                                                     textWhatsApp(
                                                         otherPhoneNumber);
                                                   }
                                                   Navigator.pop(context);
                                                 },
                                                 items: [
-                                                  'SMS text',
-                                                  'Whatsapp text'
+                                                  'SMS',
+                                                  'Whatsapp'
                                                 ].map<DropdownMenuItem>(
                                                     (String value) {
                                                   return DropdownMenuItem<

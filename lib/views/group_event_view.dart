@@ -302,7 +302,7 @@ class _GroupEventViewState extends State<GroupEventView> {
                   ),
                 ),
                 Text(
-                  'Hike Fee: ${widget.details['groupHikeDetails'][7]}',
+                  'Hike Fee: Ksh.${widget.details['groupHikeDetails'][7]}',
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.normal,

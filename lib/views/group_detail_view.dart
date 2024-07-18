@@ -41,7 +41,7 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   late int roleID;
   late bool roleSwitch;
-  late bool requested;
+  bool? requested;
 
   late int loadNum;
   dynamic detailEvent;
@@ -364,7 +364,15 @@ class _CommunityViewState extends State<GroupDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(requested == null){
+      return Container(
+              alignment: Alignment.center,
+              width: 20,
+              height: 20,
+              child: const CircularProgressIndicator(),
+            );
+    } else {
+      return Scaffold(
         appBar: AppBar(
           title: const Text(
             'Hike Group',
@@ -490,10 +498,10 @@ class _CommunityViewState extends State<GroupDetailView> {
                                           minimumSize: const Size(150, 30),
                                           foregroundColor:
                                               ColorsUtil.textColorDark,
-                                          backgroundColor: requested
+                                          backgroundColor: requested!
                                               ? ColorsUtil.accentColorDark
                                               : ColorsUtil.secondaryColorDark),
-                                      child: requested
+                                      child: requested!
                                           ? const Text('Pending...')
                                           : const Text('Request to Join'),
                                     )
@@ -585,6 +593,7 @@ class _CommunityViewState extends State<GroupDetailView> {
                 roleButton(),
               ])),
         ));
+    }
   }
 }
 
