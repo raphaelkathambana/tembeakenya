@@ -1,15 +1,11 @@
 
 / ************* TODO ************* /
 
-  TODO: Extra config wit Raph (Map)
-  TODO: Merge navigation page with mine
-
-  TODO: When Request pressed, become pending permanently
-
   TODO: After creating, automatically make guide an attendee
 
   TODO: Stats reflect when navigation ends 
 
+  KINDA: Merge navigation page with mine
 
 / ************* DONE ************* /
 
@@ -35,6 +31,8 @@
   DONE: Profile Image for Request Page
   DONE: When Accept/Reject pressed, user vanishes
   DONE: Differentiate group and people profile name
+  DONE: When Request pressed, become pending permanently
+  DONE: Extra config wit Raph (Map)
 
 
 
