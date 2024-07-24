@@ -145,7 +145,7 @@ class _NavigationPageViewState extends State<NavigationPageView> {
           children: [
             ListTile(
               title: Text(landmark.name),
-              subtitle: Text(landmark.description),
+              // subtitle: Text(landmark.description),
               onTap: () {
                 // Close the modal
                 Navigator.pop(context);

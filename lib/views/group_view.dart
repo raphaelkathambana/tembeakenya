@@ -43,8 +43,8 @@ class _GroupViewState extends State<GroupView> {
               ? ColorsUtil.secondaryColorDark
               : ColorsUtil.accentColorDark),
       child: roleSwitch
-          ? const Text('debug button: Guide')
-          : const Text('debug button: Hiker'),
+          ? const Text('Toggle button: Guide')
+          : const Text('Toggle button: Hiker'),
     );
   }
   // ***************** //
