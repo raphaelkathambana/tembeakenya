@@ -332,6 +332,12 @@ class AuthController with ChangeNotifier {
         await prefs.remove('auth_token');
         apiCall.clearCookies();
         return true;
+      } else if (e.response?.statusCode == 419) {
+        debugPrint('Token mismatch');
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.remove('auth_token');
+        apiCall.clearCookies();
+        return true;
       } else {
         return false;
       }
